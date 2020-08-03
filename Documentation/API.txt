@@ -13,7 +13,7 @@ Info about the indicator(add --> its id at the end):
 http://api.worldbank.org/v2/indicator/NY.GDP.MKTP.CD?format=json
 
 Data of all countries for a given indicator (add --> "country/all" just after "v2/"):
-http://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?format=json2
+http://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?format=json
 
 Data of a specific indicator and a specific country (change "all" to the id of the country):
 http://api.worldbank.org/v2/country/chn/indicator/SP.POP.TOTL
