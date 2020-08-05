@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const Searcher = (props) => {
   const [value, setValue] = useState("");
 
   function handleChange(e) {
     setValue(e.target.value);
+    console.log(props.countries);
   }
 
   function handleForm(e) {
     e.preventDefault();
     setValue("");
-    fetch(`https://api.github.com/users/${value}`)
+    fetch("https://restcountries.eu/rest/v2/all")
       .then((data) => data.json())
-      .then((data) => {
-        props.setUsers([...props.users, data]);
-      })
+      .then((data) => props.setCountries(data))
       .catch(function (error) {
         console.log(error); // Error!
       });
