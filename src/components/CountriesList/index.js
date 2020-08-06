@@ -1,18 +1,14 @@
 import React, { useEffect } from 'react';
 import fetchThis from '../../utils/fetcher';
 
-const EachCountry = (props) => {
-   return <li>Hey</li>
-}
-
 const CountriesList = (props) => {
-    useEffect(() => fetchThis(props));
-    console.log(props.countries);
+    useEffect(() => { fetchThis(props) }, []);
+    const EachCountry = props.allCountries.map((el) => <li key={Math.random() - Math.random()}>{el.name}</li>);
 
     return(
         <div>
             <ul>
-                <EachCountry /> 
+            {EachCountry}
             </ul>
         </div>
     )

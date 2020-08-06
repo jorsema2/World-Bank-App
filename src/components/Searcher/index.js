@@ -1,28 +1,24 @@
 import React, { useState } from "react";
+import modifyString from "../../utils/modifyString";
+import countryFilterer from "../../utils/countryFilterer";
 
 const Searcher = (props) => {
   const [value, setValue] = useState("");
 
   function handleChange(e) {
-    setValue(e.target.value);
-    console.log(props.countries);
+    const newValue = modifyString(e.target.value);
+    setValue(newValue);
+    countryFilterer(value, props);
   }
 
   function handleForm(e) {
     e.preventDefault();
     setValue("");
-    fetch("https://restcountries.eu/rest/v2/all")
-      .then((data) => data.json())
-      .then((data) => props.setCountries(data))
-      .catch(function (error) {
-        console.log(error); // Error!
-      });
   }
 
   return (
     <form onSubmit={handleForm}>
       <input onChange={handleChange} value={value}></input>
-      <button>Search</button>
     </form>
   );
 };
