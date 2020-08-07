@@ -6,9 +6,10 @@ const Searcher = (props) => {
   const [value, setValue] = useState("");
 
   function handleChange(e) {
+    const lowerCaseValue = value.toLowerCase();
+    countryFilterer(lowerCaseValue, props);
     const newValue = modifyString(e.target.value);
     setValue(newValue);
-    countryFilterer(value, props);
   }
 
   function handleForm(e) {

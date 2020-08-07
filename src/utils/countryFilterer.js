@@ -1,6 +1,7 @@
 function countryFilterer(fragment, props){
-    const newArray = props.allCountries.filter(el => el.name.includes(fragment));
-    props.setSelectedCountries(newArray);
+    // Both fragment and el.name are lower-cased to avoid case sensitive filtering
+    const newArray = props.allCountries.filter(el => el.name.toLowerCase().includes(fragment));
+    props.setChosenCountries(newArray);
 } 
 
 export default countryFilterer;
