@@ -1,27 +1,22 @@
-import React, { useEffect } from "react";
-import fetchThis from "../../utils/fetcher";
+import React from "react";
+import Dropdown from '../../../node_modules/react-dropdown';
+import '../../../node_modules/react-dropdown/style.css';
 
 const CountriesList = (props) => {
-  useEffect(() => {
-    fetchThis(props);
-  }, []);
+
+  let options;
+  let defaultOption;
+
+  props.chosenCountries === [] ? options = props.allCountries.map((el) => el.name) : options = props.chosenCountries.map((el) => el.name);
+
+  defaultOption = options[0];
 
   console.log("Chosen countries:");
   console.log(props.chosenCountries);
 
   return (
     <div>
-      <ul>
-        {props.chosenCountries === [] &&
-          props.allCountries.map((el) => (
-            <li key={Math.random() - Math.random()}>{el.name}</li>
-          ))}
-
-        {props.chosenCountries !== [] &&
-          props.chosenCountries.map((el) => (
-            <li key={Math.random() - Math.random()}>{el.name}</li>
-          ))}
-      </ul>
+      <Dropdown options={options} onChange={Dropdown._onSelect} value={defaultOption} placeholder="Select a country" />
     </div>
   );
 };

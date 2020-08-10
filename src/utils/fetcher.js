@@ -1,7 +1,7 @@
-function fetchThis(props) {
+function fetchThis(setAllCountries) {
     fetch("https://restcountries.eu/rest/v2/all")
       .then((data) => data.json())
-      .then((data) => props.setCountries(data))
+      .then((data) => setAllCountries(data))
       .catch(function (error) {
         console.log(error); // Error!
     });
