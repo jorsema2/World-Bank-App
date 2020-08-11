@@ -7,6 +7,7 @@ import '../node_modules/react-dropdown/style.css';
 const App = () => {
     const [allCountries, setAllCountries] = useState([]);
     const [chosenCountries, setChosenCountries] = useState([]);
+    const [options, setOptions] = useState([]);
 
     useEffect(() => {
         fetchThis(setAllCountries);
@@ -15,8 +16,8 @@ const App = () => {
     return(
         <div>
             <h1>World Bank App</h1>
-            <Searcher setAllCountries={setAllCountries} allCountries={allCountries} chosenCountries={chosenCountries} setChosenCountries={setChosenCountries} />
-            <CountriesList allCountries={allCountries} setCountries={setAllCountries} chosenCountries={chosenCountries} setChosenCountries={setChosenCountries} />
+            <Searcher allCountries={allCountries}  setAllCountries={setAllCountries} chosenCountries={chosenCountries} setChosenCountries={setChosenCountries} setOptions={setOptions} />
+            <CountriesList options={options} />
         </div>
     )
 }
