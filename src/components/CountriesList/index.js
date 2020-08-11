@@ -13,7 +13,6 @@ const CountriesList = (props) => {
 
   console.log("Chosen countries:");
   console.log(props.chosenCountries);
-  console.log('hey');
 
   return (
     <div>
