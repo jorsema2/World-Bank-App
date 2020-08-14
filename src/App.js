@@ -7,11 +7,9 @@ const App = () => {
   const [allCountries, setAllCountries] = useState([]);
   const [options, setOptions] = useState([]);
   const [chosenCountry, setChosenCountry] = useState({});
-  const [indicators, setIndicators] = useState([]);
 
   useEffect(() => {
     fetchThis(setAllCountries, "https://restcountries.eu/rest/v2/all");
-    fetchThis(setIndicators, "http://api.worldbank.org/v2/indicator?format=json&page=1");
   }, []);
 
   useEffect(() => {
@@ -22,21 +20,18 @@ const App = () => {
     setOptions(newOptions);
   }, [allCountries]);
 
-  useEffect(() => {
-    const chosenIndicators = indicators.map((el) => {
-      const newElement = { name: el.name, id: el.id, description: el.sourceNote }
-      return newElement;
-    })
-    setIndicators(chosenIndicators);
-  }, [chosenCountry]);  
+  // Find how to show the whole object of the chosen country because we need ID!!!
 
-  // Add later: {Object.keys(chosenCountry).length !== 0 && <List  />}
+  function handleChange(e) {
+    options.filter(obj => obj.value === e.value)
+    console.log(e.value);
+  }
   
   return (
     <div>
       <h1>World Bank App</h1>
-      <Select options={options} onChange={setChosenCountry} />
-      <List />      
+      <Select value={options.filter(obj => obj.value === chosenCountry)} options={options} onChange={handleChange} />
+      <List chosenCountry={chosenCountry} />
     </div>
   );
 };

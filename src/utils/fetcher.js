@@ -7,6 +7,7 @@ function fetchThis(setter, link) {
       */
       if(data.length === 2) {
         data = data[1];
+        console.log(data);
       }
       setter(data)})
     .catch(function (error) {
