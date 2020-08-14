@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import List from './components/List';
 import Select from "react-select";
 import fetchThis from "./utils/fetcher";
 
@@ -27,14 +28,15 @@ const App = () => {
       return newElement;
     })
     setIndicators(chosenIndicators);
-  }, [chosenCountry]);
+  }, [chosenCountry]);  
 
-  console.log(options);
+  // Add later: {Object.keys(chosenCountry).length !== 0 && <List  />}
   
   return (
     <div>
       <h1>World Bank App</h1>
       <Select options={options} onChange={setChosenCountry} />
+      <List />      
     </div>
   );
 };
