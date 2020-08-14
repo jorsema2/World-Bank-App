@@ -1,5 +1,5 @@
-function fetchThis(setter, link) {
-  fetch(link)
+function fetchThis(link) {
+  const data = fetch(link)
     .then((data) => data.json())
     .then((data) => {
       /* We need to get rid off the first element of the Indicators array 
@@ -7,12 +7,11 @@ function fetchThis(setter, link) {
       */
       if(data.length === 2) {
         data = data[1];
-        console.log(data);
-      }
-      setter(data)})
+      }})
     .catch(function (error) {
       console.log(error); // Error!
     });
+  return data;
 }
 
 export default fetchThis;

@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import fetchThis from "../utils/fetcher";
 
 const List = (props) => {
-  const [newIndicators, setNewIndicators] = useState([]);
   const [indicators, setIndicators] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
+  /* Check fetchIndicators function,
+  add async await to the promise,
+  add page hook, 
+  interpolate string for link, 
+  move baseURL (http://api.worldbank.org/v2/) to fetchThis, 
+  eliminate ID from name (look at Cristian's WhatsApp message),
+  */
+
   useEffect(() => {
-    fetchThis(setNewIndicators, "http://api.worldbank.org/v2/indicator?format=json&page=1");
-    const chosenIndicators = newIndicators.map((el) => {
-      const newElement = { name: el.name, id: el.id, description: el.sourceNote }
-      return newElement;
-    })
-    setIndicators(chosenIndicators);
+    fetchMoreIndicators();
   }, [props.chosenCountry]);
 
   useEffect(() => {
@@ -22,26 +24,22 @@ const List = (props) => {
 
   useEffect(() => {
     if (!isFetching) return;
-    fetchMoreListItems();
-    console.log(indicators);
+    fetchMoreIndicators();
   }, [isFetching]);
 
   function handleScroll() {
     if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
     setIsFetching(true);
-    console.log(indicators);
   }
 
-  function fetchMoreListItems() {
+  function fetchMoreIndicators() {
     setTimeout(() => {
-      fetchThis(setNewIndicators, "http://api.worldbank.org/v2/indicator?format=json&page=2");
-      const chosenIndicators = newIndicators.map((el) => {
+      const data = fetchThis("http://api.worldbank.org/v2/indicator?format=json&page=1");
+      const newIndicators = data.map((el) => {
         const newElement = { name: el.name, id: el.id, description: el.sourceNote }
         return newElement;
       })
-      const newArray = indicators.concat(chosenIndicators);
-      setIndicators(newArray);
-      console.log(indicators);
+      setIndicators([...indicators, ...newIndicators]);
       setIsFetching(false);
     }, 2000);
   }

@@ -20,17 +20,15 @@ const App = () => {
     setOptions(newOptions);
   }, [allCountries]);
 
-  // Find how to show the whole object of the chosen country because we need ID!!!
-
   function handleChange(e) {
-    options.filter(obj => obj.value === e.value)
-    console.log(e.value);
+    const selectedValue = options.find(obj => obj.value === e.value)
+    setChosenCountry(selectedValue);
   }
   
   return (
     <div>
       <h1>World Bank App</h1>
-      <Select value={options.filter(obj => obj.value === chosenCountry)} options={options} onChange={handleChange} />
+      <Select value={chosenCountry} options={options} onChange={handleChange} />
       <List chosenCountry={chosenCountry} />
     </div>
   );
