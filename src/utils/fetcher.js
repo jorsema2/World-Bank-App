@@ -1,16 +1,9 @@
-function fetchThis(link) {
-  const data = fetch(link)
-    .then((data) => data.json())
-    .then((data) => {
-      /* We need to get rid off the first element of the Indicators array 
-      since the array of indicators is, indeed, only the second element of the array:
-      */
-      if(data.length === 2) {
-        data = data[1];
-      }})
-    .catch(function (error) {
-      console.log(error); // Error!
-    });
+async function fetchThis(link) {
+  const result = await fetch(link)
+  let data = await result.json();
+  if(data.length === 2) {
+    data = data[1];
+  }
   return data;
 }
 

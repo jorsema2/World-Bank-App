@@ -9,7 +9,11 @@ const App = () => {
   const [chosenCountry, setChosenCountry] = useState({});
 
   useEffect(() => {
-    fetchThis(setAllCountries, "https://restcountries.eu/rest/v2/all");
+    async function fetchData() {
+      const data = await fetchThis("https://restcountries.eu/rest/v2/all");
+      setAllCountries(data);
+    }
+    fetchData();
   }, []);
 
   useEffect(() => {

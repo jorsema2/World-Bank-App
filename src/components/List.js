@@ -4,18 +4,19 @@ import fetchThis from "../utils/fetcher";
 const List = (props) => {
   const [indicators, setIndicators] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
+  const [page, setPage] = useState(1);
 
-  /* Check fetchIndicators function,
-  add async await to the promise,
+  /* Check fetchIndicators function, DONE
+  add async await to the promise, DONE
   add page hook, 
   interpolate string for link, 
-  move baseURL (http://api.worldbank.org/v2/) to fetchThis, 
+  move baseURL (http://api.worldbank.org/v2/) to fetchThis, NO! IT BREAKS ANOTHER FETCH!
   eliminate ID from name (look at Cristian's WhatsApp message),
   */
 
   useEffect(() => {
     fetchMoreIndicators();
-  }, [props.chosenCountry]);
+  }, []);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -33,8 +34,8 @@ const List = (props) => {
   }
 
   function fetchMoreIndicators() {
-    setTimeout(() => {
-      const data = fetchThis("http://api.worldbank.org/v2/indicator?format=json&page=1");
+    setTimeout(async () => {
+      const data = await fetchThis("http://api.worldbank.org/v2/indicator?format=json&page=1");
       const newIndicators = data.map((el) => {
         const newElement = { name: el.name, id: el.id, description: el.sourceNote }
         return newElement;
@@ -43,11 +44,11 @@ const List = (props) => {
       setIsFetching(false);
     }, 2000);
   }
-  
+
   return (
     <>
       <ul className="list-group mb-2">
-        {indicators.map(indicator => <li className="list-group-item">{indicator.name}</li>)}
+        {indicators.map(indicator => <li key={indicator.id} className="list-group-item">{indicator.name}</li>)}
       </ul>
       {isFetching && 'Fetching more list items...'}
     </>
