@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import fetchThis from "../utils/fetcher";
+import {Link} from 'react-router-dom'
+import fetchThis from "../../utils/fetcher";
+import './style.css'
 
 const List = (props) => {
   const [isFetching, setIsFetching] = useState(false);
@@ -14,6 +16,7 @@ const List = (props) => {
 
   useEffect(() => {
     fetchMoreIndicators();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.chosenCountry]);
 
   useEffect(() => {
@@ -24,9 +27,11 @@ const List = (props) => {
   useEffect(() => {
     if (!isFetching) return;
     fetchMoreIndicators();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFetching]);
 
   function handleScroll() {
+    console.log(window.innerHeight, document.documentElement.scrollTop, document.documentElement.offsetHeight)
     if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
     setIsFetching(true);
   }
@@ -44,10 +49,17 @@ const List = (props) => {
     props.setPage(props.page + 1);
   }
 
+  console.log(props.chosenCountry)
+
   return (
     <>
-      <ul className="list-group mb-2">
-        {props.indicators.map(indicator => <li key={indicator.id} className="list-group-item">{indicator.name}</li>)}
+      <ul className="list-group mb-2 cool-list">
+        {props.indicators.map(indicator => <li>
+          <Link to={`/indicator/${props.chosenCountry.id}/${indicator.id}`} >
+          {indicator.name}
+          </Link>
+         
+        </li>)}
       </ul>
       {isFetching && 'Loading more indicators...'}
       {props.indicators.length === 0 && 'Loading indicators...'}
