@@ -6,7 +6,9 @@ import fetchThis from "./utils/fetcher";
 const App = () => {
   const [allCountries, setAllCountries] = useState([]);
   const [options, setOptions] = useState([]);
-  const [chosenCountry, setChosenCountry] = useState({});
+  const [chosenCountry, setChosenCountry] = useState();
+  const [indicators, setIndicators] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     async function fetchData() {
@@ -25,6 +27,9 @@ const App = () => {
   }, [allCountries]);
 
   function handleChange(e) {
+    setPage(1);
+    setIndicators([]);
+    console.log(indicators);
     const selectedValue = options.find(obj => obj.value === e.value)
     setChosenCountry(selectedValue);
   }
@@ -33,7 +38,7 @@ const App = () => {
     <div>
       <h1>World Bank App</h1>
       <Select value={chosenCountry} options={options} onChange={handleChange} />
-      <List chosenCountry={chosenCountry} />
+      {chosenCountry !== undefined && <List chosenCountry={chosenCountry} indicators={indicators} setIndicators={setIndicators} page={page} setPage={setPage} />}
     </div>
   );
 };
