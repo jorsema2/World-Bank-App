@@ -10,9 +10,6 @@ import Indicator from './pages/Indicator'
 
 const FourOhFour = () => <div>Not found</div>
 
-
-
-
 const App = () => {
  
   return (

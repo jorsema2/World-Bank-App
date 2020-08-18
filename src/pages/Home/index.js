@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import List from '../../components/List';
+import IndicatorsList from '../../components/IndicatorsList/index.js';
 import fetchThis from "../../utils/fetcher";
 
 const Home = () => {
@@ -29,7 +29,6 @@ const Home = () => {
   function handleChange(e) {
     setPage(1);
     setIndicators([]);
-    console.log(indicators);
     const selectedValue = options.find(obj => obj.value === e.value)
     setChosenCountry(selectedValue);
   }
@@ -38,7 +37,7 @@ const Home = () => {
     <div>
       <h1>World Bank App</h1>
       <Select value={chosenCountry} options={options} onChange={handleChange} />
-      {chosenCountry !== undefined && <List chosenCountry={chosenCountry} indicators={indicators} setIndicators={setIndicators} page={page} setPage={setPage} />}
+      {chosenCountry !== undefined && <IndicatorsList chosenCountry={chosenCountry} indicators={indicators} setIndicators={setIndicators} page={page} setPage={setPage} />}
     </div>
   );
 };

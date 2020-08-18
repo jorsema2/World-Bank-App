@@ -3,16 +3,8 @@ import {Link} from 'react-router-dom'
 import fetchThis from "../../utils/fetcher";
 import './style.css'
 
-const List = (props) => {
+const IndicatorsList = (props) => {
   const [isFetching, setIsFetching] = useState(false);
-
-  /* Check fetchIndicators function, DONE
-  add async await to the promise, DONE
-  add page hook, DONE
-  interpolate string for link, DONE
-  move baseURL (http://api.worldbank.org/v2/) to fetchThis, NO! IT BREAKS ANOTHER FETCH!
-  eliminate ID from name (look at Cristian's WhatsApp message), MAYBE IT'S A BAD IDEA
-  */
 
   useEffect(() => {
     fetchMoreIndicators();
@@ -31,7 +23,6 @@ const List = (props) => {
   }, [isFetching]);
 
   function handleScroll() {
-    console.log(window.innerHeight, document.documentElement.scrollTop, document.documentElement.offsetHeight)
     if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
     setIsFetching(true);
   }
@@ -49,12 +40,10 @@ const List = (props) => {
     props.setPage(props.page + 1);
   }
 
-  console.log(props.chosenCountry)
-
   return (
     <>
       <ul className="list-group mb-2 cool-list">
-        {props.indicators.map(indicator => <li>
+        {props.indicators.map(indicator => <li key={indicator.id}>
           <Link to={`/indicator/${props.chosenCountry.id}/${indicator.id}`} >
           {indicator.name}
           </Link>
@@ -67,4 +56,4 @@ const List = (props) => {
   );
 };
 
-export default List;
+export default IndicatorsList;
