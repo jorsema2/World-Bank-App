@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Line } from 'react-chartjs-2';
 import fetchThis from "../../utils/fetcher";
 
 const IndicatorPage = (props) => {
@@ -12,8 +13,8 @@ const IndicatorPage = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await fetchThis(`http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`);
-      setApi(data);
+      const fetchedData = await fetchThis(`http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`);
+      setApi(fetchedData);
     }
     fetchData();
   }, []);
@@ -25,14 +26,17 @@ const IndicatorPage = (props) => {
       indicatorId: "SP.POP.TOTL"
   */
 
+
   return(
     <div>
       {api !== undefined && 
       <div>
-        <p>ID of {api[2].country.id} and name of country {api[2].country.value}</p>
-        <p>Date: {api[2].date}</p>
-        <p>Name of indicator: {api[2].indicator.value}</p>
-        <p>Value: {api[2].value}</p>
+        <Line
+          data={api}
+          width={100}
+          height={50}
+          options={{ maintainAspectRatio: false }}
+        />
       </div>}
     </div>
   )
