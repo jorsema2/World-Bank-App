@@ -4,7 +4,6 @@ async function fetchThis(link) {
   const result = await fetch(link);
   let data = await result.json();
   if(data.length === 2) {
-    console.log(data);
     data = data[1];
   }
   if(link.includes('country')) {

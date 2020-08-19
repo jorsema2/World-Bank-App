@@ -15,7 +15,6 @@ function dataFiller(fetchedObject) {
       data: dataValues
     }
   }
-  console.log(data);
   return data;
 }
 
