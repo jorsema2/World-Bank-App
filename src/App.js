@@ -2,13 +2,11 @@ import React  from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import Home from './pages/Home'
 import Indicator from './pages/Indicator'
-
-const FourOhFour = () => <div>Not found</div>
+import FourOhFour from "./components/FourOhFour/index.js"
 
 const App = () => {
  
@@ -20,9 +18,7 @@ const App = () => {
           <Home />
         </Route>
         <Route path="/indicator/:country/:indicatorId" component={Indicator} />
-        <Route path='*' >
-          <FourOhFour />
-        </Route>
+        <Route path="*" component={FourOhFour} />
       </Switch>
     </div>
   </Router>

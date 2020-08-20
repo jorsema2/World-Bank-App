@@ -3,6 +3,9 @@ import dataFiller from './dataFiller';
 async function fetchThis(link) {
   const result = await fetch(link);
   let data = await result.json();
+  if(data[0].page === 0) {
+    return;
+  }
   const pagesNumber = data[0].pages;
   if(data.length === 2) {
     data = data[1];
