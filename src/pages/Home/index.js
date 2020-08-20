@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
+import styled from 'styled-components';
 import Select from "react-select";
 import IndicatorsList from '../../components/IndicatorsList/index.js';
 import fetchThis from "../../utils/fetcher";
+
+const Title = styled.h1`
+  color: lightblue;
+  font-familiy: Arial;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3 rem;
+`
 
 const Home = () => {
   const [allCountries, setAllCountries] = useState([]);
@@ -35,7 +44,7 @@ const Home = () => {
   
   return (
     <div>
-      <h1>My React App</h1>
+      <Title>My React App</Title>
       <Select value={chosenCountry} options={options} onChange={handleChange} />
       {chosenCountry !== undefined && <IndicatorsList chosenCountry={chosenCountry} indicators={indicators} setIndicators={setIndicators} page={page} setPage={setPage} />}
     </div>

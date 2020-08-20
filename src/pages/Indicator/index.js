@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
+import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
-import FourOhFour from "../../components/FourOhFour/index.js"
+import FourOhFour from "../../components/FourOhFour/index.js";
 import fetchThis from "../../utils/fetcher";
 
+const CountryName = styled.h2`
+  color: blue;
+  font-familiy: Arial;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3 rem;
+`
 const IndicatorPage = (props) => {
   const [countryName, setCountryName] = useState()
   const [data, setData] = useState();
@@ -13,7 +21,7 @@ const IndicatorPage = (props) => {
       if(fetchedData === undefined) {
         return;
       }
-      setCountryName(fetchedData[0])
+      setCountryName(fetchedData[0]);
       setData(fetchedData[1]);
     }
     fetchData();
@@ -23,7 +31,7 @@ const IndicatorPage = (props) => {
     <div>
       {data !== undefined && 
       <div>
-        <h3>{countryName}</h3>
+        <CountryName>{countryName}</CountryName>
         <Line
           data={data}
           width={100}
@@ -31,7 +39,7 @@ const IndicatorPage = (props) => {
           options={{ maintainAspectRatio: false }}
         />
       </div>}
-      {data === undefined && <FourOhFour />}
+      {data === undefined && <h2>Loading...</h2>}
     </div>
   )
 };
