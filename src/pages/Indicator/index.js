@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2';
 import fetchThis from "../../utils/fetcher";
 
 const IndicatorPage = (props) => {
+  const [countryName, setCountryName] = useState()
   const [data, setData] = useState();
 
   /*
@@ -11,34 +12,24 @@ const IndicatorPage = (props) => {
     2) Set up 404 page
   */
 
-  // Possible solution: complete data object. There may be missing properties.
-
   useEffect(() => {
     async function fetchData() {
       const fetchedData = await fetchThis(`http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`);
-      setData(fetchedData);
+      setCountryName(fetchedData[0])
+      setData(fetchedData[1]);
     }
     fetchData();
   }, []);
-
-  console.log(data)
-
-  /*
-  props.match.params
-    params:
-      country: "chn"
-      indicatorId: "SP.POP.TOTL"
-  */
-
 
   return(
     <div>
       {data !== undefined && 
       <div>
+        <h3>{countryName}</h3>
         <Line
           data={data}
           width={100}
-          height={50}
+          height={800}
           options={{ maintainAspectRatio: false }}
         />
       </div>}

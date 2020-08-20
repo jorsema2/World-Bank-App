@@ -35,7 +35,7 @@ const Home = () => {
   
   return (
     <div>
-      <h1>World Bank App</h1>
+      <h1>My React App</h1>
       <Select value={chosenCountry} options={options} onChange={handleChange} />
       {chosenCountry !== undefined && <IndicatorsList chosenCountry={chosenCountry} indicators={indicators} setIndicators={setIndicators} page={page} setPage={setPage} />}
     </div>

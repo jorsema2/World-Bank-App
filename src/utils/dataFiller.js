@@ -1,5 +1,5 @@
 function dataFiller(fetchedObject) {
-    console.log(fetchedObject);
+  const countryName = fetchedObject[0].country.value;
   const dataValues = fetchedObject.map((el) => {
     const value = el.value;
     return value;
@@ -8,21 +8,21 @@ function dataFiller(fetchedObject) {
     const label = el.date;
     return label;
   });
-  const data = {
-    labels: labels,
-    datasets: {
+  const chartData = {
+    labels: labels.reverse(),
+    datasets: [{
       label: fetchedObject[0].indicator.value,
-      data: dataValues
-    }
+      data: dataValues.reverse(),
+      backgroundColor: [
+        'rgba(0, 99, 132, 0.2)'
+      ],
+      borderColor: [
+      ],
+      borderWidth: 2
+    }]
   }
+  const data = [countryName, chartData];
   return data;
 }
 
 export default dataFiller;
-
-
- //  data: {
-//   labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-//   datasets: [{
-//       label: '# of Votes',
-//       data: [12, 19, 3, 5, 2, 3]
