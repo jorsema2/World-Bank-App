@@ -29,12 +29,19 @@ const IndicatorPage = (props) => {
         setLoading(false);
         return;
       }
+      
       setCountryNames(fetchedData[0]);
       setData(fetchedData[1]);
       setLoading(false);
     }
     fetchData();
   }, [props]);
+
+  useEffect(() => {
+    if(data === undefined && loading === false){
+      props.history.push('/not-found')
+    }
+  }, [data, loading, props])
 
   function handleChange(e) {
     const selectedValue = props.options.find(obj => obj.value === e.value)
@@ -60,7 +67,7 @@ const IndicatorPage = (props) => {
           </OptionsContext.Consumer>
         </div>
       )}
-      {data === undefined && loading === false && <FourOhFour />}
+      
     </div>
   );
 };
