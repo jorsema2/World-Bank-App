@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import fetchThis from "../../utils/fetcher";
-import './style.css'
 
 const StyledLi = styled.li`
   background-color: lightgrey;
@@ -55,15 +54,21 @@ const IndicatorsList = (props) => {
   return (
     <>
       <ul className="list-group mb-2 cool-list">
-        {props.indicators.map(indicator => <StyledLi key={indicator.id}>
-          <Link to={`/indicator/${props.chosenCountry.id}/${indicator.id}`} >
-          {indicator.name}
-          </Link>
-         
-        </StyledLi>)}
+        {props.indicators.map((indicator) => (
+          <StyledLi key={indicator.id}>
+            <Link
+              to={{
+                pathname: `/indicator/${props.chosenCountry.id}/${indicator.id}`,
+                state: { options: props.options },
+              }}
+            >
+              {indicator.name}
+            </Link>
+          </StyledLi>
+        ))}
       </ul>
-      {isFetching && 'Loading more indicators...'}
-      {props.indicators.length === 0 && 'Loading indicators...'}
+      {isFetching && "Loading more indicators..."}
+      {props.indicators.length === 0 && "Loading indicators..."}
     </>
   );
 };

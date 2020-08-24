@@ -11,8 +11,9 @@ const Title = styled.h1`
   justify-content: center;
   margin-bottom: 3 rem;
 `
+export const OptionsContext = React.createContext();
 
-const Home = () => {
+export const Home = () => {
   const [allCountries, setAllCountries] = useState([]);
   const [options, setOptions] = useState([]);
   const [chosenCountry, setChosenCountry] = useState();
@@ -46,9 +47,18 @@ const Home = () => {
     <div>
       <Title>My React App</Title>
       <Select value={chosenCountry} options={options} onChange={handleChange} />
-      {chosenCountry !== undefined && <IndicatorsList chosenCountry={chosenCountry} indicators={indicators} setIndicators={setIndicators} page={page} setPage={setPage} />}
+      {chosenCountry !== undefined && (
+        <OptionsContext.Provider value={options}>
+          <IndicatorsList
+            options={options}
+            chosenCountry={chosenCountry}
+            indicators={indicators}
+            setIndicators={setIndicators}
+            page={page}
+            setPage={setPage}
+          />
+        </OptionsContext.Provider>
+      )}
     </div>
   );
 };
-
-export default Home;

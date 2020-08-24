@@ -20,6 +20,7 @@ http://api.worldbank.org/v2/country/chn/indicator/SP.POP.TOTL?format=json
 
 Data of a specific indicator and several specific countries (where "all" was written, delete it and write all the ids of the countries you want separated by commas):
 http://api.worldbank.org/v2/country/chn;bra/indicator/DPANUSSPB?format=json
+More countries can be added by writing more semicolons(;) and the corresponding ISO 3 code for the chosen country. The link presents arrays of data for each country for the chosen indicator concatenated. Personally, I don't like how data is organized for this request.
 Note: if data for a country doesn't appear, it may be because there's no data to show for that country given your specifications.
 
 Data of all countries for a given indicator, but only for a specific date (add --> "&date=" + dateYouWant):

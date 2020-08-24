@@ -4,7 +4,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import Home from './pages/Home'
+import { Home } from './pages/Home/index.js'
 import Indicator from './pages/Indicator'
 import FourOhFour from "./components/FourOhFour/index.js"
 
