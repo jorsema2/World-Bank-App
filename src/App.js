@@ -8,12 +8,13 @@ import {ThemeProvider} from 'styled-components'
 export const SmartContext = React.createContext();
 
 const App = () => {
+  const [options, setOptions] = useState([])
   const [indicators, setIndicators] = useState([]);
 
   return (
     <Router>
       <ThemeProvider theme={{ mainColor: '#FF5A5F' }} >
-      <SmartContext.Provider value={{indicators, setIndicators}}>
+      <SmartContext.Provider value={{options, setOptions, indicators, setIndicators}}>
         <div>
           <Switch>
             <Route exact path="/">

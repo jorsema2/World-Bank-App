@@ -68,12 +68,7 @@ const IndicatorsList = (props) => {
       <ul className="list-group mb-2 cool-list">
         {indicators.map((indicator) => (
           <StyledLi key={indicator.id}>
-            <Link
-              to={{
-                pathname: `/indicator/${props.chosenCountry.id}/${indicator.id}`,
-                state: {options: props.options},
-              }}
-            >
+            <Link to={`/indicator/${props.chosenCountry.id}/${indicator.id}`}>
               {indicator.name}
             </Link>
           </StyledLi>

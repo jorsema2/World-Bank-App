@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 import Select from "react-select";
 import FourOhFour from "../../components/FourOhFour/index.js";
 import fetchThis from "../../utils/fetcher";
-import { OptionsContext } from "../Home/index.js"
+import { SmartContext } from "../../App";
 
 const CountryName = styled.h2`
   color: blue;
@@ -15,10 +15,12 @@ const CountryName = styled.h2`
 `
 
 const IndicatorPage = (props) => {
+  const {options} = useContext(SmartContext);
   const [loading, setLoading] = useState(true);
   const [countryNames, setCountryNames] = useState([]);
   const [data, setData] = useState();
   const [additionalCountries, setAdditionalCountries] = useState([]);
+  console.log(options);
 
   useEffect(() => {
     async function fetchData() {
@@ -44,7 +46,7 @@ const IndicatorPage = (props) => {
   }, [data, loading, props])
 
   function handleChange(e) {
-    const selectedValue = props.options.find(obj => obj.value === e.value)
+    const selectedValue = options.find(obj => obj.value === e.value)
     setAdditionalCountries([...additionalCountries, selectedValue]);
 
   }
@@ -62,12 +64,9 @@ const IndicatorPage = (props) => {
             options={{ maintainAspectRatio: false }}
           />
           <p>Add another country to the chart</p>
-          <OptionsContext.Consumer>
-            {(options) => <Select options={options}/>}
-          </OptionsContext.Consumer>
+          <Select options={options} />
         </div>
       )}
-      
     </div>
   );
 };

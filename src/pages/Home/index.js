@@ -12,12 +12,10 @@ const Title = styled.h1`
   justify-content: center;
   margin-bottom: 3 rem;
 `;
-export const OptionsContext = React.createContext();
 
 export const Home = () => {
-  const {setIndicators} = useContext(SmartContext); 
+  const {options, setOptions, setIndicators} = useContext(SmartContext);
   const [allCountries, setAllCountries] = useState([]);
-  const [options, setOptions] = useState([]);
   const [chosenCountry, setChosenCountry] = useState();
   const [page, setPage] = useState(1);
 
