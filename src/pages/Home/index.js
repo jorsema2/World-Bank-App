@@ -1,8 +1,7 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useState, useContext} from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import IndicatorsList from "../../components/IndicatorsList/index.js";
-import fetchThis from "../../utils/fetcher";
 import {SmartContext} from "../../App";
 
 const Title = styled.h1`
@@ -14,26 +13,9 @@ const Title = styled.h1`
 `;
 
 export const Home = () => {
-  const {options, setOptions, setIndicators} = useContext(SmartContext);
-  const [allCountries, setAllCountries] = useState([]);
+  const {options, setIndicators} = useContext(SmartContext);
   const [chosenCountry, setChosenCountry] = useState();
   const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    async function fetchData() {
-      const data = await fetchThis("https://restcountries.eu/rest/v2/all");
-      setAllCountries(data);
-    }
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const newOptions = allCountries.map((el) => {
-      const newElement = {value: el.name, id: el.alpha3Code, label: el.name};
-      return newElement;
-    });
-    setOptions(newOptions);
-  }, [allCountries]);
 
   function handleChange(e) {
     setPage(1);

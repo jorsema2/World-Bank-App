@@ -49,7 +49,9 @@ const IndicatorsList = (props) => {
       const data = await fetchThis(
         `http://api.worldbank.org/v2/indicator?format=json&page=+${props.page}`
       );
-      const newIndicators = data.map((el) => {
+      
+      // Only the second element of the array has indicators, i.e., what we want:
+      const newIndicators = data[1].map((el) => {
         const newElement = {
           name: el.name,
           id: el.id,
@@ -57,6 +59,7 @@ const IndicatorsList = (props) => {
         };
         return newElement;
       });
+      
       setIndicators([...indicators, ...newIndicators]);
       setIsFetching(false);
     }, 2000);
