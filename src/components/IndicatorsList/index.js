@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import fetchThis from "../../utils/fetcher";
@@ -16,13 +16,12 @@ const StyledLi = styled.li`
 `;
 
 const IndicatorsList = (props) => {
-  const [isFetching, setIsFetching] = useState(false);
-  const {indicators, setIndicators} = useContext(SmartContext);
+  const {dispatch} = useContext(SmartContext);
 
   useEffect(() => {
     fetchMoreIndicators();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.chosenCountry]);
+  }, [chosenCountries[0]]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -41,7 +40,7 @@ const IndicatorsList = (props) => {
       document.documentElement.offsetHeight
     )
       return;
-    setIsFetching(true);
+    dispatch({type: 'startIndicatorsFetch'})
   }
 
   function fetchMoreIndicators() {
@@ -60,10 +59,8 @@ const IndicatorsList = (props) => {
         return newElement;
       });
       
-      setIndicators([...indicators, ...newIndicators]);
-      setIsFetching(false);
+      dispatch({type: 'finishIndicatorsFetch', newIndicators})
     }, 2000);
-    props.setPage(props.page + 1);
   }
 
   return (

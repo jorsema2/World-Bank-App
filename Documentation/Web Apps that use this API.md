@@ -1,4 +1,4 @@
-Here there is a list of links where we can find projecta that use Indicators API from the World Bank
+Here there is a list of links where we can find projects that use Indicators API from the World Bank
 
 List of projects (only some of them can be visualized):
 https://datacatalog.worldbank.org/harvest-source/indicators-api

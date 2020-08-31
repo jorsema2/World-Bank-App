@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import IndicatorsList from "../../components/IndicatorsList/index.js";
@@ -13,29 +13,22 @@ const Title = styled.h1`
 `;
 
 export const Home = () => {
-  const {options, setIndicators} = useContext(SmartContext);
-  const [chosenCountry, setChosenCountry] = useState();
-  const [page, setPage] = useState(1);
+  const {options, dispatch} = useContext(SmartContext);
 
   function handleChange(e) {
-    setPage(1);
-    setIndicators([]);
-    const selectedValue = options.find((obj) => obj.value === e.value);
-    setChosenCountry(selectedValue);
+    const selectedCountry = options.find((obj) => obj.value === e.value);
+    dispatch({type: 'firstCountry', selectedCountry});
   }
 
   return (
     <div>
       <Title>My React App</Title>
-      <Select value={chosenCountry} options={options} onChange={handleChange} />
-      {chosenCountry && (
-        <IndicatorsList
-          options={options}
-          chosenCountry={chosenCountry}
-          page={page}
-          setPage={setPage}
-        />
-      )}
+      <Select
+        value={chosenCountries[0]}
+        options={options}
+        onChange={handleChange}
+      />
+      {chosenCountries && <IndicatorsList />}
     </div>
   );
 };
