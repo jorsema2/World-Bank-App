@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import Select from "react-select";
-import IndicatorsList from "../../components/IndicatorsList/index.js";
+import IndicatorsList from "../../components/IndicatorsList";
 import {SmartContext} from "../../App";
 
 const Title = styled.h1`

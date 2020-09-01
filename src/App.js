@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useReducer } from "react";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {ThemeProvider} from 'styled-components'
-import {Home} from "./pages/Home/index.js";
+import {Home} from "./pages/Home";
 import Indicator from "./pages/Indicator";
-import FourOhFour from "./components/FourOhFour/index.js";
+import FourOhFour from "./components/FourOhFour";
 import fetchThis from "./utils/fetcher";
 
 
