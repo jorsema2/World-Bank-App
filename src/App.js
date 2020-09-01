@@ -18,7 +18,7 @@ const initialState = {
   chartData: {}
 };
 
-export function appReducer(state, action, newData) {
+export function appReducer(state, action) {
   switch (action.type) {
     case 'firstCountry': {
       return {
