@@ -13,22 +13,22 @@ const Title = styled.h1`
 `;
 
 export const Home = () => {
-  const {options, dispatch} = useContext(SmartContext);
+  const {options, state, dispatch} = useContext(SmartContext);
 
   function handleChange(e) {
     const selectedCountry = options.find((obj) => obj.value === e.value);
-    dispatch({type: 'firstCountry', selectedCountry});
+    dispatch({type: 'firstCountry', payload: selectedCountry});
   }
 
   return (
     <div>
       <Title>My React App</Title>
       <Select
-        value={chosenCountries[0]}
+        value={state.chosenCountries}
         options={options}
         onChange={handleChange}
       />
-      {chosenCountries && <IndicatorsList />}
+      {state.chosenCountries.length === 1 && <IndicatorsList />}
     </div>
   );
 };

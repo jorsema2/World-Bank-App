@@ -16,12 +16,12 @@ const StyledLi = styled.li`
 `;
 
 const IndicatorsList = (props) => {
-  const {dispatch} = useContext(SmartContext);
+  const {state, dispatch} = useContext(SmartContext);
 
   useEffect(() => {
     fetchMoreIndicators();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chosenCountries[0]]);
+  }, [state.chosenCountries]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -29,26 +29,25 @@ const IndicatorsList = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!isFetching) return;
+    if (!state.isFetching) return;
     fetchMoreIndicators();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFetching]);
+  }, [state.isFetching]);
 
   function handleScroll() {
     if (
       window.innerHeight + document.documentElement.scrollTop !==
       document.documentElement.offsetHeight
     )
-      return;
     dispatch({type: 'startIndicatorsFetch'})
+    return;    
   }
 
   function fetchMoreIndicators() {
     setTimeout(async () => {
       const data = await fetchThis(
-        `http://api.worldbank.org/v2/indicator?format=json&page=+${props.page}`
+        `http://api.worldbank.org/v2/indicator?format=json&page=+${state.page}`
       );
-      
       // Only the second element of the array has indicators, i.e., what we want:
       const newIndicators = data[1].map((el) => {
         const newElement = {
@@ -59,23 +58,23 @@ const IndicatorsList = (props) => {
         return newElement;
       });
       
-      dispatch({type: 'finishIndicatorsFetch', newIndicators})
+      dispatch({type: 'finishIndicatorsFetch', payload: newIndicators})
     }, 2000);
   }
 
   return (
     <>
       <ul className="list-group mb-2 cool-list">
-        {indicators.map((indicator) => (
+        {state.indicators.map((indicator) => (
           <StyledLi key={indicator.id}>
-            <Link to={`/indicator/${props.chosenCountry.id}/${indicator.id}`}>
+            <Link to={`/indicator/${state.chosenCountries[0].id}/${indicator.id}`}>
               {indicator.name}
             </Link>
           </StyledLi>
         ))}
       </ul>
-      {isFetching && "Loading more indicators..."}
-      {indicators.length === 0 && "Loading indicators..."}
+      {state.isFetching && "Loading more indicators..."}
+      {state.indicators.length === 0 && !state.isFetching && "Loading indicators..."}
     </>
   );
 };

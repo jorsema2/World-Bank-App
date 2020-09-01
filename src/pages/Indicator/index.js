@@ -16,7 +16,7 @@ const IndicatorName = styled.h2`
 `;
 
 const IndicatorPage = (props) => {
-  const {options, dispatch} = useContext(SmartContext);
+  const {options, state, dispatch} = useContext(SmartContext);
   const {isDisabled, setIsDisabled} = useState(false)
 
   const search = queryString.parse(props.location.search);
@@ -26,25 +26,25 @@ const IndicatorPage = (props) => {
   let indicatorName;
   let lineColors = ['rgba(255, 0, 0, 0.2)', 'rgba(0, 255, 0, 0.2)', 'rgba(0, 0, 255, 0.2)', 'rgba(255, 255, 0, 0.2)'];
   let labels;
-  let datasets;
+  let datasets = [];
 
-  function addData (fetchedData) {
+  async function addData (fetchedData, link) {
     if (!fetchedData || fetchedData[0].page === 0) {
-      setLoading(false);
+      dispatch({type: 'finishLoading'});
       return;
     }
+
+    // Number of JSON pages this data has:
+    const pagesNumber = fetchedData[0].pages;
+
+    // From now on, we only want the second element of the array, which is the one that has values per year:
+    fetchedData = fetchedData[1];
 
     // Store the name of the indicator:
     indicatorName = fetchedData[0].indicator.value;
 
     // Name of the new country:
-    const countryName = fetchedObject[0].country.value;
-
-    // Number of JSON pages this data has:
-    const pagesNumber = fetchedData[0].pages;
-
-    // We only want the second element of the array, which is the one that has values per year:
-    fetchedData = fetchedData[1];
+    const countryName = fetchedData[0].country.value;
 
     // Sometimes, there's more than one page of values fot the given country and indicator:
     if (pagesNumber > 1) {
@@ -76,14 +76,15 @@ const IndicatorPage = (props) => {
       datasets: datasets
     }
 
-    dispatch({type: 'uploadData', newChartData});
+    dispatch({type: 'uploadData', payload: newChartData});
 
-    if(chosenCountries.length >= 4) {
-      isDisabled = true;
+    if(state.chosenCountries.length >= 4) {
+      setIsDisabled(true);
     }
   }
 
   useEffect(() => {
+    console.log('0')
     try {
       const fetchData = async () => {
         const link = `http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`;
@@ -97,9 +98,10 @@ const IndicatorPage = (props) => {
       console.log("here");
       dispatch({type: 'finishLoading'});
     }
-  }, [props]);
+  }, [props.match.params]);
 
   useEffect(() => {
+    console.log('1')
     if(search.compareTo && search.compareTo !== props.match.params.country) {
       const fetchData = async () => {
         const link = `http://api.worldbank.org/v2/country/${search.compareTo}/indicator/${props.match.params.indicatorId}?format=json`;
@@ -109,15 +111,16 @@ const IndicatorPage = (props) => {
       fetchData();
     }
   
-  }, [props.match.params.country, props.match.params.indicatorId, search]);
+  }, [props.match.params.country, props.match.params.indicatorId, search.compareTo]);
 
-  console.log(search)
+  console.log(props)
 
   useEffect(() => {
-    if(!data && !loading){
+    console.log('2')
+    if(!state.chartData && !state.isLoading){
       props.history.push('/not-found')
     }
-  }, [data, loading, props])
+  }, [props])
 
   function handleChange(e) {
     const query = { compareTo: e.id };
@@ -128,20 +131,20 @@ const IndicatorPage = (props) => {
       }?${queryString.stringify(query)}`
     );
     const selectedCountry = options.find(obj => obj.value === e.value);
-    dispatch({type: 'addCountry', selectedCountry})
+    dispatch({type: 'addCountry', payload: selectedCountry})
   }
 
 
   return (
     <div>
-      {loading && <h1>Loading...</h1>}
-      {data && !loading && (
+      {state.isLoading && <h1>Loading...</h1>}
+      {state.chartData && !state.isLoading && (
         <div>
             <div>
             <IndicatorName>{indicatorName}</IndicatorName>
             <div style={{width: 1200, height: 800}} >
             <Line
-              data={data}
+              data={state.chartData}
               width={100}
               height={100}
               options={{maintainAspectRatio: false}}
@@ -149,7 +152,7 @@ const IndicatorPage = (props) => {
             </div>     
           </div>
           <div>
-            {chosenCountries.map((chosenCountry) => (
+            {state.chosenCountries.map((chosenCountry) => (
               <div>
                 <button>X</button>
                 <div>

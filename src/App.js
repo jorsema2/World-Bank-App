@@ -9,12 +9,21 @@ import fetchThis from "./utils/fetcher";
 
 export const SmartContext = React.createContext();
 
-export function appReducer(state, action) {
+const initialState = {
+  chosenCountries: [],
+  indicators: [],
+  isFetching: false,
+  isLoading: false,
+  page: 1,
+  chartData: {}
+};
+
+export function appReducer(state, action, newData) {
   switch (action.type) {
     case 'firstCountry': {
       return {
         ...state,
-        chosenCountries: [SelectedCountry]
+        chosenCountries: [action.payload]
       };
     }
     case 'restartIndicatorsList': {
@@ -30,12 +39,12 @@ export function appReducer(state, action) {
         isFetching: true
       };
     }
-    case 'finishIndicatorFetch': {
+    case 'finishIndicatorsFetch': {
       return {
         ...state,
-        indicators: [...indicators, ...newIndicators],
+        indicators: [...state.indicators, ...action.payload],
         isFetching: false,
-        page: page + 1
+        page: state.page + 1
       };
     }
     case 'startLoading': {
@@ -53,34 +62,28 @@ export function appReducer(state, action) {
     case 'uploadData': {
       return {
         ...state,
-        chartData: newChartData
+        chartData: action.payload
       };
     }
     case 'addCountry': {
       return {
         ...state,
-        chosenCountries: chosenCountries.push(SelectedCountry)
+        chosenCountries: [...state.chosenCountries, ...action.payload]
       };
     }
     // quitCountry case is under construction, yet:
-    case 'quitCountry': {
-      return {
-        ...state,
-        chosenCountries: chosenCountries.filter(el => el.value !== e.value)
-      };
-    }
+    // case 'quitCountry': {
+    //   return {
+    //     ...state,
+    //     chosenCountries: chosenCountries.filter(el => el.value !== e.value)
+    //   };
+    // }
     default:
       return state;
   }
 }
 
-const initialState = {
-  chosenCountries: [],
-  indicators: [],
-  isFetching: false,
-  isLoading: false,
-  chartData:{}
-};
+
 
 const App = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
@@ -107,7 +110,7 @@ const App = () => {
   return (
     <Router>
       <ThemeProvider theme={{ mainColor: '#FF5A5F' }} >
-      <SmartContext.Provider value={{options, setOptions, dispatch}}>
+      <SmartContext.Provider value={{options, setOptions, state, dispatch}}>
         <div>
           <Switch>
             <Route exact path="/">
