@@ -68,7 +68,7 @@ export function appReducer(state, action) {
     case 'addCountry': {
       return {
         ...state,
-        chosenCountries: [...state.chosenCountries, ...action.payload]
+        chosenCountries: action.payload
       };
     }
     // quitCountry case is under construction, yet:

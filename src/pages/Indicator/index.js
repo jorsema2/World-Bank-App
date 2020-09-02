@@ -17,16 +17,16 @@ const IndicatorName = styled.h2`
 
 const IndicatorPage = (props) => {
   const {options, state, dispatch} = useContext(SmartContext);
-  const {isDisabled, setIsDisabled} = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [indicatorName, setIndicatorName] = useState();
+  const [datasets, setDatasets] = useState([]);
 
   const search = queryString.parse(props.location.search);
 
   // Variables that will store info that will be shown in the chart:
 
-  let indicatorName;
   let lineColors = ['rgba(255, 0, 0, 0.2)', 'rgba(0, 255, 0, 0.2)', 'rgba(0, 0, 255, 0.2)', 'rgba(255, 255, 0, 0.2)'];
   let labels;
-  let datasets = [];
 
   async function addData (fetchedData, link) {
     if (!fetchedData || fetchedData[0].page === 0) {
@@ -41,7 +41,7 @@ const IndicatorPage = (props) => {
     fetchedData = fetchedData[1];
 
     // Store the name of the indicator:
-    indicatorName = fetchedData[0].indicator.value;
+    setIndicatorName(fetchedData[0].indicator.value);
 
     // Name of the new country:
     const countryName = fetchedData[0].country.value;
@@ -68,7 +68,12 @@ const IndicatorPage = (props) => {
     const processedData = dataFiller(countryName, dataValues, newColor);
 
     // Add the object of data of the newCountry to the array of datasets:
-    datasets.push(processedData);
+    const oldDatasets = datasets;
+
+    const newDatasets = oldDatasets.push(processedData);
+
+
+    setDatasets(newDatasets);
 
     // Build the object that's going to be used as data in the chart:
     const newChartData = {
@@ -78,13 +83,16 @@ const IndicatorPage = (props) => {
 
     dispatch({type: 'uploadData', payload: newChartData});
 
+    console.log(state.chartData);
+
     if(state.chosenCountries.length >= 4) {
       setIsDisabled(true);
     }
   }
 
+  console.log(datasets);
+
   useEffect(() => {
-    console.log('0')
     try {
       const fetchData = async () => {
         const link = `http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`;
@@ -98,10 +106,9 @@ const IndicatorPage = (props) => {
       console.log("here");
       dispatch({type: 'finishLoading'});
     }
-  }, [props.match.params]);
+  }, [props.match.params.country, props.match.params.indicatorId]);
 
   useEffect(() => {
-    console.log('1')
     if(search.compareTo && search.compareTo !== props.match.params.country) {
       const fetchData = async () => {
         const link = `http://api.worldbank.org/v2/country/${search.compareTo}/indicator/${props.match.params.indicatorId}?format=json`;
@@ -113,14 +120,11 @@ const IndicatorPage = (props) => {
   
   }, [props.match.params.country, props.match.params.indicatorId, search.compareTo]);
 
-  console.log(props)
-
   useEffect(() => {
-    console.log('2')
     if(!state.chartData && !state.isLoading){
       props.history.push('/not-found')
     }
-  }, [props])
+  }, [state.chartData, state.isLoading])
 
   function handleChange(e) {
     const query = { compareTo: e.id };
@@ -130,10 +134,14 @@ const IndicatorPage = (props) => {
         props.match.params.indicatorId
       }?${queryString.stringify(query)}`
     );
-    const selectedCountry = options.find(obj => obj.value === e.value);
-    dispatch({type: 'addCountry', payload: selectedCountry})
-  }
 
+    // Take the chosenCountry from the Select component and add it to state.chosenCountries:
+    const selectedCountry = options.find(obj => obj.value === e.value);
+    let newArray = state.chosenCountries;
+    newArray.push(selectedCountry);
+    dispatch({type: 'addCountry', payload: newArray})
+    // props.match.params.country = selectedCountry.id;
+  }
 
   return (
     <div>
