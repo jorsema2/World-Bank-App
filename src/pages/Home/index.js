@@ -22,7 +22,7 @@ export const Home = () => {
 
   return (
     <div>
-      <Title>My React App</Title>
+      <Title>Countries Charts</Title>
       <Select
         value={state.chosenCountries}
         options={options}

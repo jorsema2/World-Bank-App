@@ -4,7 +4,7 @@ import {ThemeProvider} from 'styled-components'
 import {Home} from "./pages/Home";
 import Indicator from "./pages/Indicator";
 import FourOhFour from "./components/FourOhFour";
-import fetchThis from "./utils/fetcher";
+import fetchOptions from "./utils/fetchCountries";
 
 
 export const SmartContext = React.createContext();
@@ -84,27 +84,17 @@ export function appReducer(state, action) {
 }
 
 
-
 const App = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  const { chosenCountries, indicators, isFetching, isLoading, chartData } = state;
-
-  const [options, setOptions] = useState([])
-  
+  const [options, setOptions] = useState([])  
 
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await fetchThis("https://restcountries.eu/rest/v2/all");
-      // Create a list of all countries that will be shown:
-      const newOptions = data.map((el) => {
-        const newElement = {value: el.name, id: el.alpha3Code, label: el.name};
-        return newElement;
-      });
+    async function addOptions() {
+      const newOptions = await fetchOptions();
       setOptions(newOptions);
-
     }
-    fetchData();
+    addOptions();
   }, []);
 
   return (

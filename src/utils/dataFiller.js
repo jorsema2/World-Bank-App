@@ -4,11 +4,12 @@ function dataFiller(newCountryName, newDataValues, newColor) {
       label: newCountryName,
       data: newDataValues,
       backgroundColor:[
-        newColor
+        "rgba(255, 255, 255, 0)"
       ],
       borderColor: [
+        newColor
       ],
-      borderWidth: 2
+      borderWidth: 4
     }
     return datasets;
   }catch(err){
