@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from "react";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {ThemeProvider} from 'styled-components'
 import {Home} from "./pages/Home";
-import Indicator from "./pages/Indicator";
+import ChartPage from "./pages/Chart";
 import FourOhFour from "./components/FourOhFour";
 import fetchOptions from "./utils/fetchCountries";
 
@@ -10,7 +10,7 @@ import fetchOptions from "./utils/fetchCountries";
 export const SmartContext = React.createContext();
 
 const initialState = {
-  chosenCountries: [],
+  chosenCountry: null,
   indicators: [],
   isFetching: false,
   isLoading: false,
@@ -20,10 +20,10 @@ const initialState = {
 
 export function appReducer(state, action) {
   switch (action.type) {
-    case 'firstCountry': {
+    case 'selectedCountry': {
       return {
         ...state,
-        chosenCountries: [action.payload]
+        chosenCountry: action.payload
       };
     }
     case 'restartIndicatorsList': {
@@ -65,19 +65,19 @@ export function appReducer(state, action) {
         chartData: action.payload
       };
     }
-    case 'addCountry': {
-      return {
-        ...state,
-        chosenCountries: action.payload
-      };
-    }
-    // quitCountry case is under construction, yet:
-    // case 'quitCountry': {
+    // case 'addCountry': {
     //   return {
     //     ...state,
-    //     chosenCountries: chosenCountries.filter(el => el.value !== e.value)
+    //     chosenCountries: action.payload
     //   };
     // }
+    // // quitCountry case is under construction, yet:
+    // // case 'quitCountry': {
+    // //   return {
+    // //     ...state,
+    // //     chosenCountries: chosenCountries.filter(el => el.value !== e.value)
+    // //   };
+    // // }
     default:
       return state;
   }
@@ -86,7 +86,7 @@ export function appReducer(state, action) {
 
 const App = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  const [options, setOptions] = useState([])  
+  const [options, setOptions] = useState([]); 
 
 
   useEffect(() => {
@@ -108,7 +108,7 @@ const App = () => {
             </Route>
             <Route
               path="/indicator/:country/:indicatorId"
-              component={Indicator}
+              component={ChartPage}
             />
             <Route path="*" component={FourOhFour} />
           </Switch>

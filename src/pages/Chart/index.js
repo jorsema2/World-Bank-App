@@ -16,7 +16,7 @@ const IndicatorName = styled.h2`
   margin-bottom: 3 rem;
 `;
 
-const IndicatorPage = (props) => {
+const ChartPage = (props) => {
   const { options, setOptions, state, dispatch } = useContext(SmartContext);
   const [isDisabled, setIsDisabled] = useState(false);
   const [indicatorName, setIndicatorName] = useState();
@@ -98,7 +98,7 @@ const IndicatorPage = (props) => {
 
     dispatch({ type: "uploadData", payload: newChartData });
 
-    if (state.chosenCountries.length >= 4) {
+    if (datasets.length >= 4) {
       setIsDisabled(true);
     }
   }
@@ -128,16 +128,6 @@ const IndicatorPage = (props) => {
       };
       fetchData();
 
-      // Take the chosenCountry from the query string and add it to state.chosenCountries:
-      const selectedCountry = options.find(
-        (obj) => obj.id === search.compareTo
-      );
-
-      if (!state.chosenCountries.includes(selectedCountry)) {
-        let newArray = state.chosenCountries;
-        newArray.push(selectedCountry);
-        dispatch({ type: "addCountry", payload: newArray });
-      }
     }
   }, [
     props.match.params.country,
@@ -152,20 +142,17 @@ const IndicatorPage = (props) => {
   }, [state.chartData, state.isLoading]);
 
   function handleChange(e) {
-    const query = { compareTo: e.id };
+    const query = { compareTo: [e.id, "CHN"]};
 
     props.history.push(
       `/indicator/${props.match.params.country}/${
         props.match.params.indicatorId
-      }?${queryString.stringify(query)}`
+      }?${queryString.stringify(query, {arrayFormat: 'comma'})}`
     );
-
-    // Take the chosenCountry from the Select component and add it to state.chosenCountries:
-    const selectedCountry = options.find((obj) => obj.value === e.value);
-    let newArray = state.chosenCountries;
-    newArray.push(selectedCountry);
-    dispatch({ type: "addCountry", payload: newArray });
   }
+
+  console.log("Props: ");
+  console.log(props);
 
   return (
     <div>
@@ -174,7 +161,7 @@ const IndicatorPage = (props) => {
         <div>
           <div>
             <IndicatorName>{indicatorName}</IndicatorName>
-            <div style={{ width: 1200, height: 800 }}>
+            <div style={{ width: 1200, height: 400 }}>
               <Line
                 data={state.chartData}
                 width={100}
@@ -182,14 +169,6 @@ const IndicatorPage = (props) => {
                 options={{ maintainAspectRatio: false }}
               />
             </div>
-          </div>
-          <div>
-            {state.chosenCountries.map((chosenCountry) => (
-              <div>
-                <button>X</button>
-                <div>{chosenCountry.value}</div>
-              </div>
-            ))}
           </div>
         </div>
       )}
@@ -205,4 +184,4 @@ const IndicatorPage = (props) => {
   );
 };
 
-export default IndicatorPage;
+export default ChartPage;

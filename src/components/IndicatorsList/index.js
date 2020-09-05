@@ -21,7 +21,7 @@ const IndicatorsList = (props) => {
   useEffect(() => {
     fetchMoreIndicators();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.chosenCountries]);
+  }, [state.chosenCountry]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -67,7 +67,7 @@ const IndicatorsList = (props) => {
       <ul className="list-group mb-2 cool-list">
         {state.indicators.map((indicator) => (
           <StyledLi key={indicator.id}>
-            <Link to={`/indicator/${state.chosenCountries[0].id}/${indicator.id}`}>
+            <Link to={`/indicator/${state.chosenCountry.id}/${indicator.id}`}>
               {indicator.name}
             </Link>
           </StyledLi>

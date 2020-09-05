@@ -17,18 +17,18 @@ export const Home = () => {
 
   function handleChange(e) {
     const selectedCountry = options.find((obj) => obj.value === e.value);
-    dispatch({type: 'firstCountry', payload: selectedCountry});
+    dispatch({type: 'selectedCountry', payload: selectedCountry});
   }
 
   return (
     <div>
       <Title>Countries Charts</Title>
       <Select
-        value={state.chosenCountries}
+        value={state.chosenCountry}
         options={options}
         onChange={handleChange}
       />
-      {state.chosenCountries.length === 1 && <IndicatorsList />}
+      {state.chosenCountry && <IndicatorsList />}
     </div>
   );
 };
