@@ -65,19 +65,6 @@ export function appReducer(state, action) {
         chartData: action.payload
       };
     }
-    // case 'addCountry': {
-    //   return {
-    //     ...state,
-    //     chosenCountries: action.payload
-    //   };
-    // }
-    // // quitCountry case is under construction, yet:
-    // // case 'quitCountry': {
-    // //   return {
-    // //     ...state,
-    // //     chosenCountries: chosenCountries.filter(el => el.value !== e.value)
-    // //   };
-    // // }
     default:
       return state;
   }

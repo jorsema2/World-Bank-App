@@ -5,7 +5,7 @@ import queryString from "query-string";
 import Select from "react-select";
 import fetchThis from "../../utils/fetcher";
 import dataFiller from "../../utils/dataFiller";
-import fetchOptions from "../../utils/fetchCountries";
+import modifyQueryString from "../../utils/compareToQueryString";
 import {SmartContext} from "../../App";
 
 const IndicatorName = styled.h2`
@@ -18,6 +18,7 @@ const IndicatorName = styled.h2`
 
 const ChartPage = (props) => {
   const { options, setOptions, state, dispatch } = useContext(SmartContext);
+  const [chosenIDs, setChosenIDs] = useState([])
   const [isDisabled, setIsDisabled] = useState(false);
   const [indicatorName, setIndicatorName] = useState();
   const [datasets, setDatasets] = useState([]);
@@ -25,22 +26,10 @@ const ChartPage = (props) => {
     "rgba(255, 0, 0, 0.8)",
     "rgba(0, 255, 0, 0.8)",
     "rgba(0, 0, 255, 0.8)",
-    "rgba(255, 255, 0, 0.8)",
+    "rgba(128, 0, 128, 0.8)",
   ]);
 
   const search = queryString.parse(props.location.search);
-
-  /*
-  We need to fetch options also in this file in case the user comes here using a link 
-  instead of navigating the web app
-  */
-  useEffect(() => {
-    async function addOptions() {
-      const newOptions = await fetchOptions();
-      setOptions(newOptions);
-    }
-    addOptions();
-  }, []);
 
   // Variable that will store years that will be shown in the chart as labels:
   let years;
@@ -120,19 +109,39 @@ const ChartPage = (props) => {
   }, [props.match.params.country, props.match.params.indicatorId]);
 
   useEffect(() => {
-    if (search.compareTo && search.compareTo !== props.match.params.country) {
-      const fetchData = async () => {
-        const link = `http://api.worldbank.org/v2/country/${search.compareTo}/indicator/${props.match.params.indicatorId}?format=json`;
-        let fetchedData = await fetchThis(link);
-        addData(fetchedData, link);
-      };
-      fetchData();
+    const fetchData = async (id) => {
 
+      const link = `http://api.worldbank.org/v2/country/${id}/indicator/${props.match.params.indicatorId}?format=json`;
+      let fetchedData = await fetchThis(link);
+      addData(fetchedData, link);
+    };
+
+    if (search.compareTo) {
+      // Convert IDs from query string to an array of IDs:
+      let arrayIDs = search.compareTo.split(",");
+
+      // Remove duplicates:
+      arrayIDs = Array.from(new Set(arrayIDs));
+
+      setChosenIDs(arrayIDs);
+
+      // Since we only want to allow 3 countries for comparison:
+      const threeIDs = arrayIDs.slice(0, 3);
+
+      threeIDs.forEach((el) => {
+        if (el !== props.match.params.country) {
+          fetchData(el);
+        }
+      });
+
+      modifyQueryString(arrayIDs, props);
+      disableChosen();
     }
+    
   }, [
     props.match.params.country,
     props.match.params.indicatorId,
-    search.compareTo,
+    search.compareTo
   ]);
 
   useEffect(() => {
@@ -141,18 +150,49 @@ const ChartPage = (props) => {
     }
   }, [state.chartData, state.isLoading]);
 
-  function handleChange(e) {
-    const query = { compareTo: [e.id, "CHN"]};
 
-    props.history.push(
-      `/indicator/${props.match.params.country}/${
-        props.match.params.indicatorId
-      }?${queryString.stringify(query, {arrayFormat: 'comma'})}`
-    );
+
+  function handleChange(e) {
+
+    /*
+    Since colors of the three compareTo countries are reassigned in every 
+    render, we need to need to recover all of them in every render to be
+    able to assign them again
+    */
+
+    setLineColors([
+      "rgba(255, 0, 0, 0.8)",
+      "rgba(0, 255, 0, 0.8)",
+      "rgba(0, 0, 255, 0.8)",
+    ]);
+
+    /*
+    To avoid duplicates because of the forEach method, 
+    we need to get rid of all the datasets except for the first:
+    */
+
+    const newDatasets = [datasets[0]];
+    setDatasets(newDatasets);
+
+    // Store all the IDs:
+    const newArray = chosenIDs;
+    newArray.push(e.id);
+    setChosenIDs(newArray);
+
+    modifyQueryString(chosenIDs, props);
   }
 
-  console.log("Props: ");
-  console.log(props);
+  function disableChosen() {
+    let newOptions = options;
+    const optionsToDisable = [...[props.match.params.country], ...chosenIDs];
+    optionsToDisable.forEach(function(el) {
+      const index = options.findIndex(x => x.id === el);
+      if(index !== -1) {
+        newOptions[index].isDisabled = true;
+      }
+    })
+    setOptions(newOptions);
+  }
 
   return (
     <div>
@@ -177,6 +217,7 @@ const ChartPage = (props) => {
         <Select
           isDisabled={isDisabled}
           onChange={handleChange}
+          onFocus={disableChosen}
           options={options}
         />
       </div>
