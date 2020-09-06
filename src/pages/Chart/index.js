@@ -3,6 +3,10 @@ import styled from "styled-components";
 import {Line} from "react-chartjs-2";
 import queryString from "query-string";
 import Select from "react-select";
+import Header from "../../components/Header";
+import FourOhFour from "../../components/FourOhFour";
+import groupedIndicators from "../../utils/groupedIndicators";
+import IndicatorsList from "../../components/IndicatorsList";
 import fetchThis from "../../utils/fetcher";
 import dataFiller from "../../utils/dataFiller";
 import modifyQueryString from "../../utils/compareToQueryString";
@@ -18,7 +22,8 @@ const IndicatorName = styled.h2`
 
 const ChartPage = (props) => {
   const { options, setOptions, state, dispatch } = useContext(SmartContext);
-  const [chosenIDs, setChosenIDs] = useState([])
+  const [invalidRequest, setInvalidRequest] = useState(false);
+  const [chosenIDs, setChosenIDs] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
   const [indicatorName, setIndicatorName] = useState();
   const [datasets, setDatasets] = useState([]);
@@ -35,8 +40,18 @@ const ChartPage = (props) => {
   let years;
 
   async function addData(fetchedData, link) {
-    if (!fetchedData || fetchedData[0].page === 0) {
+    /*
+    If there's no data, 0 pages of data or the fetched data has the property called "message",
+    it's an invalid request:
+    */
+
+    if (
+      !fetchedData ||
+      fetchedData[0].page === 0 ||
+      "message" in fetchedData[0]
+    ) {
       dispatch({ type: "finishLoading" });
+      setInvalidRequest(true);
       return;
     }
 
@@ -110,7 +125,6 @@ const ChartPage = (props) => {
 
   useEffect(() => {
     const fetchData = async (id) => {
-
       const link = `http://api.worldbank.org/v2/country/${id}/indicator/${props.match.params.indicatorId}?format=json`;
       let fetchedData = await fetchThis(link);
       addData(fetchedData, link);
@@ -137,11 +151,10 @@ const ChartPage = (props) => {
       modifyQueryString(arrayIDs, props);
       disableChosen();
     }
-    
   }, [
     props.match.params.country,
     props.match.params.indicatorId,
-    search.compareTo
+    search.compareTo,
   ]);
 
   useEffect(() => {
@@ -150,10 +163,7 @@ const ChartPage = (props) => {
     }
   }, [state.chartData, state.isLoading]);
 
-
-
   function handleChange(e) {
-
     /*
     Since colors of the three compareTo countries are reassigned in every 
     render, we need to need to recover all of them in every render to be
@@ -182,23 +192,27 @@ const ChartPage = (props) => {
     modifyQueryString(chosenIDs, props);
   }
 
+  // Disable chosen countries in Select dropdown
   function disableChosen() {
     let newOptions = options;
     const optionsToDisable = [...[props.match.params.country], ...chosenIDs];
-    optionsToDisable.forEach(function(el) {
-      const index = options.findIndex(x => x.id === el);
-      if(index !== -1) {
+    optionsToDisable.forEach(function (el) {
+      const index = options.findIndex((x) => x.id === el);
+      if (index !== -1) {
         newOptions[index].isDisabled = true;
       }
-    })
+    });
     setOptions(newOptions);
   }
+  console.log(state);
 
   return (
     <div>
       {state.isLoading && <h1>Loading...</h1>}
-      {state.chartData && !state.isLoading && (
+      {invalidRequest && <FourOhFour />}
+      {!invalidRequest && state.chartData && !state.isLoading && (
         <div>
+          <Header />
           <div>
             <IndicatorName>{indicatorName}</IndicatorName>
             <div style={{ width: 1200, height: 400 }}>
@@ -210,17 +224,25 @@ const ChartPage = (props) => {
               />
             </div>
           </div>
+          <div>
+            <p>Add another country to the chart</p>
+            <Select
+              isDisabled={isDisabled}
+              onChange={handleChange}
+              onFocus={disableChosen}
+              options={options}
+            />
+          </div>
+          <div>
+            <h3>Indicators by topic</h3>
+            <Select onChange={handleChange} options={groupedIndicators} />
+          </div>
+          {/* <div>
+            <h3>All indicators</h3>
+            <IndicatorsList />
+          </div> */}
         </div>
       )}
-      <div>
-        <p>Add another country to the chart</p>
-        <Select
-          isDisabled={isDisabled}
-          onChange={handleChange}
-          onFocus={disableChosen}
-          options={options}
-        />
-      </div>
     </div>
   );
 };

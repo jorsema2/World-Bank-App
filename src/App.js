@@ -73,8 +73,7 @@ export function appReducer(state, action) {
 
 const App = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  const [options, setOptions] = useState([]); 
-
+  const [options, setOptions] = useState([]);
 
   useEffect(() => {
     async function addOptions() {
@@ -85,25 +84,28 @@ const App = () => {
   }, []);
 
   return (
-    <Router>
-      <ThemeProvider theme={{ mainColor: '#FF5A5F' }} >
-      <SmartContext.Provider value={{options, setOptions, state, dispatch}}>
-        <div>
-          <Switch>
-            <Route exact path="/">
-              <Home />
-            </Route>
-            <Route
-              path="/indicator/:country/:indicatorId"
-              component={ChartPage}
-            />
-            <Route path="*" component={FourOhFour} />
-          </Switch>
-        </div>
-      </SmartContext.Provider>
-      </ThemeProvider>
-     
-    </Router>
+    <div>
+      <Router>
+        <ThemeProvider theme={{ mainColor: "#FF5A5F" }}>
+          <SmartContext.Provider
+            value={{ options, setOptions, state, dispatch }}
+          >
+            <div>
+              <Switch>
+                <Route exact path="/">
+                  <Home />
+                </Route>
+                <Route
+                  path="/indicator/:country/:indicatorId"
+                  component={ChartPage}
+                />
+                <Route path="*" component={FourOhFour} />
+              </Switch>
+            </div>
+          </SmartContext.Provider>
+        </ThemeProvider>
+      </Router>
+    </div>
   );
 };
 
