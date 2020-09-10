@@ -27,11 +27,10 @@ const ChartPage = (props) => {
   const [invalidRequest, setInvalidRequest] = useState(false);
   const [chosenIDs, setChosenIDs] = useState([]);
   const [selected, setSelected] = useState([]);
-  const [isDisabled, setIsDisabled] = useState(false);
   const [indicatorName, setIndicatorName] = useState();
   const [datasets, setDatasets] = useState([]);
   const [isLine, setIsLine] = useState(true);
-  const [lineColors, setLineColors] = useState([
+  const [countryColors, setCountryColors] = useState([
     "rgba(255, 0, 0, 0.8)",
     "rgba(0, 255, 0, 0.8)",
     "rgba(0, 0, 255, 0.8)",
@@ -40,6 +39,8 @@ const ChartPage = (props) => {
   const [showIndicators, setShowIndicators] = useState(false);
 
   const search = queryString.parse(props.location.search);
+
+  console.log(state.firstCountry);
 
   // Eliminate first country (match.params.country) from array:
 
@@ -60,14 +61,13 @@ const ChartPage = (props) => {
   }, [filteredOptions]);
 
   useEffect(() => {
-    console.log(selected);
     /*
     Since colors of the three compareTo countries are reassigned in every 
     render, we need to need to recover all of them in every render to be
     able to assign them again
     */
 
-    setLineColors([
+    setCountryColors([
       "rgba(255, 0, 0, 0.8)",
       "rgba(0, 255, 0, 0.8)",
       "rgba(0, 0, 255, 0.8)",
@@ -134,8 +134,8 @@ const ChartPage = (props) => {
     years = fetchedData.map((el) => el.date).reverse();
 
     // Color that will be used for the line of the new country:
-    const newColor = lineColors.pop();
-    setLineColors(lineColors);
+    const newColor = countryColors.pop();
+    setCountryColors(countryColors);
 
     // We select only the data that's going to be used in the chart:
     const processedData = dataFiller(countryName, dataValues, newColor);
@@ -152,10 +152,6 @@ const ChartPage = (props) => {
     };
 
     dispatch({ type: "uploadData", payload: newChartData });
-
-    if (datasets.length >= 4) {
-      setIsDisabled(true);
-    }
   }
 
   useEffect(() => {
