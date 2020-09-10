@@ -6,10 +6,10 @@ function dataFiller(newCountryName, newDataValues, newColor) {
       backgroundColor:[
         "rgba(255, 255, 255, 0)"
       ],
-      borderColor: [
+      borderColor: 
         newColor
-      ],
-      borderWidth: 4
+      ,
+      borderWidth: 8
     }
     return datasets;
   }catch(err){

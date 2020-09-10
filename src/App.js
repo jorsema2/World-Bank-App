@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from "react";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {ThemeProvider} from 'styled-components'
 import {Home} from "./pages/Home";
-import ChartPage from "./pages/Chart";
+import ChartPage from "./pages/ChartPage";
 import FourOhFour from "./components/FourOhFour";
 import fetchOptions from "./utils/fetchCountries";
 
@@ -10,7 +10,7 @@ import fetchOptions from "./utils/fetchCountries";
 export const SmartContext = React.createContext();
 
 const initialState = {
-  chosenCountry: null,
+  firstCountry: null,
   indicators: [],
   isFetching: false,
   isLoading: false,
@@ -23,7 +23,12 @@ export function appReducer(state, action) {
     case 'selectedCountry': {
       return {
         ...state,
-        chosenCountry: action.payload,
+        firstCountry: action.payload
+      };
+    }
+    case 'showIndicators': {
+      return {
+        ...state,
         indicators: [],
         page: 1
       };

@@ -26,11 +26,11 @@ export const Home = () => {
       <Header />
       <Title>Countries Charts</Title>
       <Select
-        value={state.chosenCountry}
+        value={state.firstCountry}
         options={options}
         onChange={handleChange}
       />
-      {state.chosenCountry && <IndicatorsList />}
+      {state.firstCountry && <IndicatorsList />}
     </div>
   );
 };

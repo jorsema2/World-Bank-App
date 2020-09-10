@@ -1,10 +1,11 @@
 import React, {useState, useEffect, useContext} from "react";
 import styled from "styled-components";
-import {Line} from "react-chartjs-2";
+import {Line, Bar} from "react-chartjs-2";
 import queryString from "query-string";
 import Select from "react-select";
 import Header from "../../components/Header";
-import NoDataMessage from "../../components/NoDataMessage"
+import NoDataMessage from "../../components/NoDataMessage";
+import MultiSelectSort from "../../components/SelectMoreCountries";
 import groupedIndicators from "../../utils/groupedIndicators";
 import IndicatorsList from "../../components/IndicatorsList";
 import fetchThis from "../../utils/fetcher";
@@ -21,20 +22,70 @@ const IndicatorName = styled.h2`
 `;
 
 const ChartPage = (props) => {
-  const { options, setOptions, state, dispatch } = useContext(SmartContext);
+  const { options, state, dispatch } = useContext(SmartContext);
+  const [filteredOptions, setFilteredOptions] = useState([]);
   const [invalidRequest, setInvalidRequest] = useState(false);
   const [chosenIDs, setChosenIDs] = useState([]);
+  const [selected, setSelected] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
   const [indicatorName, setIndicatorName] = useState();
   const [datasets, setDatasets] = useState([]);
+  const [isLine, setIsLine] = useState(true);
   const [lineColors, setLineColors] = useState([
     "rgba(255, 0, 0, 0.8)",
     "rgba(0, 255, 0, 0.8)",
     "rgba(0, 0, 255, 0.8)",
     "rgba(128, 0, 128, 0.8)",
   ]);
+  const [showIndicators, setShowIndicators] = useState(false);
 
   const search = queryString.parse(props.location.search);
+
+  // Eliminate first country (match.params.country) from array:
+
+  useEffect(() => {
+    const newOptions = options.filter(el => el.id !== props.match.params.country.toUpperCase());
+    setFilteredOptions(newOptions);
+  }, [options])
+
+  // If access through link, take chosenIDs in query string to make selected countries appear in select dropdown:
+
+  useEffect(() => {
+    if (filteredOptions.length > 3) {
+      const newSelected = chosenIDs.map((thisSelected) => {
+        return filteredOptions.find((option) => option.id === thisSelected);
+      });
+      setSelected(newSelected);
+    }
+  }, [filteredOptions]);
+
+  useEffect(() => {
+    console.log(selected);
+    /*
+    Since colors of the three compareTo countries are reassigned in every 
+    render, we need to need to recover all of them in every render to be
+    able to assign them again
+    */
+
+    setLineColors([
+      "rgba(255, 0, 0, 0.8)",
+      "rgba(0, 255, 0, 0.8)",
+      "rgba(0, 0, 255, 0.8)",
+    ]);
+
+    /*
+    To avoid duplicates because of the forEach method, 
+    we need to get rid of all the datasets except for the first:
+    */
+
+    const newDatasets = [datasets[0]];
+    setDatasets(newDatasets);
+
+    // Store all the IDs:
+    const newIDs = selected.map((el) => el.id);
+
+    modifyQueryString(newIDs, props);
+  }, [selected]);
 
   // Variable that will store years that will be shown in the chart as labels:
   let years;
@@ -150,7 +201,6 @@ const ChartPage = (props) => {
       });
 
       modifyQueryString(arrayIDs, props);
-      disableChosen();
     }
   }, [
     props.match.params.country,
@@ -164,47 +214,22 @@ const ChartPage = (props) => {
     }
   }, [state.chartData, state.isLoading]);
 
-  function handleChange(e) {
-    /*
-    Since colors of the three compareTo countries are reassigned in every 
-    render, we need to need to recover all of them in every render to be
-    able to assign them again
-    */
-
-    setLineColors([
-      "rgba(255, 0, 0, 0.8)",
-      "rgba(0, 255, 0, 0.8)",
-      "rgba(0, 0, 255, 0.8)",
-    ]);
-
-    /*
-    To avoid duplicates because of the forEach method, 
-    we need to get rid of all the datasets except for the first:
-    */
-
-    const newDatasets = [datasets[0]];
-    setDatasets(newDatasets);
-
-    // Store all the IDs:
-    const newArray = chosenIDs;
-    newArray.push(e.id);
-    setChosenIDs(newArray);
-
-    modifyQueryString(chosenIDs, props);
+  function changeChart() {
+    const newChartType = !isLine;
+    setIsLine(newChartType);
   }
 
-  // Disable chosen countries in Select dropdown
-  function disableChosen() {
-    let newOptions = options;
-    const optionsToDisable = [...[props.match.params.country], ...chosenIDs];
-    optionsToDisable.forEach(function (el) {
-      const index = options.findIndex((x) => x.id === el);
-      if (index !== -1) {
-        newOptions[index].isDisabled = true;
-      }
-    });
-    setOptions(newOptions);
+  function openIndicators() {
+    dispatch({type: 'showIndicators'});
+    const indicatorsOpen = !showIndicators;
+    setShowIndicators(indicatorsOpen);
   }
+
+  function closeIndicators() {
+    const indicatorsClosed = !showIndicators;
+    setShowIndicators(indicatorsClosed);
+  }
+
 
   return (
     <div>
@@ -216,31 +241,57 @@ const ChartPage = (props) => {
           <div>
             <IndicatorName>{indicatorName}</IndicatorName>
             <div style={{ width: 1200, height: 400 }}>
-              <Line
-                data={state.chartData}
-                width={100}
-                height={100}
-                options={{ maintainAspectRatio: false }}
-              />
+              {isLine && (
+                <Line
+                  data={state.chartData}
+                  width={100}
+                  height={100}
+                  options={{ maintainAspectRatio: false }}
+                />
+              )}
+              {!isLine && (
+                <Bar
+                  data={state.chartData}
+                  width={100}
+                  height={100}
+                  options={{ maintainAspectRatio: false }}
+                />
+              )}
+            </div>
+            <div>
+              <button onClick={() => changeChart()}>Change chart type</button>
             </div>
           </div>
           <div>
             <p>Add another country to the chart</p>
-            <Select
-              isDisabled={isDisabled}
-              onChange={handleChange}
-              onFocus={disableChosen}
-              options={options}
+            <MultiSelectSort
+              filteredOptions={filteredOptions}
+              selected={selected}
+              setSelected={setSelected}
             />
           </div>
           <div>
             <h3>Indicators by topic</h3>
-            <Select onChange={handleChange} options={groupedIndicators} />
+            <Select options={groupedIndicators} />
           </div>
-          {/* <div>
-            <h3>All indicators</h3>
-            <IndicatorsList />
-          </div> */}
+          <div>
+            {!showIndicators && (
+              <button onClick={() => openIndicators()}>
+                Show all indicators
+              </button>
+            )}
+            {showIndicators && (
+              <button onClick={() => closeIndicators()}>Hide indicators</button>
+            )}
+          </div>
+
+          {/* Indicators links do not work properly */}
+          {showIndicators && (
+            <div>
+              <h3>All indicators</h3>
+              <IndicatorsList />
+            </div>
+          )}
         </div>
       )}
     </div>
