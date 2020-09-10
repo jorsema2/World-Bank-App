@@ -15,7 +15,7 @@ const StyledLi = styled.li`
   margin-bottom: 2rem;
 `;
 
-const IndicatorsList = (props) => {
+const IndicatorsList = () => {
   const {state, dispatch} = useContext(SmartContext);
 
   useEffect(() => {

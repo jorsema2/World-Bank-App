@@ -23,14 +23,9 @@ export function appReducer(state, action) {
     case 'selectedCountry': {
       return {
         ...state,
-        chosenCountry: action.payload
-      };
-    }
-    case 'restartIndicatorsList': {
-      return {
-        ...state,
-        page: 1,
-        indicators: []
+        chosenCountry: action.payload,
+        indicators: [],
+        page: 1
       };
     }
     case 'startIndicatorsFetch': {

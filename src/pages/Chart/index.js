@@ -4,7 +4,7 @@ import {Line} from "react-chartjs-2";
 import queryString from "query-string";
 import Select from "react-select";
 import Header from "../../components/Header";
-import FourOhFour from "../../components/FourOhFour";
+import NoDataMessage from "../../components/NoDataMessage"
 import groupedIndicators from "../../utils/groupedIndicators";
 import IndicatorsList from "../../components/IndicatorsList";
 import fetchThis from "../../utils/fetcher";
@@ -91,7 +91,7 @@ const ChartPage = (props) => {
 
     // Add the object of data of the newCountry to the array of datasets:
     const newDatasets = datasets;
-    newDatasets.push(processedData);
+    datasets.push(processedData);
     setDatasets(newDatasets);
 
     // Build the object that's going to be used as data in the chart:
@@ -117,6 +117,7 @@ const ChartPage = (props) => {
       };
       fetchData();
       dispatch({ type: "finishLoading" });
+      setInvalidRequest(false);
     } catch (err) {
       console.log("here");
       dispatch({ type: "finishLoading" });
@@ -204,12 +205,11 @@ const ChartPage = (props) => {
     });
     setOptions(newOptions);
   }
-  console.log(state);
 
   return (
     <div>
       {state.isLoading && <h1>Loading...</h1>}
-      {invalidRequest && <FourOhFour />}
+      {invalidRequest && <NoDataMessage />}
       {!invalidRequest && state.chartData && !state.isLoading && (
         <div>
           <Header />
