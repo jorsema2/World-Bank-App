@@ -14,11 +14,12 @@ const Title = styled.h1`
 `;
 
 export const Home = () => {
-  const {options, state, dispatch} = useContext(SmartContext);
+  const {options, appState, appDispatch} = useContext(SmartContext);
 
   function handleChange(e) {
     const selectedCountry = options.find((obj) => obj.value === e.value);
-    dispatch({type: 'selectedCountry', payload: selectedCountry});
+    appDispatch({type: 'selectedCountry', payload: selectedCountry});
+    appDispatch({type: 'resetIndicators', payload: selectedCountry});
   }
 
   return (
@@ -26,11 +27,11 @@ export const Home = () => {
       <Header />
       <Title>Countries Charts</Title>
       <Select
-        value={state.firstCountry}
+        value={appState.firstCountry}
         options={options}
         onChange={handleChange}
       />
-      {state.firstCountry && <IndicatorsList />}
+      {appState.firstCountry && <IndicatorsList />}
     </div>
   );
 };

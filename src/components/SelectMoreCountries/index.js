@@ -25,7 +25,10 @@ const SortableSelect = SortableContainer(Select);
 
 export default function MultiSelectSort(props) {
   const [areDisabled, setAreDisabled] = useState(false);
-  const onChange = (selectedOptions) => props.setSelected(selectedOptions);
+
+  const onChange = (selectedOptions) => {
+    selectedOptions !== null ? props.setSelected(selectedOptions) : props.setSelected([]);
+  }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     const newValue = arrayMove(props.selected, oldIndex, newIndex);
@@ -36,6 +39,8 @@ export default function MultiSelectSort(props) {
     );
   };
 
+  // Bug: failed to compile when all countries are deselected:
+  
   useEffect(() => {
     props.selected.length === 3 ? setAreDisabled(true) : setAreDisabled(false);
   }, [props.selected])

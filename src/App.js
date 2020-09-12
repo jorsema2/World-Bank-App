@@ -1,79 +1,18 @@
 import React, { useState, useEffect, useReducer } from "react";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {ThemeProvider} from 'styled-components'
+import { appReducer, appInitialState } from "./Reducers/appReducer"
 import {Home} from "./pages/Home";
 import ChartPage from "./pages/ChartPage";
 import FourOhFour from "./components/FourOhFour";
 import fetchOptions from "./utils/fetchCountries";
 
-
 export const SmartContext = React.createContext();
 
-const initialState = {
-  firstCountry: null,
-  indicators: [],
-  isFetching: false,
-  isLoading: false,
-  page: 1,
-  chartData: {}
-};
-
-export function appReducer(state, action) {
-  switch (action.type) {
-    case 'selectedCountry': {
-      return {
-        ...state,
-        firstCountry: action.payload
-      };
-    }
-    case 'showIndicators': {
-      return {
-        ...state,
-        indicators: [],
-        page: 1
-      };
-    }
-    case 'startIndicatorsFetch': {
-      return {
-        ...state,
-        isFetching: true
-      };
-    }
-    case 'finishIndicatorsFetch': {
-      return {
-        ...state,
-        indicators: [...state.indicators, ...action.payload],
-        isFetching: false,
-        page: state.page + 1
-      };
-    }
-    case 'startLoading': {
-      return {
-        ...state,
-        isLoading: true
-      };
-    }
-    case 'finishLoading': {
-      return {
-        ...state,
-        isLoading: false
-      };
-    }
-    case 'uploadData': {
-      return {
-        ...state,
-        chartData: action.payload
-      };
-    }
-    default:
-      return state;
-  }
-}
-
-
 const App = () => {
-  const [state, dispatch] = useReducer(appReducer, initialState);
+  const [appState, appDispatch] = useReducer(appReducer, appInitialState);
   const [options, setOptions] = useState([]);
+  
 
   useEffect(() => {
     async function addOptions() {
@@ -88,7 +27,7 @@ const App = () => {
       <Router>
         <ThemeProvider theme={{ mainColor: "#FF5A5F" }}>
           <SmartContext.Provider
-            value={{ options, setOptions, state, dispatch }}
+            value={{ options, setOptions, appState, appDispatch }}
           >
             <div>
               <Switch>

@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext, useReducer } from "react";
 import styled from "styled-components";
-import {Line, Bar} from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 import queryString from "query-string";
 import Select from "react-select";
 import Header from "../../components/Header";
@@ -11,7 +11,8 @@ import IndicatorsList from "../../components/IndicatorsList";
 import fetchThis from "../../utils/fetcher";
 import dataFiller from "../../utils/dataFiller";
 import modifyQueryString from "../../utils/compareToQueryString";
-import {SmartContext} from "../../App";
+import { SmartContext } from "../../App";
+import { chartReducer, chartInitialState } from "../../Reducers/chartReducer";
 
 const IndicatorName = styled.h2`
   color: blue;
@@ -22,43 +23,36 @@ const IndicatorName = styled.h2`
 `;
 
 const ChartPage = (props) => {
-  const { options, state, dispatch } = useContext(SmartContext);
-  const [filteredOptions, setFilteredOptions] = useState([]);
-  const [invalidRequest, setInvalidRequest] = useState(false);
-  const [chosenIDs, setChosenIDs] = useState([]);
+  const { options, appDispatch } = useContext(SmartContext);
+  const [chartState, chartDispatch] = useReducer(
+    chartReducer,
+    chartInitialState
+  );
   const [selected, setSelected] = useState([]);
-  const [indicatorName, setIndicatorName] = useState();
-  const [datasets, setDatasets] = useState([]);
-  const [isLine, setIsLine] = useState(true);
-  const [countryColors, setCountryColors] = useState([
-    "rgba(255, 0, 0, 0.8)",
-    "rgba(0, 255, 0, 0.8)",
-    "rgba(0, 0, 255, 0.8)",
-    "rgba(128, 0, 128, 0.8)",
-  ]);
-  const [showIndicators, setShowIndicators] = useState(false);
 
   const search = queryString.parse(props.location.search);
-
-  console.log(state.firstCountry);
 
   // Eliminate first country (match.params.country) from array:
 
   useEffect(() => {
-    const newOptions = options.filter(el => el.id !== props.match.params.country.toUpperCase());
-    setFilteredOptions(newOptions);
-  }, [options])
+    const newOptions = options.filter(
+      (el) => el.id !== props.match.params.country.toUpperCase()
+    );
+    chartDispatch({ type: "setFilteredOptions", payload: newOptions });
+  }, [options]);
 
   // If access through link, take chosenIDs in query string to make selected countries appear in select dropdown:
 
   useEffect(() => {
-    if (filteredOptions.length > 3) {
-      const newSelected = chosenIDs.map((thisSelected) => {
-        return filteredOptions.find((option) => option.id === thisSelected);
+    if (selected.length < 4) {
+      const newSelected = chartState.chosenIDs.map((thisSelected) => {
+        return chartState.filteredOptions.find(
+          (option) => option.id === thisSelected
+        );
       });
       setSelected(newSelected);
     }
-  }, [filteredOptions]);
+  }, [chartState.filteredOptions]);
 
   useEffect(() => {
     /*
@@ -67,25 +61,22 @@ const ChartPage = (props) => {
     able to assign them again
     */
 
-    setCountryColors([
-      "rgba(255, 0, 0, 0.8)",
-      "rgba(0, 255, 0, 0.8)",
-      "rgba(0, 0, 255, 0.8)",
-    ]);
+    chartDispatch({ type: "retrieveColors" });
 
     /*
     To avoid duplicates because of the forEach method, 
     we need to get rid of all the datasets except for the first:
     */
+    const oldDatasets = chartState.datasets;
+    const firstDataset = oldDatasets[0];
 
-    const newDatasets = [datasets[0]];
-    setDatasets(newDatasets);
+    chartDispatch({ type: "resetDatasets", payload: firstDataset });
 
     // Store all the IDs:
     const newIDs = selected.map((el) => el.id);
 
     modifyQueryString(newIDs, props);
-  }, [selected]);
+  }, [selected.length]);
 
   // Variable that will store years that will be shown in the chart as labels:
   let years;
@@ -96,13 +87,14 @@ const ChartPage = (props) => {
     it's an invalid request:
     */
 
+
     if (
       !fetchedData ||
       fetchedData[0].page === 0 ||
       "message" in fetchedData[0]
     ) {
-      dispatch({ type: "finishLoading" });
-      setInvalidRequest(true);
+      chartDispatch({ type: "finishLoading" });
+      chartDispatch({ type: "invalidateRequest" });
       return;
     }
 
@@ -113,7 +105,10 @@ const ChartPage = (props) => {
     fetchedData = fetchedData[1];
 
     // Store the name of the indicator:
-    setIndicatorName(fetchedData[0].indicator.value);
+    chartDispatch({
+      type: "setIndicatorName",
+      payload: fetchedData[0].indicator.value,
+    });
 
     // Name of the new country:
     const countryName = fetchedData[0].country.value;
@@ -134,24 +129,28 @@ const ChartPage = (props) => {
     years = fetchedData.map((el) => el.date).reverse();
 
     // Color that will be used for the line of the new country:
-    const newColor = countryColors.pop();
-    setCountryColors(countryColors);
+    const newColor = chartState.countryColors.pop();
+    chartDispatch({ type: "remainingColors", payload: newColor });
 
     // We select only the data that's going to be used in the chart:
     const processedData = dataFiller(countryName, dataValues, newColor);
 
     // Add the object of data of the newCountry to the array of datasets:
-    const newDatasets = datasets;
-    datasets.push(processedData);
-    setDatasets(newDatasets);
+    const oldDatasets = chartState.datasets;
+    console.log(oldDatasets);
+    const newDatasets = oldDatasets.concat([processedData]);
+    chartDispatch({ type: "addDataset", payload: newDatasets });
+    console.log(chartState.datasets);
+
 
     // Build the object that's going to be used as data in the chart:
     const newChartData = {
       labels: years,
-      datasets: datasets,
+      datasets: newDatasets,
     };
 
-    dispatch({ type: "uploadData", payload: newChartData });
+    chartDispatch({ type: "uploadData", payload: newChartData });
+    console.log(chartState.datasets);
   }
 
   useEffect(() => {
@@ -163,11 +162,11 @@ const ChartPage = (props) => {
         addData(fetchedData, link);
       };
       fetchData();
-      dispatch({ type: "finishLoading" });
-      setInvalidRequest(false);
+      chartDispatch({ type: "finishLoading" });
+      chartDispatch({ type: "validateRequest" });
     } catch (err) {
       console.log("here");
-      dispatch({ type: "finishLoading" });
+      chartDispatch({ type: "finishLoading" });
     }
   }, [props.match.params.country, props.match.params.indicatorId]);
 
@@ -185,7 +184,7 @@ const ChartPage = (props) => {
       // Remove duplicates:
       arrayIDs = Array.from(new Set(arrayIDs));
 
-      setChosenIDs(arrayIDs);
+      chartDispatch({ type: "setChosenIDs", payload: arrayIDs });
 
       // Since we only want to allow 3 countries for comparison:
       const threeIDs = arrayIDs.slice(0, 3);
@@ -193,9 +192,10 @@ const ChartPage = (props) => {
       threeIDs.forEach((el) => {
         if (el !== props.match.params.country) {
           fetchData(el);
+          console.log(chartState.datasets);
         }
       });
-
+      console.log(chartState.datasets);
       modifyQueryString(arrayIDs, props);
     }
   }, [
@@ -205,91 +205,92 @@ const ChartPage = (props) => {
   ]);
 
   useEffect(() => {
-    if (!state.chartData && !state.isLoading) {
+    if (!chartState.chartData && !chartState.isLoading) {
       props.history.push("/not-found");
     }
-  }, [state.chartData, state.isLoading]);
+  }, [chartState.chartData, chartState.isLoading]);
 
   function changeChart() {
-    const newChartType = !isLine;
-    setIsLine(newChartType);
+    chartDispatch({ type: "changeChartType" });
   }
 
   function openIndicators() {
-    dispatch({type: 'showIndicators'});
-    const indicatorsOpen = !showIndicators;
-    setShowIndicators(indicatorsOpen);
+    appDispatch({ type: "resetIndicators" });
+    chartDispatch({ type: "openIndicators" });
   }
 
   function closeIndicators() {
-    const indicatorsClosed = !showIndicators;
-    setShowIndicators(indicatorsClosed);
+    chartDispatch({ type: "closeIndicators" });
   }
-
 
   return (
     <div>
-      {state.isLoading && <h1>Loading...</h1>}
-      {invalidRequest && <NoDataMessage />}
-      {!invalidRequest && state.chartData && !state.isLoading && (
-        <div>
-          <Header />
+      {chartState.isLoading && <h1>Loading...</h1>}
+      {!chartState.isRequestValid && <NoDataMessage />}
+      {chartState.isRequestValid &&
+        chartState.chartData &&
+        !chartState.isLoading && (
           <div>
-            <IndicatorName>{indicatorName}</IndicatorName>
-            <div style={{ width: 1200, height: 400 }}>
-              {isLine && (
-                <Line
-                  data={state.chartData}
-                  width={100}
-                  height={100}
-                  options={{ maintainAspectRatio: false }}
-                />
-              )}
-              {!isLine && (
-                <Bar
-                  data={state.chartData}
-                  width={100}
-                  height={100}
-                  options={{ maintainAspectRatio: false }}
-                />
-              )}
+            <Header />
+            <div>
+              <IndicatorName>{chartState.indicatorName}</IndicatorName>
+              <div style={{ width: 1200, height: 400 }}>
+                {chartState.isLine && (
+                  <Line
+                    data={chartState.chartData}
+                    width={100}
+                    height={100}
+                    options={{ maintainAspectRatio: false }}
+                  />
+                )}
+                {!chartState.isLine && (
+                  <Bar
+                    data={chartState.chartData}
+                    width={100}
+                    height={100}
+                    options={{ maintainAspectRatio: false }}
+                  />
+                )}
+              </div>
+              <div>
+                <button onClick={() => changeChart()}>Change chart type</button>
+              </div>
             </div>
             <div>
-              <button onClick={() => changeChart()}>Change chart type</button>
+              <p>Add another country to the chart</p>
+              <MultiSelectSort
+                filteredOptions={chartState.filteredOptions}
+                selected={selected}
+                setSelected={setSelected}
+              />
             </div>
-          </div>
-          <div>
-            <p>Add another country to the chart</p>
-            <MultiSelectSort
-              filteredOptions={filteredOptions}
-              selected={selected}
-              setSelected={setSelected}
-            />
-          </div>
-          <div>
-            <h3>Indicators by topic</h3>
-            <Select options={groupedIndicators} />
-          </div>
-          <div>
-            {!showIndicators && (
-              <button onClick={() => openIndicators()}>
-                Show all indicators
-              </button>
-            )}
-            {showIndicators && (
-              <button onClick={() => closeIndicators()}>Hide indicators</button>
-            )}
-          </div>
+            <div>
+              <h3>Indicators by topic</h3>
+              <Select options={groupedIndicators} />
+            </div>
+            <div>
+              {/* If no appState.firstCountry --> Failed to compile (from refresh or copypasting link) */}
+              {!chartState.areIndicatorsShown && (
+                <button onClick={() => openIndicators()}>
+                  Show all indicators
+                </button>
+              )}
+              {chartState.areIndicatorsShown && (
+                <button onClick={() => closeIndicators()}>
+                  Hide indicators
+                </button>
+              )}
+            </div>
 
-          {/* Indicators links do not work properly */}
-          {showIndicators && (
-            <div>
-              <h3>All indicators</h3>
-              <IndicatorsList />
-            </div>
-          )}
-        </div>
-      )}
+            {/* Indicators links do not work properly */}
+            {chartState.areIndicatorsShown && (
+              <div>
+                <h3>All indicators</h3>
+                <IndicatorsList />
+              </div>
+            )}
+          </div>
+        )}
     </div>
   );
 };
