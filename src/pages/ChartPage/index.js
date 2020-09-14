@@ -68,7 +68,9 @@ const ChartPage = (props) => {
     we need to get rid of all the datasets except for the first:
     */
     const oldDatasets = chartState.datasets;
-    const firstDataset = oldDatasets[0];
+    const firstDataset = [oldDatasets[0]];
+    console.log("First: ")
+    console.log(firstDataset);
 
     chartDispatch({ type: "resetDatasets", payload: firstDataset });
 
@@ -136,9 +138,11 @@ const ChartPage = (props) => {
     const processedData = dataFiller(countryName, dataValues, newColor);
 
     // Add the object of data of the newCountry to the array of datasets:
+    console.log("Beginning of addData(): ")
     const oldDatasets = chartState.datasets;
     console.log(oldDatasets);
-    const newDatasets = oldDatasets.concat([processedData]);
+    const newDatasets = oldDatasets.concat(processedData);
+    console.log(newDatasets)
     chartDispatch({ type: "addDataset", payload: newDatasets });
     console.log(chartState.datasets);
 

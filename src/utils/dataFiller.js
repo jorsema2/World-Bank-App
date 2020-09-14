@@ -1,6 +1,6 @@
 function dataFiller(newCountryName, newDataValues, newColor) {
   try{
-    const datasets = {
+    const datasets = [{
       label: newCountryName,
       data: newDataValues,
       backgroundColor:[
@@ -10,7 +10,7 @@ function dataFiller(newCountryName, newDataValues, newColor) {
         newColor
       ,
       borderWidth: 8
-    }
+    }]
     return datasets;
   }catch(err){
     return []
