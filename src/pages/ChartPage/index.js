@@ -127,7 +127,6 @@ const ChartPage = (props) => {
     const yearsArray = fetchedData.map((el) => el.date).reverse();
 
     chartDispatch({ type: "updateYears", payload: yearsArray })
-    console.log(yearsArray);
 
     // We select only the data that's going to be used in the chart:
     const processedData = dataFiller(countryName, dataValues, newColor);
@@ -142,7 +141,6 @@ const ChartPage = (props) => {
   }
 
   useEffect(() => {
-    console.log(chartState.years);
     // Build the object that's going to be used as data in the chart:
     const newChartData = {
       labels: chartState.years,
@@ -158,14 +156,12 @@ const ChartPage = (props) => {
         const fetchedData = await fetchThis(link);
         const firstColor = "rgba(128, 0, 128, 0.8)";
         const firstDataset = await addData(fetchedData, link, firstColor);
-        console.log(chartState);
         chartDispatch({ type: "updateDatasets", payload: firstDataset });
       };
       fetchData();
       chartDispatch({ type: "finishLoading" });
       chartDispatch({ type: "validateRequest" });
     } catch (err) {
-      console.log("here");
       chartDispatch({ type: "finishLoading" });
     }
   }, []);
@@ -226,12 +222,14 @@ const ChartPage = (props) => {
     chartDispatch({ type: "closeIndicators" });
   }
 
+  console.log(chartState);
+
   return (
     <div>
       {chartState.isLoading && <h1>Loading...</h1>}
       {!chartState.isRequestValid && <NoDataMessage />}
       {chartState.isRequestValid &&
-        chartState.chartData &&
+        chartState.chartData && chartState.datasets && chartState.years &&
         !chartState.isLoading && (
           <div>
             <Header />

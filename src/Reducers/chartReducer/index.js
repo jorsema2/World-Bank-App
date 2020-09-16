@@ -53,7 +53,7 @@ export function chartReducer(chartState, action) {
     case "updateYears": {
       return {
         ...chartState,
-        datasets: action.payload,
+        years: action.payload,
       }
     }
     case "setIndicatorName": {
