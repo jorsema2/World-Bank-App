@@ -2,7 +2,6 @@ const allColors = [
   "rgba(255, 0, 0, 0.8)",
   "rgba(0, 255, 0, 0.8)",
   "rgba(0, 0, 255, 0.8)",
-  "rgba(128, 0, 128, 0.8)",
 ];
 
 export const chartInitialState = {
@@ -11,6 +10,7 @@ export const chartInitialState = {
   isRequestValid: true,
   chosenIDs: [],
   datasets: [],
+  years: [],
   isLine: true,
   countryColors: allColors,
   indicatorName: null,
@@ -44,17 +44,17 @@ export function chartReducer(chartState, action) {
         countryColors: allColors,
       };
     }
-    case "resetDatasets": {
+    case "updateDatasets": {
       return {
         ...chartState,
         datasets: action.payload,
       };
     }
-    case "addDataset": {
+    case "updateYears": {
       return {
         ...chartState,
         datasets: action.payload,
-      };
+      }
     }
     case "setIndicatorName": {
       return {

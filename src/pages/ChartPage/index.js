@@ -32,63 +32,59 @@ const ChartPage = (props) => {
 
   const search = queryString.parse(props.location.search);
 
-  // Eliminate first country (match.params.country) from array:
-
   useEffect(() => {
+    // Don't show the first chosen country in the select dropdown:
     const newOptions = options.filter(
       (el) => el.id !== props.match.params.country.toUpperCase()
     );
     chartDispatch({ type: "setFilteredOptions", payload: newOptions });
   }, [options]);
 
-  // If access through link, take chosenIDs in query string to make selected countries appear in select dropdown:
+  async function fetchData(id, color) {
+    const link = `http://api.worldbank.org/v2/country/${id}/indicator/${props.match.params.indicatorId}?format=json`;
+    const fetchedData = await fetchThis(link);
+    const newDataset = addData(fetchedData, link, color);
+    const oldDatasets = [...chartState.datasets];
+    chartDispatch({ type: "updateDataset", payload: [...oldDatasets, newDataset] });
+  };
 
   useEffect(() => {
-    if (selected.length < 4) {
-      const newSelected = chartState.chosenIDs.map((thisSelected) => {
-        return chartState.filteredOptions.find(
-          (option) => option.id === thisSelected
-        );
-      });
-      setSelected(newSelected);
-    }
-  }, [chartState.filteredOptions]);
-
-  useEffect(() => {
-    /*
-    Since colors of the three compareTo countries are reassigned in every 
-    render, we need to need to recover all of them in every render to be
-    able to assign them again
-    */
-
-    chartDispatch({ type: "retrieveColors" });
 
     /*
     To avoid duplicates because of the forEach method, 
     we need to get rid of all the datasets except for the first:
     */
+
     const oldDatasets = chartState.datasets;
     const firstDataset = [oldDatasets[0]];
-    console.log("First: ")
-    console.log(firstDataset);
 
     chartDispatch({ type: "resetDatasets", payload: firstDataset });
 
-    // Store all the IDs:
+    selected.forEach((el) => {
+      const chosenColor = chooseColor(el);
+      fetchData(el.id, chosenColor);
+    })
+
+    
+    // Build the object that's going to be used as data in the chart:
+    const newChartData = {
+      labels: chartState.years,
+      datasets: chartState.datasets,
+    };
+
+    chartDispatch({ type: "uploadData", payload: newChartData });
+
+    // In case we need to add IDs to query string:
     const newIDs = selected.map((el) => el.id);
 
     modifyQueryString(newIDs, props);
   }, [selected.length]);
 
-  // Variable that will store years that will be shown in the chart as labels:
-  let years;
-
-  async function addData(fetchedData, link) {
+  async function addData(fetchedData, link, newColor) {
     /*
     If there's no data, 0 pages of data or the fetched data has the property called "message",
     it's an invalid request:
     */
-
 
     if (
       !fetchedData ||
@@ -128,42 +124,42 @@ const ChartPage = (props) => {
     So, we reverse both arrays (years' values and years): 
     */
     const dataValues = fetchedData.map((el) => el.value).reverse();
-    years = fetchedData.map((el) => el.date).reverse();
+    const yearsArray = fetchedData.map((el) => el.date).reverse();
 
-    // Color that will be used for the line of the new country:
-    const newColor = chartState.countryColors.pop();
-    chartDispatch({ type: "remainingColors", payload: newColor });
+    chartDispatch({ type: "updateYears", payload: yearsArray })
+    console.log(yearsArray);
 
     // We select only the data that's going to be used in the chart:
     const processedData = dataFiller(countryName, dataValues, newColor);
 
-    // Add the object of data of the newCountry to the array of datasets:
-    console.log("Beginning of addData(): ")
-    const oldDatasets = chartState.datasets;
-    console.log(oldDatasets);
-    const newDatasets = oldDatasets.concat(processedData);
-    console.log(newDatasets)
-    chartDispatch({ type: "addDataset", payload: newDatasets });
-    console.log(chartState.datasets);
+    return processedData;
+  }
 
+  function chooseColor(country) {
+    const colorPosition = selected.indexOf(country);
+    const chosenColor = chartState.countryColors[colorPosition];
+    return chosenColor;
+  }
 
+  useEffect(() => {
+    console.log(chartState.years);
     // Build the object that's going to be used as data in the chart:
     const newChartData = {
-      labels: years,
-      datasets: newDatasets,
+      labels: chartState.years,
+      datasets: chartState.datasets,
     };
-
     chartDispatch({ type: "uploadData", payload: newChartData });
-    console.log(chartState.datasets);
-  }
+  }, [chartState.datasets]);
 
   useEffect(() => {
     try {
       const fetchData = async () => {
         const link = `http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`;
-        let fetchedData = await fetchThis(link);
-
-        addData(fetchedData, link);
+        const fetchedData = await fetchThis(link);
+        const firstColor = "rgba(128, 0, 128, 0.8)";
+        const firstDataset = await addData(fetchedData, link, firstColor);
+        console.log(chartState);
+        chartDispatch({ type: "updateDatasets", payload: firstDataset });
       };
       fetchData();
       chartDispatch({ type: "finishLoading" });
@@ -172,41 +168,44 @@ const ChartPage = (props) => {
       console.log("here");
       chartDispatch({ type: "finishLoading" });
     }
-  }, [props.match.params.country, props.match.params.indicatorId]);
+  }, []);
+
+  function storeSelectedCountries(allIDs) {
+    const newSelected = allIDs.map((chosenID) => {
+      return chartState.filteredOptions.find(
+        (option) => option.id === chosenID
+      );
+    });
+    return newSelected;
+  }
+
+  function chooseIDs(IDsInString) {
+    // Convert IDs from query string to an array of IDs:
+    let arrayIDs = IDsInString.split(",");
+
+    // Remove duplicates:
+    arrayIDs = Array.from(new Set(arrayIDs));
+
+    // Since we only want to allow 3 countries for comparison:
+    const chosenIDs = arrayIDs.slice(0, 3);
+
+    return chosenIDs;
+  }
 
   useEffect(() => {
-    const fetchData = async (id) => {
-      const link = `http://api.worldbank.org/v2/country/${id}/indicator/${props.match.params.indicatorId}?format=json`;
-      let fetchedData = await fetchThis(link);
-      addData(fetchedData, link);
-    };
-
     if (search.compareTo) {
-      // Convert IDs from query string to an array of IDs:
-      let arrayIDs = search.compareTo.split(",");
 
-      // Remove duplicates:
-      arrayIDs = Array.from(new Set(arrayIDs));
+      // Convert search.compareTO (string of countries) into an array of IDs:
+      const chosenIDs = chooseIDs(search.compareTo);
 
-      chartDispatch({ type: "setChosenIDs", payload: arrayIDs });
+      // Modify queryString if necessary (if there were more than 3 countries in string):
+      modifyQueryString(chosenIDs, props);
 
-      // Since we only want to allow 3 countries for comparison:
-      const threeIDs = arrayIDs.slice(0, 3);
-
-      threeIDs.forEach((el) => {
-        if (el !== props.match.params.country) {
-          fetchData(el);
-          console.log(chartState.datasets);
-        }
-      });
-      console.log(chartState.datasets);
-      modifyQueryString(arrayIDs, props);
+      // Store selected countries in state hook:
+      const countriesSelected = storeSelectedCountries(chosenIDs);
+      setSelected(countriesSelected);
     }
-  }, [
-    props.match.params.country,
-    props.match.params.indicatorId,
-    search.compareTo,
-  ]);
+  }, [search.compareTo]);
 
   useEffect(() => {
     if (!chartState.chartData && !chartState.isLoading) {
