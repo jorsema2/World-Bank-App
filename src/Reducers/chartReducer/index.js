@@ -6,7 +6,6 @@ const allColors = [
 
 export const chartInitialState = {
   isLoading: false,
-  filteredOptions: [],
   isRequestValid: true,
   chosenIDs: [],
   datasets: [],
