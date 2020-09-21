@@ -6,7 +6,7 @@ import fetchMorePages from "./fetchMorePages";
 import arrayProcessor from "./processArrays";
 import dataFiller from "./dataFiller";
 
-function processData(fetchedData, link, newColor) {
+async function processData(fetchedData, link, newColor) {
   const isValid = checkIfValid(fetchedData);
   if (isValid === false) return null;
 
@@ -19,14 +19,17 @@ function processData(fetchedData, link, newColor) {
 
   const countryName = returnCountryName(fetchedData);
 
-  fetchedData = fetchMorePages(fetchedData, link, pagesNumber);
+  // Sometimes, there's more than one page of values fot the given country and indicator:
+  if (pagesNumber > 1) {
+    fetchedData = await fetchMorePages(fetchedData, link, pagesNumber);
+  }
 
   const [valuesArray, yearsArray] = arrayProcessor(fetchedData);
 
   // We select only the data that's going to be used in the chart:
   const countryDataset = dataFiller(countryName, valuesArray, newColor);
 
-  return [indicatorName, yearsArray, countryDataset]
+  return { indicatorName, yearsArray, countryDataset };
 }
 
 export default processData;

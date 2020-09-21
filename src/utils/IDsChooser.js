@@ -6,7 +6,8 @@ function chooseIDs(IDsInString) {
   arrayIDs = Array.from(new Set(arrayIDs));
 
   // Since we only want to allow 3 countries for comparison:
-  return chosenIDs = arrayIDs.slice(0, 3);
+  const chosenIDs = arrayIDs.slice(0, 3);
+  return chosenIDs;
 }
 
 export default chooseIDs;

@@ -1,6 +1,7 @@
 function storeSelectedCountries(allIDs, filteredOptions) {
   const newSelected = allIDs.map((chosenID) => {
-    return filteredOptions.find((option) => option.id === chosenID);
+    const newCountry = filteredOptions.find((option) => option.id === chosenID);
+    return newCountry;
   });
   return newSelected;
 }

@@ -6,7 +6,7 @@ import groupedIndicators from "../../utils/groupedIndicators";
 import IndicatorsList from "../../components/IndicatorsList";
 
 const Selectors = (props) => {
-  const [appDispatch] = useReducer(appReducer, appInitialState);
+  const [appState, appDispatch] = useReducer(appReducer, appInitialState);
   const [areIndicatorsShown, setIndicatorsShown] = useState(false);
 
   useEffect(() => {

@@ -4,6 +4,7 @@ function chartObjectBuilder(years, datasets) {
     labels: years,
     datasets: datasets,
   };
+
   return newChartData;
 }
 

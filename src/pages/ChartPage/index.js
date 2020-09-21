@@ -27,26 +27,25 @@ const ChartPage = (props) => {
 
   useEffect(() => {
     try {
-      const [fetchedData, link] = fetchData(
-        props.match.params.country,
-        props.match.params.indicatorId
-      );
-      const firstColor = "rgba(128, 0, 128, 0.8)";
-      const firstDataset = async function getFirstDataset() {
+      async function addData() {
+        const [fetchedData, link] = await fetchData(
+          props.match.params.country,
+          props.match.params.indicatorId
+        );
+        const firstColor = "rgba(128, 0, 128, 0.8)";
         const firstDataset = await processData(fetchedData, link, firstColor);
-        return firstDataset;
-      };
-      firstDataset();
-      if (firstDataset === null) {
-        chartDispatch({ type: "invalidateRequest" });
-      } else {
-        [indicatorName, yearsArray, countryDataset] = firstDataset;
-        chartDispatch({ type: "updateDatasets", payload: [countryDataset] });
-        chartDispatch({ type: "updateYears", payload: yearsArray });
-        chartDispatch({ type: "setIndicatorName", payload: indicatorName });
-        chartDispatch({ type: "finishLoading" });
-        chartDispatch({ type: "validateRequest" });
+        if (firstDataset === null) {
+          chartDispatch({ type: "invalidateRequest" });
+        } else {
+          const { indicatorName, yearsArray, countryDataset } = firstDataset;
+          chartDispatch({ type: "updateDatasets", payload: [countryDataset] });
+          chartDispatch({ type: "updateYears", payload: yearsArray });
+          chartDispatch({ type: "setIndicatorName", payload: indicatorName });
+          chartDispatch({ type: "finishLoading" });
+          chartDispatch({ type: "validateRequest" });
+        }
       }
+      addData();
     } catch (err) {
       chartDispatch({ type: "finishLoading" });
     }
@@ -61,6 +60,11 @@ const ChartPage = (props) => {
   }, [options]);
 
   useEffect(() => {
+    console.log(selected);
+    // We don't want this effect to be used unless we already know the years:
+
+    if (chartState.years.length < 1) return;
+
     /*
         To avoid duplicates because of the forEach method, 
         we need to get rid of all the datasets except for the first:
@@ -71,25 +75,32 @@ const ChartPage = (props) => {
 
     chartDispatch({ type: "resetDatasets", payload: firstDataset });
 
-    let newDatasets = [];
+    let newDatasets = firstDataset;
+
+    // Add data for new selected countries if necessary:
 
     selected.forEach((el) => {
-      const chosenColor = chooseColor(el);
-      const dataAndLink = fetchData(el.id, chosenColor);
-      [fetchedData, link] = dataAndLink;
-      const newDataset = async function getNewDataset() {
-        const newDataset = await processData(fetchedData, link, firstColor);
-        return newDataset;
-      };
-      newDatasets.push(newDataset);
+      async function getMoreCountries(el) {
+        const chosenColor = chooseColor(el, selected);
+        const dataAndLink = await fetchData(el.id, props.match.params.indicatorId);
+        console.log(dataAndLink);
+        const [fetchedData, link] = dataAndLink;
+        const newDataset = await processData(fetchedData, link, chosenColor);
+        console.log(newDataset);
+        newDatasets.push(newDataset.countryDataset);
+      }
+      getMoreCountries(el);
     });
 
     // Data for chart needs an specific data structure we get by using this:
     const objectForChart = chartObjectBuilder(chartState.years, newDatasets);
 
+    console.log(objectForChart);
+
     chartDispatch({ type: "uploadData", payload: objectForChart });
 
     // In case we need to add IDs to query string:
+    console.log(selected);
     const newIDs = selected.map((el) => el.id);
 
     modifyQueryString(newIDs, props);
@@ -105,9 +116,10 @@ const ChartPage = (props) => {
       modifyQueryString(chosenIDs, props);
 
       // Store selected countries in state hook:
-      const countriesSelected = storeSelectedCountries(chosenIDs);
+      const countriesSelected = storeSelectedCountries(chosenIDs, filteredOptions);
       setSelected(countriesSelected);
     }
+    console.log(selected);
   }, [search.compareTo]);
 
   useEffect(() => {
@@ -116,17 +128,26 @@ const ChartPage = (props) => {
     }
   }, [chartState.chartData, chartState.isLoading]);
 
+  console.log(chartState.chartData);
   return (
     <div>
       <Header />
       {!chartState.isRequestValid && <NoDataMessage />}
-      {chartState.isRequestValid && (
-        <div>
-          <Chart />
-          <Selectors filteredOptions={filteredOptions}           selected={selected}
-          setSelected={setSelected} />
-        </div>
-      )}
+      {chartState.isRequestValid &&
+        chartState.datasets.length > 0 &&
+        chartState.years.length > 0 && (
+          <div>
+            <Chart
+              chartData={chartState.chartData}
+              indicatorName={chartState.indicatorName}
+            />
+            <Selectors
+              filteredOptions={filteredOptions}
+              selected={selected}
+              setSelected={setSelected}
+            />
+          </div>
+        )}
     </div>
   );
 };

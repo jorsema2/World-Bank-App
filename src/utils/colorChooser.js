@@ -4,9 +4,10 @@ const allColors = [
   "rgba(0, 0, 255, 0.8)",
 ];
 
-function chooseColor(country) {
+function chooseColor(country, selected) {
   const colorPosition = selected.indexOf(country);
-  return chosenColor = allColors[colorPosition];
+  const chosenColor = allColors[colorPosition];
+  return chosenColor;
 }
 
 export default chooseColor;
