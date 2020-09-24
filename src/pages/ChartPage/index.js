@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext, useReducer } from "react";
+import React, {useState, useEffect, useContext, useReducer} from "react";
 import queryString from "query-string";
 import Header from "../../components/Header";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
 import Selectors from "../../components/Selectors";
-import { SmartContext } from "../../App";
-import { chartReducer, chartInitialState } from "../../Reducers/chartReducer";
+import {SmartContext} from "../../App";
+import {chartReducer, chartInitialState} from "../../reducers/chartReducer";
 import fetchData from "../../utils/dataFetcher";
 import processData from "../../utils/dataProcessor";
 import modifyQueryString from "../../utils/compareToQueryString";
@@ -15,7 +15,7 @@ import chooseIDs from "../../utils/IDsChooser";
 import storeSelectedCountries from "../../utils/storeSelectedCountries";
 
 const ChartPage = (props) => {
-  const { options } = useContext(SmartContext);
+  const {options} = useContext(SmartContext);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [chartState, chartDispatch] = useReducer(
     chartReducer,
@@ -28,28 +28,49 @@ const ChartPage = (props) => {
   useEffect(() => {
     try {
       async function addData() {
-        const [fetchedData, link] = await fetchData(
+        const {fetchedData, link} = await fetchData(
           props.match.params.country,
           props.match.params.indicatorId
         );
+
         const firstColor = "rgba(128, 0, 128, 0.8)";
         const firstDataset = await processData(fetchedData, link, firstColor);
         if (firstDataset === null) {
-          chartDispatch({ type: "invalidateRequest" });
+          chartDispatch({type: "invalidateRequest"});
         } else {
-          const { indicatorName, yearsArray, countryDataset } = firstDataset;
-          chartDispatch({ type: "updateDatasets", payload: [countryDataset] });
-          chartDispatch({ type: "updateYears", payload: yearsArray });
-          chartDispatch({ type: "setIndicatorName", payload: indicatorName });
-          chartDispatch({ type: "finishLoading" });
-          chartDispatch({ type: "validateRequest" });
+          const {indicatorName, yearsArray, countryDataset} = firstDataset;
+          chartDispatch({
+            type: "FETCH_DATA_SUCCESS",
+            payload: {
+              datasets: [countryDataset],
+              years: yearsArray,
+              indicatorName,
+            },
+          });
         }
       }
       addData();
+      
     } catch (err) {
-      chartDispatch({ type: "finishLoading" });
+      chartDispatch({type: "finishLoading"});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+      if(!selected.length && options.length && search.compareTo) {
+
+        const defaultSelected = storeSelectedCountries(chooseIDs(search.compareTo), options)
+        setSelected(defaultSelected)
+        return;
+      }
+
+      const newIDs = selected.map((el) => el.id);
+      modifyQueryString(newIDs, props);
+
+   
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, props.location.search, options])
 
   useEffect(() => {
     // Don't show the first chosen country in the select dropdown:
@@ -57,58 +78,45 @@ const ChartPage = (props) => {
       (el) => el.id !== props.match.params.country.toUpperCase()
     );
     setFilteredOptions(newOptions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
 
   useEffect(() => {
-    console.log(selected);
     // We don't want this effect to be used unless we already know the years:
-
-    if (chartState.years.length < 1) return;
-
-    /*
-        To avoid duplicates because of the forEach method, 
-        we need to get rid of all the datasets except for the first:
-        */
-
-    const oldDatasets = chartState.datasets;
-    const firstDataset = [oldDatasets[0]];
-
-    chartDispatch({ type: "resetDatasets", payload: firstDataset });
-
-    let newDatasets = firstDataset;
-
-    // Add data for new selected countries if necessary:
-
-    selected.forEach((el) => {
-      async function getMoreCountries(el) {
+    if (!chartState.years.length) return;
+    Promise.all(
+      selected.map(async function (el) {
         const chosenColor = chooseColor(el, selected);
-        const dataAndLink = await fetchData(el.id, props.match.params.indicatorId);
-        console.log(dataAndLink);
-        const [fetchedData, link] = dataAndLink;
+        const {fetchedData, link} = await fetchData(
+          el.id,
+          props.match.params.indicatorId
+        );
         const newDataset = await processData(fetchedData, link, chosenColor);
-        console.log(newDataset);
-        newDatasets.push(newDataset.countryDataset);
-      }
-      getMoreCountries(el);
-    });
+        if(newDataset){
+          chartDispatch({
+            type: "FETCH_DATA_SUCCESS",
+            payload: {
+              datasets: [...chartState.datasets, newDataset.countryDataset],
+            },
+          });
 
-    // Data for chart needs an specific data structure we get by using this:
-    const objectForChart = chartObjectBuilder(chartState.years, newDatasets);
-
-    console.log(objectForChart);
-
-    chartDispatch({ type: "uploadData", payload: objectForChart });
+        }else {
+          // const nextSelected = [...selected];
+          // nextSelected[nextSelected.length - 1].disabled = true;
+          // setSelected(nextSelected);
+        }
+        
+      })
+    );
 
     // In case we need to add IDs to query string:
-    console.log(selected);
-    const newIDs = selected.map((el) => el.id);
-
-    modifyQueryString(newIDs, props);
-  }, [chartState.indicatorName, selected.length]);
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected.length]);
 
   useEffect(() => {
-    if (search.compareTo) {
 
+    if (search.compareTo && filteredOptions[0] !== undefined) {
       // Convert search.compareTO (string of countries) into an array of IDs:
       const chosenIDs = chooseIDs(search.compareTo);
 
@@ -116,19 +124,29 @@ const ChartPage = (props) => {
       modifyQueryString(chosenIDs, props);
 
       // Store selected countries in state hook:
-      const countriesSelected = storeSelectedCountries(chosenIDs, filteredOptions);
+      const countriesSelected = storeSelectedCountries(
+        chosenIDs,
+        filteredOptions
+      );
+
       setSelected(countriesSelected);
     }
-    console.log(selected);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search.compareTo]);
 
+  // DONE
   useEffect(() => {
     if (!chartState.chartData && !chartState.isLoading) {
       props.history.push("/not-found");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartState.chartData, chartState.isLoading]);
 
-  console.log(chartState.chartData);
+  const chartData = {
+    labels: chartState.years,
+    datasets: chartState.datasets
+  }
   return (
     <div>
       <Header />
@@ -138,7 +156,7 @@ const ChartPage = (props) => {
         chartState.years.length > 0 && (
           <div>
             <Chart
-              chartData={chartState.chartData}
+              chartData={chartData}
               indicatorName={chartState.indicatorName}
             />
             <Selectors

@@ -43,6 +43,16 @@ export function chartReducer(chartState, action) {
         countryColors: allColors,
       };
     }
+    case 'FETCH_DATA_SUCCESS':{
+      console.log('FETCH_DATA_SUCCESS', action.payload)
+      return {
+        ...chartState,
+        ...action.payload,
+        isLoading: false,
+        isRequestValid: true,
+      }
+    }
+    // to review
     case "updateDatasets": {
       return {
         ...chartState,
@@ -61,6 +71,7 @@ export function chartReducer(chartState, action) {
         indicatorName: action.payload,
       };
     }
+    // -- end review
     case "setRemainingColors": {
       return {
         ...chartState,
@@ -95,12 +106,6 @@ export function chartReducer(chartState, action) {
       return {
         ...chartState,
         isLoading: false,
-      };
-    }
-    case "uploadData": {
-      return {
-        ...chartState,
-        chartData: action.payload,
       };
     }
     case "setChosenIDs": {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
 import Select from "react-select";
-import { appReducer, appInitialState } from "../../Reducers/appReducer";
+import { appReducer, appInitialState } from "../../reducers/appReducer";
 import MultiSelectSort from "../../components/SelectMoreCountries";
 import groupedIndicators from "../../utils/groupedIndicators";
 import IndicatorsList from "../../components/IndicatorsList";

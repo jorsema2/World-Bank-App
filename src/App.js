@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from "react";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {ThemeProvider} from 'styled-components'
-import { appReducer, appInitialState } from "./Reducers/appReducer"
+import { appReducer, appInitialState } from "./reducers/appReducer"
 import {Home} from "./pages/Home";
 import ChartPage from "./pages/ChartPage";
 import FourOhFour from "./components/FourOhFour";
@@ -20,6 +20,7 @@ const App = () => {
       setOptions(newOptions);
     }
     addOptions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

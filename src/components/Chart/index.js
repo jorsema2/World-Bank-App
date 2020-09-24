@@ -1,7 +1,7 @@
 import React, { useReducer } from "react";
 import styled from "styled-components";
 import { Line, Bar } from "react-chartjs-2";
-import { chartReducer, chartInitialState } from "../../Reducers/chartReducer";
+import { chartReducer, chartInitialState } from "../../reducers/chartReducer";
 
 const IndicatorName = styled.h2`
   color: blue;
@@ -21,7 +21,6 @@ const Chart = (props) => {
     chartDispatch({ type: "changeChartType" });
   }
 
-  console.log(props.chartData);
 
   return (
     <div>
