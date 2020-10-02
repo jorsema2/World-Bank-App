@@ -33,10 +33,6 @@ export default function MultiSelectSort(props) {
   const onSortEnd = ({ oldIndex, newIndex }) => {
     const newValue = arrayMove(props.selected, oldIndex, newIndex);
     props.setSelected(newValue);
-    console.log(
-      "Values sorted:",
-      newValue.map((i) => i.value)
-    );
   };
 
   // Bug: failed to compile when all countries are deselected:

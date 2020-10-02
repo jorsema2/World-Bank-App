@@ -25,22 +25,21 @@ async function processData(fetchedData, link, newColor) {
     let data = fetchedData[1];
     const indicatorName = data[0].indicator.value;
     const countryName = data[0].country.value;
-  
+
     // Sometimes, there's more than one page of values fot the given country and indicator:
     if (pagesNumber > 1) {
       data = await fetchMorePages(data, link, pagesNumber);
     }
-  
-    const {valuesArray, yearsArray} = arrayProcessor(data);
-  
+
+    const { valuesArray, yearsArray } = arrayProcessor(data);
+
     // We select only the data that's going to be used in the chart:
     const countryDataset = dataFiller(countryName, valuesArray, newColor);
     return { indicatorName, yearsArray, countryDataset };
-  }catch(err){
-    console.log(err)
-return {}
+  } catch (err) {
+    console.log(err);
+    return {};
   }
- 
 }
 
 export default processData;

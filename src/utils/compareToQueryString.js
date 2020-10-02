@@ -1,6 +1,5 @@
 import queryString from "query-string";
 
-// Modify query string in ChartPage:
 function modifyQueryString(arrayOfIDs, props) {
   const query = { compareTo: arrayOfIDs };
   props.history.push(

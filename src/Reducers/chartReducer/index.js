@@ -44,7 +44,6 @@ export function chartReducer(chartState, action) {
       };
     }
     case 'FETCH_DATA_SUCCESS':{
-      console.log('FETCH_DATA_SUCCESS', action.payload)
       return {
         ...chartState,
         ...action.payload,

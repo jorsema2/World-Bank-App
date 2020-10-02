@@ -10,7 +10,6 @@ import fetchData from "../../utils/dataFetcher";
 import processData from "../../utils/dataProcessor";
 import modifyQueryString from "../../utils/compareToQueryString";
 import chooseColor from "../../utils/colorChooser";
-import chartObjectBuilder from "../../utils/chartFiller";
 import chooseIDs from "../../utils/IDsChooser";
 import storeSelectedCountries from "../../utils/storeSelectedCountries";
 
@@ -26,6 +25,29 @@ const ChartPage = (props) => {
   const search = queryString.parse(props.location.search);
 
   useEffect(() => {
+    console.log('1')
+
+    if (search.compareTo && filteredOptions[0] !== undefined) {
+      // Convert search.compareTO (string of countries) into an array of IDs:
+      const chosenIDs = chooseIDs(search.compareTo);
+
+      // Modify queryString if necessary (if there were more than 3 countries in string):
+      modifyQueryString(chosenIDs, props);
+
+      // Store selected countries in state hook:
+      const countriesSelected = storeSelectedCountries(
+        chosenIDs,
+        filteredOptions
+      );
+
+      setSelected(countriesSelected);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    console.log('2')
     try {
       async function addData() {
         const {fetchedData, link} = await fetchData(
@@ -55,22 +77,21 @@ const ChartPage = (props) => {
       chartDispatch({type: "finishLoading"});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [props.match.params.country]);
 
   useEffect(() => {
-      if(!selected.length && options.length && search.compareTo) {
+    console.log('3')
+    if (!selected.length && options.length && search.compareTo) {
+      const defaultSelected = storeSelectedCountries(
+        chooseIDs(search.compareTo),
+        options
+      );
+      setSelected(defaultSelected);
+      return;
+    }
 
-        const defaultSelected = storeSelectedCountries(chooseIDs(search.compareTo), options)
-        setSelected(defaultSelected)
-        return;
-      }
-
-      const newIDs = selected.map((el) => el.id);
-      modifyQueryString(newIDs, props);
-
-   
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected, props.location.search, options])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options]);
 
   useEffect(() => {
     // Don't show the first chosen country in the select dropdown:
@@ -79,63 +100,43 @@ const ChartPage = (props) => {
     );
     setFilteredOptions(newOptions);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
+  }, [options, props.match.params.country]);
 
   useEffect(() => {
+    const countriesIDs = selected.map((el) => {
+      return el.id
+    })
+    modifyQueryString(countriesIDs, props);
+  }, [selected])
+
+  useEffect(() => {
+    console.log('4')
     // We don't want this effect to be used unless we already know the years:
     if (!chartState.years.length) return;
-    Promise.all(
-      selected.map(async function (el) {
-        const chosenColor = chooseColor(el, selected);
-        const {fetchedData, link} = await fetchData(
-          el.id,
-          props.match.params.indicatorId
-        );
-        const newDataset = await processData(fetchedData, link, chosenColor);
-        if(newDataset){
-          chartDispatch({
-            type: "FETCH_DATA_SUCCESS",
-            payload: {
-              datasets: [...chartState.datasets, newDataset.countryDataset],
-            },
-          });
-
-        }else {
-          // const nextSelected = [...selected];
-          // nextSelected[nextSelected.length - 1].disabled = true;
-          // setSelected(nextSelected);
-        }
-        
-      })
-    );
-
-    // In case we need to add IDs to query string:
+    async function getSelectedCountriesDatasets() {
+      let newDatasets = await Promise.all(
+        selected.map(async function (el) {
+          const chosenColor = chooseColor(el, selected);
+          const { fetchedData, link } = await fetchData(
+            el.id,
+            props.match.params.indicatorId
+          );
+          const newDataset = await processData(fetchedData, link, chosenColor);
+          return newDataset.countryDataset;
+        })
+      );
+      chartDispatch({
+        type: "FETCH_DATA_SUCCESS",
+        payload: {
+          datasets: [chartState.datasets[0], ...newDatasets],
+        },
+      });
+    }
+    getSelectedCountriesDatasets();
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected.length]);
+  }, [selected.length, chartState.years]);
 
-  useEffect(() => {
-
-    if (search.compareTo && filteredOptions[0] !== undefined) {
-      // Convert search.compareTO (string of countries) into an array of IDs:
-      const chosenIDs = chooseIDs(search.compareTo);
-
-      // Modify queryString if necessary (if there were more than 3 countries in string):
-      modifyQueryString(chosenIDs, props);
-
-      // Store selected countries in state hook:
-      const countriesSelected = storeSelectedCountries(
-        chosenIDs,
-        filteredOptions
-      );
-
-      setSelected(countriesSelected);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search.compareTo]);
-
-  // DONE
   useEffect(() => {
     if (!chartState.chartData && !chartState.isLoading) {
       props.history.push("/not-found");
@@ -147,6 +148,7 @@ const ChartPage = (props) => {
     labels: chartState.years,
     datasets: chartState.datasets
   }
+
   return (
     <div>
       <Header />
