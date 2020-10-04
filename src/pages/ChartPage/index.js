@@ -14,7 +14,7 @@ import chooseIDs from "../../utils/IDsChooser";
 import storeSelectedCountries from "../../utils/storeSelectedCountries";
 
 const ChartPage = (props) => {
-  const {options} = useContext(SmartContext);
+  const {options, appDispatch} = useContext(SmartContext);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [chartState, chartDispatch] = useReducer(
     chartReducer,
@@ -25,7 +25,6 @@ const ChartPage = (props) => {
   const search = queryString.parse(props.location.search);
 
   useEffect(() => {
-    console.log('1')
 
     if (search.compareTo && filteredOptions[0] !== undefined) {
       // Convert search.compareTO (string of countries) into an array of IDs:
@@ -47,10 +46,9 @@ const ChartPage = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log('2')
     try {
       async function addData() {
-        const {fetchedData, link} = await fetchData(
+        const { fetchedData, link } = await fetchData(
           props.match.params.country,
           props.match.params.indicatorId
         );
@@ -58,9 +56,9 @@ const ChartPage = (props) => {
         const firstColor = "rgba(128, 0, 128, 0.8)";
         const firstDataset = await processData(fetchedData, link, firstColor);
         if (firstDataset === null) {
-          chartDispatch({type: "invalidateRequest"});
+          chartDispatch({ type: "invalidateRequest" });
         } else {
-          const {indicatorName, yearsArray, countryDataset} = firstDataset;
+          const { indicatorName, yearsArray, countryDataset } = firstDataset;
           chartDispatch({
             type: "FETCH_DATA_SUCCESS",
             payload: {
@@ -72,15 +70,17 @@ const ChartPage = (props) => {
         }
       }
       addData();
-      
     } catch (err) {
-      chartDispatch({type: "finishLoading"});
+      chartDispatch({ type: "finishLoading" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.match.params.country]);
+  }, [props.match.params.country, props.match.params.indicatorId]);
 
   useEffect(() => {
-    console.log('3')
+
+    const firstCountry = options.find((obj) => obj.id === props.match.params.country.toUpperCase());
+    appDispatch({type: 'selectedCountry', payload: firstCountry});
+
     if (!selected.length && options.length && search.compareTo) {
       const defaultSelected = storeSelectedCountries(
         chooseIDs(search.compareTo),
@@ -103,14 +103,16 @@ const ChartPage = (props) => {
   }, [options, props.match.params.country]);
 
   useEffect(() => {
+    if(selected.length == 0) return;
+
     const countriesIDs = selected.map((el) => {
       return el.id
     })
+
     modifyQueryString(countriesIDs, props);
-  }, [selected])
+  }, [selected]);
 
   useEffect(() => {
-    console.log('4')
     // We don't want this effect to be used unless we already know the years:
     if (!chartState.years.length) return;
     async function getSelectedCountriesDatasets() {
@@ -133,9 +135,9 @@ const ChartPage = (props) => {
       });
     }
     getSelectedCountriesDatasets();
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected.length, chartState.years]);
+  }, [selected.length, chartState.years, props.match.params.indicatorId]);
 
   useEffect(() => {
     if (!chartState.chartData && !chartState.isLoading) {
@@ -165,6 +167,8 @@ const ChartPage = (props) => {
               filteredOptions={filteredOptions}
               selected={selected}
               setSelected={setSelected}
+              history={props.history}
+              search={search}
             />
           </div>
         )}

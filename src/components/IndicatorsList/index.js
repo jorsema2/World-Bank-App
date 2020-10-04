@@ -15,7 +15,7 @@ const StyledLi = styled.li`
   margin-bottom: 2rem;
 `;
 
-const IndicatorsList = () => {
+const IndicatorsList = (props) => {
   const {appState, appDispatch} = useContext(SmartContext);
 
   useEffect(() => {
@@ -43,6 +43,10 @@ const IndicatorsList = () => {
     return;    
   }
 
+  const hasSearch = props.search && props.search.compareTo;
+
+  const otherCountries = hasSearch ? `?compareTo=${props.search.compareTo}` : '';
+
   function fetchMoreIndicators() {
     setTimeout(async () => {
       const data = await fetchThis(
@@ -67,7 +71,7 @@ const IndicatorsList = () => {
       <ul className="list-group mb-2 cool-list">
         {appState.indicators.map((indicator) => (
           <StyledLi key={Math.random() + "-" + Math.random()}>
-            <Link to={`/indicator/${appState.firstCountry.id}/${indicator.id}`}>
+            <Link to={`/indicator/${appState.firstCountry.id}/${indicator.id}/${otherCountries}`}>
               {indicator.name}
             </Link>
           </StyledLi>
