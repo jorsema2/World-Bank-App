@@ -8,6 +8,7 @@ it's an invalid request:
 */
 
 function checkIfValid(data) {
+
   if (!data || data[0].page === 0 || "message" in data[0]) {
     return false;
   }
@@ -15,10 +16,9 @@ function checkIfValid(data) {
 }
 
 
-async function processData(fetchedData, link, newColor) {
+async function processData(fetchedData, link, newColor, selectedItem) {
   try {
     const isValid = checkIfValid(fetchedData);
-
     if (!isValid) return null;
     // From now on, we only want the second element of the array, which is the one that has values per year:
     const pagesNumber = fetchedData[0].pages;

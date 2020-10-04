@@ -14,8 +14,8 @@ import chooseIDs from "../../utils/IDsChooser";
 import storeSelectedCountries from "../../utils/storeSelectedCountries";
 
 const ChartPage = (props) => {
-  const {options, appDispatch} = useContext(SmartContext);
-  const [filteredOptions, setFilteredOptions] = useState([]);
+  const {options, appDispatch} = useContext(SmartContext); //rename this to countries
+  const [filteredOptions, setFilteredOptions] = useState([]); //rename this to options
   const [chartState, chartDispatch] = useReducer(
     chartReducer,
     chartInitialState
@@ -25,8 +25,7 @@ const ChartPage = (props) => {
   const search = queryString.parse(props.location.search);
 
   useEffect(() => {
-
-    if (search.compareTo && filteredOptions[0] !== undefined) {
+    if (search.compareTo && filteredOptions[0] !== undefined) { // !filteredOptions.length
       // Convert search.compareTO (string of countries) into an array of IDs:
       const chosenIDs = chooseIDs(search.compareTo);
 
@@ -77,7 +76,6 @@ const ChartPage = (props) => {
   }, [props.match.params.country, props.match.params.indicatorId]);
 
   useEffect(() => {
-
     const firstCountry = options.find((obj) => obj.id === props.match.params.country.toUpperCase());
     appDispatch({type: 'selectedCountry', payload: firstCountry});
 
@@ -87,7 +85,7 @@ const ChartPage = (props) => {
         options
       );
       setSelected(defaultSelected);
-      return;
+      return; // unnecessary 
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,20 +101,24 @@ const ChartPage = (props) => {
   }, [options, props.match.params.country]);
 
   useEffect(() => {
-    if(selected.length == 0) return;
+    if(selected.length === 0) return;
 
     const countriesIDs = selected.map((el) => {
       return el.id
     })
 
     modifyQueryString(countriesIDs, props);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   useEffect(() => {
     // We don't want this effect to be used unless we already know the years:
     if (!chartState.years.length) return;
+    console.log('checking selected option', {
+      selected, search
+    })
     async function getSelectedCountriesDatasets() {
-      let newDatasets = await Promise.all(
+      const newDatasets = await Promise.all(
         selected.map(async function (el) {
           const chosenColor = chooseColor(el, selected);
           const { fetchedData, link } = await fetchData(
@@ -124,13 +126,17 @@ const ChartPage = (props) => {
             props.match.params.indicatorId
           );
           const newDataset = await processData(fetchedData, link, chosenColor);
+
+          if(!newDataset) return null;
           return newDataset.countryDataset;
         })
       );
+      const filteredDatasets = newDatasets.filter(data => data !== null);
+
       chartDispatch({
         type: "FETCH_DATA_SUCCESS",
         payload: {
-          datasets: [chartState.datasets[0], ...newDatasets],
+          datasets: [chartState.datasets[0], ...filteredDatasets], // why are you spreading an object into an array???
         },
       });
     }

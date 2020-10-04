@@ -1,16 +1,15 @@
-function dataFiller(newCountryName, newDataValues, newColor) {
-  try {
+function dataFiller(label, data = [], borderColor) {
+
+
     const datasets = {
-      label: newCountryName,
-      data: newDataValues,
+      label,
+      data,
       backgroundColor: ["rgba(255, 255, 255, 0)"],
-      borderColor: newColor,
+      borderColor,
       borderWidth: 8,
     };
     return datasets;
-  } catch (err) {
-    return [];
-  }
+
 }
 
 export default dataFiller;

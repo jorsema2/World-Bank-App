@@ -11,7 +11,7 @@ export const SmartContext = React.createContext();
 
 const App = () => {
   const [appState, appDispatch] = useReducer(appReducer, appInitialState);
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState([]); // rename this to countries
   
 
   useEffect(() => {
