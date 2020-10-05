@@ -2,24 +2,18 @@ import fetchMorePages from "./fetchMorePages";
 import arrayProcessor from "./processArrays";
 import dataFiller from "./dataFiller";
 
-/*
-If there's no data, 0 pages of data or the fetched data has the property called "message",
-it's an invalid request:
-*/
-
-function checkIfValid(data) {
-
-  if (!data || data[0].page === 0 || "message" in data[0]) {
+function checkIfHasData(data) {
+  if (!data || data[0].page === 0) {
     return false;
   }
   return true;
 }
 
-
-async function processData(fetchedData, link, newColor, selectedItem) {
+async function processData(fetchedData, link, newColor) {
   try {
-    const isValid = checkIfValid(fetchedData);
-    if (!isValid) return null;
+    console.log(fetchedData)
+    const hasData = checkIfHasData(fetchedData);
+    if (!hasData) return null;
     // From now on, we only want the second element of the array, which is the one that has values per year:
     const pagesNumber = fetchedData[0].pages;
     let data = fetchedData[1];
