@@ -1,18 +1,12 @@
-const allColors = [
-  "rgba(255, 0, 0, 0.8)",
-  "rgba(0, 255, 0, 0.8)",
-  "rgba(0, 0, 255, 0.8)",
-];
-
 export const chartInitialState = {
   isLoading: false,
   isRequestValid: true,
-  chosenIDs: [],
   datasets: [],
   years: [],
   isLine: true,
-  countryColors: allColors,
   indicatorName: null,
+  // ChartData is only used in one useEffect. It's unnecessary.
+  // However, if it's deleted, chartPage always shows "not-found". Review!
   chartData: {},
   areIndicatorsShown: false,
 };
@@ -31,51 +25,12 @@ export function chartReducer(chartState, action) {
         isRequestValid: true,
       };
     }
-    case "setFilteredOptions": {
-      return {
-        ...chartState,
-        filteredOptions: action.payload,
-      };
-    }
-    case "retrieveColors": {
-      return {
-        ...chartState,
-        countryColors: allColors,
-      };
-    }
     case 'FETCH_DATA_SUCCESS':{
       return {
         ...chartState,
         ...action.payload,
         isLoading: false,
-        isRequestValid: true,
       }
-    }
-    // to review
-    case "updateDatasets": {
-      return {
-        ...chartState,
-        datasets: action.payload,
-      };
-    }
-    case "updateYears": {
-      return {
-        ...chartState,
-        years: action.payload,
-      }
-    }
-    case "setIndicatorName": {
-      return {
-        ...chartState,
-        indicatorName: action.payload,
-      };
-    }
-    // -- end review
-    case "setRemainingColors": {
-      return {
-        ...chartState,
-        countryColors: action.payload,
-      };
     }
     case "changeChartType": {
       return {
@@ -105,12 +60,6 @@ export function chartReducer(chartState, action) {
       return {
         ...chartState,
         isLoading: false,
-      };
-    }
-    case "setChosenIDs": {
-      return {
-        ...chartState,
-        chosenIDs: action.payload,
       };
     }
     default:

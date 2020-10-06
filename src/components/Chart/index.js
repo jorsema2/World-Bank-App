@@ -21,7 +21,6 @@ const Chart = (props) => {
     chartDispatch({ type: "changeChartType" });
   }
 
-
   return (
     <div>
       <div>

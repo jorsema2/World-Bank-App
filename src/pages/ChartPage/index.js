@@ -53,11 +53,14 @@ const ChartPage = (props) => {
           props.match.params.country,
           props.match.params.indicatorId
         );
+        const isCountry = checkIfIsCountry(fetchedData);
+        const wasIndicatorDeleted = checkIfIndicatorWasDeleted(fetchedData);
 
         const firstColor = "rgba(128, 0, 128, 0.8)";
         const firstDataset = await processData(fetchedData, link, firstColor);
-        if (firstDataset === null) {
+        if (firstDataset === null || !isCountry || wasIndicatorDeleted) {
           chartDispatch({ type: "invalidateRequest" });
+          return;
         } else {
           const { indicatorName, yearsArray, countryDataset } = firstDataset;
           chartDispatch({
@@ -68,6 +71,7 @@ const ChartPage = (props) => {
               indicatorName,
             },
           });
+          chartDispatch({ type: "validateRequest" });
         }
       }
       addData();
@@ -105,7 +109,7 @@ const ChartPage = (props) => {
   }, [options, props.match.params.country]);
 
   useEffect(() => {
-    if (selected.length === 0) return;
+    if (selected.length === 0 && chartState.datasets.length < 1) return;
 
     const countriesIDs = selected.map((el) => {
       return el.id;
@@ -126,9 +130,13 @@ const ChartPage = (props) => {
             el.id,
             props.match.params.indicatorId
           );
-          const isCountry = checkIfIsCountry(fetchedData)
-          if(!isCountry) {
-            const newDataset = dataFiller(el.value + " (No Data)", [], chosenColor);
+          const isCountry = checkIfIsCountry(fetchedData);
+          if (!isCountry) {
+            const newDataset = dataFiller(
+              el.value + " (No Data)",
+              [],
+              chosenColor
+            );
             return newDataset;
           }
           const newDataset = await processData(fetchedData, link, chosenColor);
@@ -158,11 +166,18 @@ const ChartPage = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartState.chartData, chartState.isLoading]);
 
-  function checkIfIsCountry(fetchedData) {
-    if(fetchedData.length > 1) {
+  function checkIfIsCountry(data) {
+    if (data.length > 1) {
       return true;
     }
-    return false
+    return false;
+  }
+
+  function checkIfIndicatorWasDeleted(data) {
+    if (data.length === 1) {
+      return true;
+    }
+    return false;
   }
 
   const chartData = {
@@ -173,7 +188,9 @@ const ChartPage = (props) => {
   return (
     <div>
       <Header />
-      {!chartState.isRequestValid && <NoDataMessage />}
+      {!chartState.isRequestValid && (
+        <NoDataMessage setSelected={setSelected} />
+      )}
       {chartState.isRequestValid &&
         chartState.datasets.length > 0 &&
         chartState.years.length > 0 && (

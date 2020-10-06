@@ -21,8 +21,6 @@ const groupedIndicators = [
 
       { id: "NY.GDP.PCAP.CD", label: "GDP per capita (current US$)" },
 
-      { id: "BI.EMP.TOTL.NO", label: "Number of employed individuals" },
-
       {
         id: "BX.GSR.GNFS.CD",
         label: "Exports of goods and services (BoP, current US$)",

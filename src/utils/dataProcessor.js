@@ -11,7 +11,6 @@ function checkIfHasData(data) {
 
 async function processData(fetchedData, link, newColor) {
   try {
-    console.log(fetchedData)
     const hasData = checkIfHasData(fetchedData);
     if (!hasData) return null;
     // From now on, we only want the second element of the array, which is the one that has values per year:
