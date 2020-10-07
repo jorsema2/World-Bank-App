@@ -185,29 +185,42 @@ const ChartPage = (props) => {
     datasets: chartState.datasets,
   };
 
+  const chartHasData =
+    chartState.datasets.length > 0 && chartState.years.length > 0;
+
   return (
     <div>
       <Header />
-      {!chartState.isRequestValid && (
+      {!chartState.isRequestValid && !chartHasData && (
         <NoDataMessage setSelected={setSelected} />
       )}
-      {chartState.isRequestValid &&
-        chartState.datasets.length > 0 &&
-        chartState.years.length > 0 && (
-          <div>
-            <Chart
-              chartData={chartData}
-              indicatorName={chartState.indicatorName}
-            />
-            <Selectors
-              filteredOptions={filteredOptions}
-              selected={selected}
-              setSelected={setSelected}
-              history={props.history}
-              search={search}
-            />
-          </div>
-        )}
+      {!chartState.isRequestValid && chartHasData && (
+        <div>
+          <NoDataMessage setSelected={setSelected} />
+          <Selectors
+            filteredOptions={filteredOptions}
+            selected={selected}
+            setSelected={setSelected}
+            history={props.history}
+            search={search}
+          />
+        </div>
+      )}
+      {chartState.isRequestValid && chartHasData && (
+        <div>
+          <Chart
+            chartData={chartData}
+            indicatorName={chartState.indicatorName}
+          />
+          <Selectors
+            filteredOptions={filteredOptions}
+            selected={selected}
+            setSelected={setSelected}
+            history={props.history}
+            search={search}
+          />
+        </div>
+      )}
     </div>
   );
 };
