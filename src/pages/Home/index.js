@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import Select from "react-select";
-import Header from "../../components/Header";
+import Header from "../../components/HomeButton";
 import IndicatorsList from "../../components/IndicatorsList";
 import {SmartContext} from "../../App";
 

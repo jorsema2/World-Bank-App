@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
-const Header = () => {
+const HomeButton = () => {
     return (
       <div>
         <Link to={`/`}>
@@ -11,4 +11,4 @@ const Header = () => {
     );
 }
 
-export default Header;
+export default HomeButton;

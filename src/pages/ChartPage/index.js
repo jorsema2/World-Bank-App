@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
 import queryString from "query-string";
-import Header from "../../components/Header";
+import { Layout } from "antd";
+import 'antd/dist/antd.css';
+import NavMenu from "../../components/NavMenu";
+import HomeButton from "../../components/HomeButton";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
 import Selectors from "../../components/Selectors";
@@ -24,6 +27,8 @@ const ChartPage = (props) => {
   const [selected, setSelected] = useState([]);
 
   const search = queryString.parse(props.location.search);
+
+  const { Header, Footer, Sider, Content } = Layout;
 
   useEffect(() => {
     if (search.compareTo && filteredOptions[0] !== undefined) {
@@ -189,39 +194,48 @@ const ChartPage = (props) => {
     chartState.datasets.length > 0 && chartState.years.length > 0;
 
   return (
-    <div>
-      <Header />
-      {!chartState.isRequestValid && !chartHasData && (
-        <NoDataMessage setSelected={setSelected} />
-      )}
-      {!chartState.isRequestValid && chartHasData && (
-        <div>
-          <NoDataMessage setSelected={setSelected} />
-          <Selectors
-            filteredOptions={filteredOptions}
-            selected={selected}
-            setSelected={setSelected}
-            history={props.history}
-            search={search}
-          />
-        </div>
-      )}
-      {chartState.isRequestValid && chartHasData && (
-        <div>
-          <Chart
-            chartData={chartData}
-            indicatorName={chartState.indicatorName}
-          />
-          <Selectors
-            filteredOptions={filteredOptions}
-            selected={selected}
-            setSelected={setSelected}
-            history={props.history}
-            search={search}
-          />
-        </div>
-      )}
-    </div>
+    <Layout>
+      <Sider>
+        <HomeButton />
+        <NavMenu />
+      </Sider>
+      <Layout>
+        <Header>Header</Header>
+        <Content>
+          {!chartState.isRequestValid && !chartHasData && (
+            <NoDataMessage setSelected={setSelected} />
+          )}
+          {!chartState.isRequestValid && chartHasData && (
+            <div>
+              <NoDataMessage setSelected={setSelected} />
+              <Selectors
+                filteredOptions={filteredOptions}
+                selected={selected}
+                setSelected={setSelected}
+                history={props.history}
+                search={search}
+              />
+            </div>
+          )}
+          {chartState.isRequestValid && chartHasData && (
+            <div>
+              <Chart
+                chartData={chartData}
+                indicatorName={chartState.indicatorName}
+              />
+              <Selectors
+                filteredOptions={filteredOptions}
+                selected={selected}
+                setSelected={setSelected}
+                history={props.history}
+                search={search}
+              />
+            </div>
+          )}
+        </Content>
+        <Footer>Footer</Footer>
+      </Layout>
+    </Layout>
   );
 };
 
