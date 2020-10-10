@@ -200,7 +200,10 @@ const ChartPage = (props) => {
         <NavMenu />
       </Sider>
       <Layout>
-        <Header>Header</Header>
+        <Header style={{ backgroundColor: 'green', height: 96 }}>
+          <h3 style={{ height: 32 }}>Welcome to World Charts</h3>
+          <h4 style={{ height: 32 }}>A React App by Jorge Segura</h4> 
+        </Header>
         <Content>
           {!chartState.isRequestValid && !chartHasData && (
             <NoDataMessage setSelected={setSelected} />
@@ -233,7 +236,7 @@ const ChartPage = (props) => {
             </div>
           )}
         </Content>
-        <Footer>Footer</Footer>
+        <Footer style={{ backgroundColor: 'pink', height: 256 }}>*EMPTY BOX FOR FUTURE CONTENT*</Footer>
       </Layout>
     </Layout>
   );

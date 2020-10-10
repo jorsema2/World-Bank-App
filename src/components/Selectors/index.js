@@ -13,14 +13,14 @@ const Selectors = (props) => {
     appDispatch({ type: "resetIndicators"})
   }, [areIndicatorsShown])
 
-  const onChange = (selectedOptions) => {
+  const changeIndicator = (newIndicator) => {
 
     const hasSearch = props.search && props.search.compareTo;
 
     const otherCountries = hasSearch ? `?compareTo=${props.search.compareTo}` : '';
 
     props.history.push(
-      `/indicator/${appState.firstCountry.id}/${selectedOptions.id}/${otherCountries}`
+      `/indicator/${appState.firstCountry.id}/${newIndicator.id}/${otherCountries}`
     );
   };
 
@@ -35,17 +35,16 @@ const Selectors = (props) => {
         />
       </div>
       <div>
-        <h3>Indicators by topic</h3>
-        <Select options={groupedIndicators} onChange={onChange} />
+        <h3>Recommended indicators</h3>
+        <Select options={groupedIndicators} onChange={changeIndicator} />
       </div>
       <div>
         <button onClick={() => setIndicatorsShown(!areIndicatorsShown)}>
-          Show/Hide indicators
+          All indicators
         </button>
       </div>
       {areIndicatorsShown && (
         <div>
-          <h3>All indicators</h3>
           <IndicatorsList search={props.search} />
         </div>
       )}

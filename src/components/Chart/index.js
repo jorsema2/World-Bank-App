@@ -25,8 +25,11 @@ const Chart = (props) => {
     <div>
       <div>
         <IndicatorName>{props.indicatorName}</IndicatorName>
+        <div>
+          <button onClick={() => changeChart()}>Change chart type</button>
+        </div>
         {props.chartData && (
-          <div style={{ width: 1200, height: 400 }}>
+          <div style={{ width: 768, height: 400 }}>
             {chartState.isLine && (
               <Line
                 data={props.chartData}
@@ -45,9 +48,6 @@ const Chart = (props) => {
             )}
           </div>
         )}
-        <div>
-          <button onClick={() => changeChart()}>Change chart type</button>
-        </div>
       </div>
     </div>
   );
