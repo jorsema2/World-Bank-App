@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {Link} from "react-router-dom";
 import { Menu } from "antd";
 import {
   AppstoreOutlined,
@@ -34,7 +35,7 @@ const NavMenu = () => {
           </span>
         }
       >
-        <Menu.Item key="1">Option 1</Menu.Item>
+        <Menu.Item key="1"><Link to={`/`}>Home</Link></Menu.Item>
         <Menu.Item key="2">Option 2</Menu.Item>
         <Menu.Item key="3">Option 3</Menu.Item>
         <Menu.Item key="4">Option 4</Menu.Item>

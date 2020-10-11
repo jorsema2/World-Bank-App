@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import Select from "react-select";
-import Header from "../../components/HomeButton";
 import IndicatorsList from "../../components/IndicatorsList";
 import {SmartContext} from "../../App";
 
@@ -24,8 +23,7 @@ export const Home = () => {
 
   return (
     <div>
-      <Header />
-      <Title>Countries Charts</Title>
+      <Title>World Charts</Title>
       <Select
         value={appState.firstCountry}
         options={options}

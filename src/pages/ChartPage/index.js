@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
 import queryString from "query-string";
-import { Layout } from "antd";
+import { Layout, Slider } from "antd";
 import "antd/dist/antd.css";
 import styled from "styled-components";
 import Select from "react-select";
 import NavMenu from "../../components/NavMenu";
-import HomeButton from "../../components/HomeButton";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
 import IndicatorsList from "../../components/IndicatorsList";
@@ -231,18 +230,30 @@ const ChartPage = (props) => {
       )}
       {chartHasData && (
         <Layout>
-          <Sider>
-            <HomeButton />
+          <Sider style={{ backgroundColor: "white" }}>
             <NavMenu />
           </Sider>
-          <Layout>
+          <Layout style={{ padding: 16 }}>
             <Header style={{ backgroundColor: "green", height: 96 }}>
               <h3 style={{ height: 32 }}>Welcome to World Charts</h3>
               <h4 style={{ height: 32 }}>A React App by Jorge Segura</h4>
             </Header>
-            <Content>
-              <div>
-                <div>
+            <Content
+              style={{
+                backgroundColor: "yellow",
+                padding: 16,
+                paddingColor: "yellow",
+              }}
+            >
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    width: 768
+                  }}
+                >
                   <div>
                     <div>
                       <button
@@ -271,7 +282,23 @@ const ChartPage = (props) => {
                       <Chart chartData={chartData} isLine={chartState.isLine} />
                     )}
                   </div>
-                  {/* Slider */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      maxWidth: 500,
+                    }}
+                  >
+                    <p>1960</p>
+                    <Slider
+                      range
+                      defaultValue={[1990, 2015]}
+                      min={1960}
+                      max={2019}
+                      style={{ minWidth: 360 }}
+                    />
+                    <p>2019</p>
+                  </div>
                 </div>
                 <div>
                   <h3>Recommended indicators</h3>
