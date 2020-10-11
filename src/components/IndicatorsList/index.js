@@ -1,8 +1,9 @@
 import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
-import fetchThis from "../../utils/fetcher";
 import {SmartContext} from "../../App";
+import fetchThis from "../../utils/fetcher";
+
 
 const StyledLi = styled.li`
   background-color: lightgrey;

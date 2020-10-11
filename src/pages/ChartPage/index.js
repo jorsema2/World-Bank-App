@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
 import queryString from "query-string";
 import { Layout } from "antd";
-import 'antd/dist/antd.css';
+import "antd/dist/antd.css";
+import styled from "styled-components";
+import Select from "react-select";
 import NavMenu from "../../components/NavMenu";
 import HomeButton from "../../components/HomeButton";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
-import Selectors from "../../components/Selectors";
+import IndicatorsList from "../../components/IndicatorsList";
+import MultiSelectSort from "../../components/SelectMoreCountries";
 import { SmartContext } from "../../App";
 import { chartReducer, chartInitialState } from "../../reducers/chartReducer";
 import fetchData from "../../utils/dataFetcher";
@@ -16,15 +19,25 @@ import modifyQueryString from "../../utils/compareToQueryString";
 import chooseColor from "../../utils/colorChooser";
 import chooseIDs from "../../utils/IDsChooser";
 import storeSelectedCountries from "../../utils/storeSelectedCountries";
+import groupedIndicators from "../../utils/groupedIndicators";
+
+const IndicatorName = styled.h2`
+  color: blue;
+  font-familiy: Arial;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3 rem;
+`;
 
 const ChartPage = (props) => {
-  const { options, appDispatch } = useContext(SmartContext); //rename this to countries
+  const { options, appState, appDispatch } = useContext(SmartContext); //rename this to countries
   const [chartState, chartDispatch] = useReducer(
     chartReducer,
     chartInitialState
   );
   const [filteredOptions, setFilteredOptions] = useState([]); //rename this to options
   const [selected, setSelected] = useState([]);
+  const [areIndicatorsShown, setIndicatorsShown] = useState(false);
 
   const search = queryString.parse(props.location.search);
 
@@ -171,6 +184,10 @@ const ChartPage = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartState.chartData, chartState.isLoading]);
 
+  useEffect(() => {
+    appDispatch({ type: "resetIndicators" });
+  }, [areIndicatorsShown]);
+
   function checkIfIsCountry(data) {
     if (data.length > 1) {
       return true;
@@ -185,6 +202,20 @@ const ChartPage = (props) => {
     return false;
   }
 
+  function changeChart() {
+    chartDispatch({ type: "changeChartType" });
+  }
+
+  const changeIndicator = (newIndicator) => {
+    const hasSearch = search && search.compareTo;
+
+    const otherCountries = hasSearch ? `?compareTo=${search.compareTo}` : "";
+
+    props.history.push(
+      `/indicator/${appState.firstCountry.id}/${newIndicator.id}/${otherCountries}`
+    );
+  };
+
   const chartData = {
     labels: chartState.years,
     datasets: chartState.datasets,
@@ -194,51 +225,78 @@ const ChartPage = (props) => {
     chartState.datasets.length > 0 && chartState.years.length > 0;
 
   return (
-    <Layout>
-      <Sider>
-        <HomeButton />
-        <NavMenu />
-      </Sider>
-      <Layout>
-        <Header style={{ backgroundColor: 'green', height: 96 }}>
-          <h3 style={{ height: 32 }}>Welcome to World Charts</h3>
-          <h4 style={{ height: 32 }}>A React App by Jorge Segura</h4> 
-        </Header>
-        <Content>
-          {!chartState.isRequestValid && !chartHasData && (
-            <NoDataMessage setSelected={setSelected} />
-          )}
-          {!chartState.isRequestValid && chartHasData && (
-            <div>
-              <NoDataMessage setSelected={setSelected} />
-              <Selectors
-                filteredOptions={filteredOptions}
-                selected={selected}
-                setSelected={setSelected}
-                history={props.history}
-                search={search}
-              />
-            </div>
-          )}
-          {chartState.isRequestValid && chartHasData && (
-            <div>
-              <Chart
-                chartData={chartData}
-                indicatorName={chartState.indicatorName}
-              />
-              <Selectors
-                filteredOptions={filteredOptions}
-                selected={selected}
-                setSelected={setSelected}
-                history={props.history}
-                search={search}
-              />
-            </div>
-          )}
-        </Content>
-        <Footer style={{ backgroundColor: 'pink', height: 256 }}>*EMPTY BOX FOR FUTURE CONTENT*</Footer>
-      </Layout>
-    </Layout>
+    <div>
+      {!chartState.isRequestValid && !chartHasData && (
+        <NoDataMessage setSelected={setSelected} />
+      )}
+      {chartHasData && (
+        <Layout>
+          <Sider>
+            <HomeButton />
+            <NavMenu />
+          </Sider>
+          <Layout>
+            <Header style={{ backgroundColor: "green", height: 96 }}>
+              <h3 style={{ height: 32 }}>Welcome to World Charts</h3>
+              <h4 style={{ height: 32 }}>A React App by Jorge Segura</h4>
+            </Header>
+            <Content>
+              <div>
+                <div>
+                  <div>
+                    <div>
+                      <button
+                        onClick={() => setIndicatorsShown(!areIndicatorsShown)}
+                      >
+                        All indicators
+                      </button>
+                      {areIndicatorsShown && (
+                        <div>
+                          <IndicatorsList search={props.search} />
+                        </div>
+                      )}
+                    </div>
+                    <IndicatorName>{chartState.indicatorName}</IndicatorName>
+                    <div>
+                      <button onClick={() => changeChart()}>
+                        Change chart type
+                      </button>
+                    </div>
+                  </div>
+                  <div style={{ width: 768, height: 400 }}>
+                    {!chartState.isRequestValid && (
+                      <NoDataMessage setSelected={setSelected} />
+                    )}
+                    {chartState.isRequestValid && (
+                      <Chart chartData={chartData} isLine={chartState.isLine} />
+                    )}
+                  </div>
+                  {/* Slider */}
+                </div>
+                <div>
+                  <h3>Recommended indicators</h3>
+                  <Select
+                    options={groupedIndicators}
+                    onChange={changeIndicator}
+                  />
+                </div>
+              </div>
+              <div>
+                <p>Add another country to the chart</p>
+                <MultiSelectSort
+                  filteredOptions={filteredOptions}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </div>
+            </Content>
+            <Footer style={{ backgroundColor: "pink", height: 256 }}>
+              *EMPTY BOX FOR FUTURE CONTENT*
+            </Footer>
+          </Layout>
+        </Layout>
+      )}
+    </div>
   );
 };
 

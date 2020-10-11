@@ -13,7 +13,7 @@ const NoDataMessage = (props) => {
     }
 
     return(
-        <div>
+        <div style={{height: 400}}>
             <h3>No data for this indicator</h3>
             <br></br>
             <p>Unfortunately, this API has a lot of indicators without data. To save you time looking for a valid indicator, I suggest you to use the following:</p>
