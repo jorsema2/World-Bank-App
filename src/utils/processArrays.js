@@ -1,4 +1,4 @@
-function arrayProcessor(data) {
+function processArrays(data) {
   /* 
   This fetched data shows newest year to oldest year, but we want the opposite. 
   So, we reverse both arrays (years' values and years): 
@@ -9,4 +9,4 @@ function arrayProcessor(data) {
   return {valuesArray, yearsArray};
 }
 
-export default arrayProcessor;
+export default processArrays;

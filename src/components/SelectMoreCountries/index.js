@@ -26,8 +26,8 @@ const SortableSelect = SortableContainer(Select);
 export default function MultiSelectSort(props) {
   const [areDisabled, setAreDisabled] = useState(false);
 
-  const onChange = (selectedOptions) => {
-    selectedOptions !== null ? props.setSelected(selectedOptions) : props.setSelected([]);
+  const onChange = (selectedCountries) => {
+    selectedCountries !== null ? props.setSelected(selectedCountries) : props.setSelected([]);
   }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -52,7 +52,7 @@ export default function MultiSelectSort(props) {
       getHelperDimensions={({ node }) => node.getBoundingClientRect()}
       // react-select props:
       isMulti
-      options={props.filteredOptions}
+      options={props.options}
       value={props.selected}
       onChange={onChange}
       components={{
@@ -69,7 +69,7 @@ export default function MultiSelectSort(props) {
       getHelperDimensions={({ node }) => node.getBoundingClientRect()}
       // react-select props:
       isMulti
-      options={props.filteredOptions}
+      options={props.options}
       value={props.selected}
       onChange={onChange}
       components={{

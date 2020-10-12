@@ -1,5 +1,5 @@
 import fetchMorePages from "./fetchMorePages";
-import arrayProcessor from "./processArrays";
+import processArrays from "./processArrays";
 import dataFiller from "./dataFiller";
 
 function checkIfHasData(data) {
@@ -24,7 +24,7 @@ async function processData(fetchedData, link, newColor) {
       data = await fetchMorePages(data, link, pagesNumber);
     }
 
-    const { valuesArray, yearsArray } = arrayProcessor(data);
+    const { valuesArray, yearsArray } = processArrays(data);
 
     // We select only the data that's going to be used in the chart:
     const countryDataset = dataFiller(countryName, valuesArray, newColor);

@@ -11,12 +11,12 @@ import IndicatorsList from "../../components/IndicatorsList";
 import MultiSelectSort from "../../components/SelectMoreCountries";
 import { SmartContext } from "../../App";
 import { chartReducer, chartInitialState } from "../../reducers/chartReducer";
-import fetchData from "../../utils/dataFetcher";
-import processData from "../../utils/dataProcessor";
+import fetchData from "../../utils/fetchData";
+import processData from "../../utils/processData";
 import dataFiller from "../../utils/dataFiller";
-import modifyQueryString from "../../utils/compareToQueryString";
-import chooseColor from "../../utils/colorChooser";
-import chooseIDs from "../../utils/IDsChooser";
+import modifyQueryString from "../../utils/modifyQueryString";
+import chooseColor from "../../utils/chooseColor";
+import chooseIDs from "../../utils/chooseIDs";
 import storeSelectedCountries from "../../utils/storeSelectedCountries";
 import groupedIndicators from "../../utils/groupedIndicators";
 
@@ -29,12 +29,12 @@ const IndicatorName = styled.h2`
 `;
 
 const ChartPage = (props) => {
-  const { options, appState, appDispatch } = useContext(SmartContext); //rename this to countries
+  const { countries, appState, appDispatch } = useContext(SmartContext);
   const [chartState, chartDispatch] = useReducer(
     chartReducer,
     chartInitialState
   );
-  const [filteredOptions, setFilteredOptions] = useState([]); //rename this to options
+  const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState([]);
   const [areIndicatorsShown, setIndicatorsShown] = useState(false);
 
@@ -43,19 +43,14 @@ const ChartPage = (props) => {
   const { Header, Footer, Sider, Content } = Layout;
 
   useEffect(() => {
-    if (search.compareTo && filteredOptions[0] !== undefined) {
-      // !filteredOptions.length
+    if (search.compareTo && options[0] !== undefined) {
+
       // Convert search.compareTO (string of countries) into an array of IDs:
       const chosenIDs = chooseIDs(search.compareTo);
 
-      // Modify queryString if necessary (if there were more than 3 countries in string):
       modifyQueryString(chosenIDs, props);
 
-      // Store selected countries in state hook:
-      const countriesSelected = storeSelectedCountries(
-        chosenIDs,
-        filteredOptions
-      );
+      const countriesSelected = storeSelectedCountries(chosenIDs, options);
 
       setSelected(countriesSelected);
     }
@@ -99,31 +94,31 @@ const ChartPage = (props) => {
   }, [props.match.params.country, props.match.params.indicatorId]);
 
   useEffect(() => {
-    const firstCountry = options.find(
+    const firstCountry = countries.find(
       (obj) => obj.id === props.match.params.country.toUpperCase()
     );
     appDispatch({ type: "selectedCountry", payload: firstCountry });
 
-    if (!selected.length && options.length && search.compareTo) {
+    if (!selected.length && countries.length && search.compareTo) {
       const defaultSelected = storeSelectedCountries(
         chooseIDs(search.compareTo),
-        options
+        countries
       );
       setSelected(defaultSelected);
       return; // unnecessary
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
+  }, [countries]);
 
   useEffect(() => {
     // Don't show the first chosen country in the select dropdown:
-    const newOptions = options.filter(
+    const newOptions = countries.filter(
       (el) => el.id !== props.match.params.country.toUpperCase()
     );
-    setFilteredOptions(newOptions);
+    setOptions(newOptions);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options, props.match.params.country]);
+  }, [countries, props.match.params.country]);
 
   useEffect(() => {
     if (selected.length === 0 && chartState.datasets.length < 1) return;
@@ -251,10 +246,16 @@ const ChartPage = (props) => {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
-                    width: 768
+                    width: 768,
                   }}
                 >
-                  <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      alignItems: "baseline",
+                    }}
+                  >
                     <div>
                       <button
                         onClick={() => setIndicatorsShown(!areIndicatorsShown)}
@@ -285,8 +286,8 @@ const ChartPage = (props) => {
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "space-around",
-                      maxWidth: 500,
+                      justifyContent: "center",
+                      alignItems: "baseline",
                     }}
                   >
                     <p>1960</p>
@@ -311,7 +312,7 @@ const ChartPage = (props) => {
               <div>
                 <p>Add another country to the chart</p>
                 <MultiSelectSort
-                  filteredOptions={filteredOptions}
+                  options={options}
                   selected={selected}
                   setSelected={setSelected}
                 />

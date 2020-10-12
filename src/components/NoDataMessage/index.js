@@ -3,12 +3,12 @@ import {Link} from "react-router-dom";
 import {SmartContext} from "../../App";
 
 const NoDataMessage = (props) => {
-    const { options, appDispatch } = useContext(SmartContext);
+    const { countries, appDispatch } = useContext(SmartContext);
 
     function changeToChina() {
         // We only want to show China, so we empty the array of countries
         props.setSelected([]);
-        const selectedCountry = options.find((obj) => obj.id === "CHN");
+        const selectedCountry = countries.find((obj) => obj.id === "CHN");
         appDispatch({type: 'selectedCountry', payload: selectedCountry});
     }
 

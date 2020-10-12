@@ -13,10 +13,10 @@ const Title = styled.h1`
 `;
 
 export const Home = () => {
-  const {options, appState, appDispatch} = useContext(SmartContext);
+  const {countries, appState, appDispatch} = useContext(SmartContext);
 
   function handleChange(e) {
-    const selectedCountry = options.find((obj) => obj.value === e.value);
+    const selectedCountry = countries.find((obj) => obj.value === e.value);
     appDispatch({type: 'selectedCountry', payload: selectedCountry});
     appDispatch({type: 'resetIndicators', payload: selectedCountry});
   }
@@ -26,7 +26,7 @@ export const Home = () => {
       <Title>World Charts</Title>
       <Select
         value={appState.firstCountry}
-        options={options}
+        options={countries}
         onChange={handleChange}
       />
       {appState.firstCountry && <IndicatorsList />}

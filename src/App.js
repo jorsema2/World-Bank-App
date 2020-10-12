@@ -1,25 +1,24 @@
 import React, { useState, useEffect, useReducer } from "react";
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
-import {ThemeProvider} from 'styled-components'
-import { appReducer, appInitialState } from "./reducers/appReducer"
-import {Home} from "./pages/Home";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
+import { appReducer, appInitialState } from "./reducers/appReducer";
+import { Home } from "./pages/Home";
 import ChartPage from "./pages/ChartPage";
 import FourOhFour from "./components/FourOhFour";
-import fetchOptions from "./utils/fetchCountries";
+import getCountries from "./utils/getCountries";
 
 export const SmartContext = React.createContext();
 
 const App = () => {
   const [appState, appDispatch] = useReducer(appReducer, appInitialState);
-  const [options, setOptions] = useState([]); // rename this to countries
-  
+  const [countries, setCountries] = useState([]);
 
   useEffect(() => {
-    async function addOptions() {
-      const newOptions = await fetchOptions();
-      setOptions(newOptions);
+    async function addCountries() {
+      const newCountries = await getCountries();
+      setCountries(newCountries);
     }
-    addOptions();
+    addCountries();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -28,7 +27,7 @@ const App = () => {
       <Router>
         <ThemeProvider theme={{ mainColor: "#FF5A5F" }}>
           <SmartContext.Provider
-            value={{ options, setOptions, appState, appDispatch }}
+            value={{ countries, setCountries, appState, appDispatch }}
           >
             <div>
               <Switch>
