@@ -1,4 +1,5 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useCallback } from "react";
+import {withRouter} from 'react-router-dom'
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import {SmartContext} from "../../App";
@@ -19,6 +20,15 @@ const StyledLi = styled.li`
 const IndicatorsList = (props) => {
   const {appState, appDispatch} = useContext(SmartContext);
 
+  const handleScroll = useCallback(() => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop !==
+      document.documentElement.offsetHeight
+    )
+    appDispatch({type: 'startIndicatorsFetch'})
+    return;    
+  }, [appDispatch])
+
   useEffect(() => {
     fetchMoreIndicators();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -27,7 +37,7 @@ const IndicatorsList = (props) => {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
   useEffect(() => {
     if (!appState.isFetching) return;
@@ -35,19 +45,12 @@ const IndicatorsList = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appState.isFetching]);
 
-  function handleScroll() {
-    if (
-      window.innerHeight + document.documentElement.scrollTop !==
-      document.documentElement.offsetHeight
-    )
-    appDispatch({type: 'startIndicatorsFetch'})
-    return;    
-  }
+ 
 
-  console.log("After: ")
-  console.log(props.search.compareTo);
 
   const hasSearch = props.search && props.search.compareTo;
+
+  console.log(props)
 
   const otherCountries = hasSearch ? `?compareTo=${props.search.compareTo}` : '';
 

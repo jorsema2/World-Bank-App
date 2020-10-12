@@ -42,6 +42,12 @@ const ChartPage = (props) => {
 
   const { Header, Footer, Sider, Content } = Layout;
 
+  const StyledContent = styled(Content)`
+  background-color: yellow;
+  padding: 16px;
+  paddingColor: yellow;
+  `
+
   useEffect(() => {
     if (search.compareTo && options[0] !== undefined) {
 
@@ -94,10 +100,10 @@ const ChartPage = (props) => {
   }, [props.match.params.country, props.match.params.indicatorId]);
 
   useEffect(() => {
-    const firstCountry = countries.find(
+    const currentCountry = countries.find(
       (obj) => obj.id === props.match.params.country.toUpperCase()
     );
-    appDispatch({ type: "selectedCountry", payload: firstCountry });
+    appDispatch({ type: "selectedCountry", payload: currentCountry });
 
     if (!selected.length && countries.length && search.compareTo) {
       const defaultSelected = storeSelectedCountries(
@@ -105,7 +111,6 @@ const ChartPage = (props) => {
         countries
       );
       setSelected(defaultSelected);
-      return; // unnecessary
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -180,7 +185,7 @@ const ChartPage = (props) => {
 
   useEffect(() => {
     appDispatch({ type: "resetIndicators" });
-  }, [areIndicatorsShown]);
+  }, [appDispatch, areIndicatorsShown]);
 
   function checkIfIsCountry(data) {
     if (data.length > 1) {
@@ -218,6 +223,8 @@ const ChartPage = (props) => {
   const chartHasData =
     chartState.datasets.length > 0 && chartState.years.length > 0;
 
+    console.log(props)
+
   return (
     <div>
       {!chartState.isRequestValid && !chartHasData && (
@@ -233,7 +240,7 @@ const ChartPage = (props) => {
               <h3 style={{ height: 32 }}>Welcome to World Charts</h3>
               <h4 style={{ height: 32 }}>A React App by Jorge Segura</h4>
             </Header>
-            <Content
+            <StyledContent
               style={{
                 backgroundColor: "yellow",
                 padding: 16,
@@ -264,7 +271,7 @@ const ChartPage = (props) => {
                       </button>
                       {areIndicatorsShown && (
                         <div>
-                          <IndicatorsList search={props.search} />
+                          <IndicatorsList search={props.location.search} />
                         </div>
                       )}
                     </div>
@@ -317,7 +324,7 @@ const ChartPage = (props) => {
                   setSelected={setSelected}
                 />
               </div>
-            </Content>
+            </StyledContent>
             <Footer style={{ backgroundColor: "pink", height: 256 }}>
               *EMPTY BOX FOR FUTURE CONTENT*
             </Footer>
