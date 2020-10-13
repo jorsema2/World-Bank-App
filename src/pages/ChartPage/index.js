@@ -271,7 +271,7 @@ const ChartPage = (props) => {
                       </button>
                       {areIndicatorsShown && (
                         <div>
-                          <IndicatorsList search={props.location.search} />
+                          <IndicatorsList search={search} />
                         </div>
                       )}
                     </div>

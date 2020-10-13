@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useCallback } from "react";
-import {withRouter} from 'react-router-dom'
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import {SmartContext} from "../../App";
@@ -44,9 +43,6 @@ const IndicatorsList = (props) => {
     fetchMoreIndicators();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appState.isFetching]);
-
- 
-
 
   const hasSearch = props.search && props.search.compareTo;
 
