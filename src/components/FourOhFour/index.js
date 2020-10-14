@@ -1,16 +1,12 @@
 import React from "react";
 import { Layout } from "antd";
 import "antd/dist/antd.css";
-import NavMenu from "../NavMenu";
 
 const FourOhFour = () => {
-  const { Sider, Content } = Layout;
+  const { Content } = Layout;
 
   return (
     <Layout>
-      <Sider>
-        <NavMenu />
-      </Sider>
       <Content>
         <div>
           <h1>404 Error: Not Found</h1>

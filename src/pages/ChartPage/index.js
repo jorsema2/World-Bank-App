@@ -1,10 +1,25 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
 import queryString from "query-string";
-import { Layout, Slider } from "antd";
+import { Link } from "react-router-dom";
 import "antd/dist/antd.css";
-import styled from "styled-components";
 import Select from "react-select";
-import NavMenu from "../../components/NavMenu";
+import {
+  StyledLayout,
+  StyledHeader,
+  AppTitle,
+  NavMenu,
+  NavMenuItem,
+  StyledContent,
+  IndicatorName,
+  ContainerRow,
+  ContentLeftContainer,
+  ButtonContainer,
+  ChartContainer,
+  SliderContainer,
+  StyledSlider,
+  ContentRightContainer,
+  StyledFooter,
+} from "./style";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
 import IndicatorsList from "../../components/IndicatorsList";
@@ -20,14 +35,6 @@ import chooseIDs from "../../utils/chooseIDs";
 import storeSelectedCountries from "../../utils/storeSelectedCountries";
 import groupedIndicators from "../../utils/groupedIndicators";
 
-const IndicatorName = styled.h2`
-  color: blue;
-  font-familiy: Arial;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 3 rem;
-`;
-
 const ChartPage = (props) => {
   const { countries, appState, appDispatch } = useContext(SmartContext);
   const [chartState, chartDispatch] = useReducer(
@@ -40,17 +47,8 @@ const ChartPage = (props) => {
 
   const search = queryString.parse(props.location.search);
 
-  const { Header, Footer, Sider, Content } = Layout;
-
-  const StyledContent = styled(Content)`
-  background-color: yellow;
-  padding: 16px;
-  paddingColor: yellow;
-  `
-
   useEffect(() => {
     if (search.compareTo && options[0] !== undefined) {
-
       // Convert search.compareTO (string of countries) into an array of IDs:
       const chosenIDs = chooseIDs(search.compareTo);
 
@@ -223,113 +221,95 @@ const ChartPage = (props) => {
   const chartHasData =
     chartState.datasets.length > 0 && chartState.years.length > 0;
 
-    console.log(props)
-
   return (
     <div>
       {!chartState.isRequestValid && !chartHasData && (
         <NoDataMessage setSelected={setSelected} />
       )}
       {chartHasData && (
-        <Layout>
-          <Sider style={{ backgroundColor: "white" }}>
-            <NavMenu />
-          </Sider>
-          <Layout style={{ padding: 16 }}>
-            <Header style={{ backgroundColor: "green", height: 96 }}>
-              <h3 style={{ height: 32 }}>Welcome to World Charts</h3>
-              <h4 style={{ height: 32 }}>A React App by Jorge Segura</h4>
-            </Header>
-            <StyledContent
-              style={{
-                backgroundColor: "yellow",
-                padding: 16,
-                paddingColor: "yellow",
-              }}
-            >
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    width: 768,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-around",
-                      alignItems: "baseline",
-                    }}
-                  >
-                    <div>
-                      <button
-                        onClick={() => setIndicatorsShown(!areIndicatorsShown)}
-                      >
-                        All indicators
-                      </button>
-                      {areIndicatorsShown && (
-                        <div>
-                          <IndicatorsList search={search} />
-                        </div>
-                      )}
-                    </div>
-                    <IndicatorName>{chartState.indicatorName}</IndicatorName>
-                    <div>
-                      <button onClick={() => changeChart()}>
-                        Change chart type
-                      </button>
-                    </div>
-                  </div>
-                  <div style={{ width: 768, height: 400 }}>
-                    {!chartState.isRequestValid && (
-                      <NoDataMessage setSelected={setSelected} />
-                    )}
-                    {chartState.isRequestValid && (
-                      <Chart chartData={chartData} isLine={chartState.isLine} />
+        <StyledLayout>
+          <StyledHeader>
+            <AppTitle>
+              <Link to="/">World Charts</Link>
+            </AppTitle>
+            <NavMenu>
+              <NavMenuItem
+                target="_blank"
+                href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
+              >
+                LinkedIn
+              </NavMenuItem>
+              <NavMenuItem target="_blank" href="https://github.com/jorsema2">
+                GitHub
+              </NavMenuItem>
+            </NavMenu>
+          </StyledHeader>
+          <StyledContent>
+            <div>
+              <IndicatorName>{chartState.indicatorName}</IndicatorName>
+            </div>
+            <ContainerRow>
+              <ContentLeftContainer>
+                <ButtonContainer>
+                  <div>
+                    <button
+                      onClick={() => setIndicatorsShown(!areIndicatorsShown)}
+                    >
+                      All indicators
+                    </button>
+                    {areIndicatorsShown && (
+                      <div>
+                        <IndicatorsList search={search} />
+                      </div>
                     )}
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "baseline",
-                    }}
-                  >
-                    <p>1960</p>
-                    <Slider
-                      range
-                      defaultValue={[1990, 2015]}
-                      min={1960}
-                      max={2019}
-                      style={{ minWidth: 360 }}
-                    />
-                    <p>2019</p>
+                  <div>
+                    <button onClick={() => changeChart()}>
+                      Change chart type
+                    </button>
                   </div>
-                </div>
-                <div>
-                  <h3>Recommended indicators</h3>
-                  <Select
-                    options={groupedIndicators}
-                    onChange={changeIndicator}
+                </ButtonContainer>
+                <ChartContainer>
+                  {!chartState.isRequestValid && (
+                    <NoDataMessage setSelected={setSelected} />
+                  )}
+                  {chartState.isRequestValid && (
+                    <Chart chartData={chartData} isLine={chartState.isLine} />
+                  )}
+                </ChartContainer>
+                <SliderContainer>
+                  <p>1960</p>
+                  <StyledSlider
+                    range
+                    defaultValue={[1990, 2015]}
+                    min={1960}
+                    max={2019}
                   />
-                </div>
-              </div>
-              <div>
-                <p>Add another country to the chart</p>
-                <MultiSelectSort
-                  options={options}
-                  selected={selected}
-                  setSelected={setSelected}
+                  <p>2019</p>
+                </SliderContainer>
+              </ContentLeftContainer>
+              <ContentRightContainer>
+                <h3>Recommended indicators</h3>
+                <Select
+                  options={groupedIndicators}
+                  onChange={changeIndicator}
                 />
-              </div>
-            </StyledContent>
-            <Footer style={{ backgroundColor: "pink", height: 256 }}>
-              *EMPTY BOX FOR FUTURE CONTENT*
-            </Footer>
-          </Layout>
-        </Layout>
+              </ContentRightContainer>
+            </ContainerRow>
+            <div>
+              <p>Add another country to the chart</p>
+              <MultiSelectSort
+                options={options}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            </div>
+          </StyledContent>
+          <StyledFooter>
+            <h3>Welcome to World Charts</h3>
+            <h4>A React App by Jorge Segura</h4>
+          </StyledFooter>
+        </StyledLayout>
       )}
     </div>
   );
