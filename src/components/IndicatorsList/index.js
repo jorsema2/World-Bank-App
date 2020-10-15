@@ -46,8 +46,6 @@ const IndicatorsList = (props) => {
 
   const hasSearch = props.search && props.search.compareTo;
 
-  console.log(props)
-
   const otherCountries = hasSearch ? `?compareTo=${props.search.compareTo}` : '';
 
   function fetchMoreIndicators() {

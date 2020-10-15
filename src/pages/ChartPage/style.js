@@ -13,7 +13,7 @@ export const StyledHeader = styled(Header)`
   background-color: green;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
 `;
 
 export const AppTitle = styled.div`
@@ -23,16 +23,19 @@ export const AppTitle = styled.div`
   font-size: 3rem;
 `;
 
-export const NavMenu = styled.div`
+export const HeaderMenu = styled.div`
   width: 33%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 `;
 
-export const NavMenuItem = styled.a`
+export const MenuItem = styled.div`
   color: black;
   font-size: 1.25rem;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
 `;
 
 export const StyledContent = styled(Content)`
@@ -92,5 +95,14 @@ export const ContentRightContainer = styled.div`
 export const StyledFooter = styled(Footer)`
   background-color: pink;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const FooterMenu = styled.div`
+  display: flex;
+  align-items: baseline;
+  align-self: flex-end;
+  justify-content: space-between;
+  width: 50%;  
 `;

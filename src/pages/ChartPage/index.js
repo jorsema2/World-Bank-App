@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
+import {
+  GlobalOutlined,
+  GithubOutlined,
+  LinkedinFilled,
+  MailOutlined,
+} from "@ant-design/icons";
 import "antd/dist/antd.css";
-import Select from "react-select";
 import {
   StyledLayout,
   StyledHeader,
   AppTitle,
-  NavMenu,
-  NavMenuItem,
+  HeaderMenu,
+  MenuItem,
   StyledContent,
   IndicatorName,
   ContainerRow,
@@ -19,11 +24,13 @@ import {
   StyledSlider,
   ContentRightContainer,
   StyledFooter,
+  FooterMenu,
 } from "./style";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
 import IndicatorsList from "../../components/IndicatorsList";
 import MultiSelectSort from "../../components/SelectMoreCountries";
+import RecommendedIndicators from "../../components/RecommendedIndicators";
 import { SmartContext } from "../../App";
 import { chartReducer, chartInitialState } from "../../reducers/chartReducer";
 import fetchData from "../../utils/fetchData";
@@ -33,7 +40,6 @@ import modifyQueryString from "../../utils/modifyQueryString";
 import chooseColor from "../../utils/chooseColor";
 import chooseIDs from "../../utils/chooseIDs";
 import storeSelectedCountries from "../../utils/storeSelectedCountries";
-import groupedIndicators from "../../utils/groupedIndicators";
 
 const ChartPage = (props) => {
   const { countries, appState, appDispatch } = useContext(SmartContext);
@@ -203,16 +209,6 @@ const ChartPage = (props) => {
     chartDispatch({ type: "changeChartType" });
   }
 
-  const changeIndicator = (newIndicator) => {
-    const hasSearch = search && search.compareTo;
-
-    const otherCountries = hasSearch ? `?compareTo=${search.compareTo}` : "";
-
-    props.history.push(
-      `/indicator/${appState.firstCountry.id}/${newIndicator.id}/${otherCountries}`
-    );
-  };
-
   const chartData = {
     labels: chartState.years,
     datasets: chartState.datasets,
@@ -230,19 +226,26 @@ const ChartPage = (props) => {
         <StyledLayout>
           <StyledHeader>
             <AppTitle>
-              <Link to="/">World Charts</Link>
+              <Link to="/">
+                <GlobalOutlined /> World Charts
+              </Link>
             </AppTitle>
-            <NavMenu>
-              <NavMenuItem
-                target="_blank"
-                href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
-              >
-                LinkedIn
-              </NavMenuItem>
-              <NavMenuItem target="_blank" href="https://github.com/jorsema2">
-                GitHub
-              </NavMenuItem>
-            </NavMenu>
+            <HeaderMenu>
+              <MenuItem>
+                <a
+                  target="_blank"
+                  href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
+                >
+                  <LinkedinFilled />
+                  LinkedIn
+                </a>
+              </MenuItem>
+              <MenuItem>
+                <a target="_blank" href="https://github.com/jorsema2">
+                  <GithubOutlined /> GitHub
+                </a>
+              </MenuItem>
+            </HeaderMenu>
           </StyledHeader>
           <StyledContent>
             <div>
@@ -290,9 +293,10 @@ const ChartPage = (props) => {
               </ContentLeftContainer>
               <ContentRightContainer>
                 <h3>Recommended indicators</h3>
-                <Select
-                  options={groupedIndicators}
-                  onChange={changeIndicator}
+                <RecommendedIndicators
+                  history={props.history}
+                  search={search}
+                  currentCountry={props.match.params.country}
                 />
               </ContentRightContainer>
             </ContainerRow>
@@ -306,8 +310,32 @@ const ChartPage = (props) => {
             </div>
           </StyledContent>
           <StyledFooter>
-            <h3>Welcome to World Charts</h3>
-            <h4>A React App by Jorge Segura</h4>
+            <div>
+              <h3>Welcome to World Charts</h3>
+              <h4>A React App by Jorge Segura</h4>
+            </div>
+            <FooterMenu>
+              <MenuItem>
+                <a href = "mailto: jorsema2@gmail.com">
+                  <MailOutlined />
+                  jorsema2@gmail.com
+                </a>
+              </MenuItem>
+              <MenuItem>
+                <a
+                  target="_blank"
+                  href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
+                >
+                  <LinkedinFilled />
+                  LinkedIn
+                </a>
+              </MenuItem>
+              <MenuItem>
+                <a target="_blank" href="https://github.com/jorsema2">
+                  <GithubOutlined /> GitHub
+                </a>
+              </MenuItem>
+            </FooterMenu>
           </StyledFooter>
         </StyledLayout>
       )}
