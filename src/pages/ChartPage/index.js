@@ -19,6 +19,7 @@ import {
   ContainerRow,
   ContentLeftContainer,
   ButtonContainer,
+  StyledIndicatorsDropdown,
   ChartContainer,
   SliderContainer,
   StyledSlider,
@@ -28,7 +29,6 @@ import {
 } from "./style";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
-import IndicatorsList from "../../components/IndicatorsList";
 import MultiSelectSort from "../../components/SelectMoreCountries";
 import RecommendedIndicators from "../../components/RecommendedIndicators";
 import { SmartContext } from "../../App";
@@ -49,7 +49,6 @@ const ChartPage = (props) => {
   );
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState([]);
-  const [areIndicatorsShown, setIndicatorsShown] = useState(false);
 
   const search = queryString.parse(props.location.search);
 
@@ -187,10 +186,6 @@ const ChartPage = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartState.chartData, chartState.isLoading]);
 
-  useEffect(() => {
-    appDispatch({ type: "resetIndicators" });
-  }, [appDispatch, areIndicatorsShown]);
-
   function checkIfIsCountry(data) {
     if (data.length > 1) {
       return true;
@@ -254,18 +249,11 @@ const ChartPage = (props) => {
             <ContainerRow>
               <ContentLeftContainer>
                 <ButtonContainer>
-                  <div>
-                    <button
-                      onClick={() => setIndicatorsShown(!areIndicatorsShown)}
-                    >
-                      All indicators
-                    </button>
-                    {areIndicatorsShown && (
-                      <div>
-                        <IndicatorsList search={search} />
-                      </div>
-                    )}
-                  </div>
+                  <StyledIndicatorsDropdown
+                    history={props.history}
+                    search={search}
+                    currentCountry={props.match.params.country}
+                  />
                   <div>
                     <button onClick={() => changeChart()}>
                       Change chart type
@@ -316,7 +304,7 @@ const ChartPage = (props) => {
             </div>
             <FooterMenu>
               <MenuItem>
-                <a href = "mailto: jorsema2@gmail.com">
+                <a href="mailto: jorsema2@gmail.com">
                   <MailOutlined />
                   jorsema2@gmail.com
                 </a>

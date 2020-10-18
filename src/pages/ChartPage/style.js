@@ -1,5 +1,7 @@
+import React from "react";
 import styled from "styled-components";
 import { Layout, Slider } from "antd";
+import IndicatorsDropdown from "../../components/IndicatorsDropdown";
 
 const { Header, Content, Footer } = Layout;
 
@@ -71,6 +73,10 @@ export const ButtonContainer = styled.div`
   margin: 0 1rem;
 `;
 
+export const StyledIndicatorsDropdown = styled(IndicatorsDropdown)`
+  width: 50%;
+`;
+
 export const ChartContainer = styled.div`
   height: 80%;
 `;
@@ -104,5 +110,5 @@ export const FooterMenu = styled.div`
   align-items: baseline;
   align-self: flex-end;
   justify-content: space-between;
-  width: 50%;  
+  width: 50%;
 `;

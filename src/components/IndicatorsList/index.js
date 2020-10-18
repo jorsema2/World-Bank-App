@@ -1,9 +1,8 @@
 import React, { useEffect, useContext, useCallback } from "react";
 import styled from "styled-components";
-import {Link} from "react-router-dom";
-import {SmartContext} from "../../App";
+import { Link } from "react-router-dom";
+import { SmartContext } from "../../App";
 import getData from "../../utils/getData";
-
 
 const StyledLi = styled.li`
   background-color: lightgrey;
@@ -17,16 +16,16 @@ const StyledLi = styled.li`
 `;
 
 const IndicatorsList = (props) => {
-  const {appState, appDispatch} = useContext(SmartContext);
+  const { appState, appDispatch } = useContext(SmartContext);
 
   const handleScroll = useCallback(() => {
     if (
       window.innerHeight + document.documentElement.scrollTop !==
       document.documentElement.offsetHeight
     )
-    appDispatch({type: 'startIndicatorsFetch'})
-    return;    
-  }, [appDispatch])
+      appDispatch({ type: "startIndicatorsFetch" });
+    return;
+  }, [appDispatch]);
 
   useEffect(() => {
     fetchMoreIndicators();
@@ -46,7 +45,9 @@ const IndicatorsList = (props) => {
 
   const hasSearch = props.search && props.search.compareTo;
 
-  const otherCountries = hasSearch ? `?compareTo=${props.search.compareTo}` : '';
+  const otherCountries = hasSearch
+    ? `?compareTo=${props.search.compareTo}`
+    : "";
 
   function fetchMoreIndicators() {
     setTimeout(async () => {
@@ -62,9 +63,9 @@ const IndicatorsList = (props) => {
         };
         return newElement;
       });
-      
-      appDispatch({type: 'finishIndicatorsFetch', payload: newIndicators})
-    }, 2000);
+
+      appDispatch({ type: "finishIndicatorsFetch", payload: newIndicators });
+    }, 1500);
   }
 
   return (
@@ -72,14 +73,18 @@ const IndicatorsList = (props) => {
       <ul className="list-group mb-2 cool-list">
         {appState.indicators.map((indicator) => (
           <StyledLi key={Math.random() + "-" + Math.random()}>
-            <Link to={`/indicator/${appState.firstCountry.id}/${indicator.id}/${otherCountries}`}>
+            <Link
+              to={`/indicator/${appState.firstCountry.id}/${indicator.id}/${otherCountries}`}
+            >
               {indicator.name}
             </Link>
           </StyledLi>
         ))}
       </ul>
       {appState.isFetching && "Loading more indicators..."}
-      {appState.indicators.length === 0 && !appState.isFetching && "Loading indicators..."}
+      {appState.indicators.length === 0 &&
+        !appState.isFetching &&
+        "Loading indicators..."}
     </>
   );
 };

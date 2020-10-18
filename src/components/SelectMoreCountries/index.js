@@ -34,8 +34,6 @@ export default function MultiSelectSort(props) {
     const newValue = arrayMove(props.selected, oldIndex, newIndex);
     props.setSelected(newValue);
   };
-
-  // Bug: failed to compile when all countries are deselected:
   
   useEffect(() => {
     props.selected.length === 3 ? setAreDisabled(true) : setAreDisabled(false);
