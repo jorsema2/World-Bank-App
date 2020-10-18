@@ -6,6 +6,7 @@ import { Home } from "./pages/Home";
 import ChartPage from "./pages/ChartPage";
 import FourOhFour from "./components/FourOhFour";
 import getCountries from "./utils/getCountries";
+import Navigation from './components/Navigation'
 
 export const SmartContext = React.createContext();
 
@@ -30,6 +31,7 @@ const App = () => {
             value={{ countries, setCountries, appState, appDispatch }}
           >
             <div>
+              <Navigation />
               <Switch>
                 <Route exact path="/">
                   <Home />

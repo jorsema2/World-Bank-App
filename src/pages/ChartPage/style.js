@@ -1,14 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import { Layout, Slider } from "antd";
+import {Layout, Slider} from "antd";
 import IndicatorsDropdown from "../../components/IndicatorsDropdown";
+import {MaxWidthContainer} from "../../components/UI/ui.styles";
 
-const { Header, Content, Footer } = Layout;
+const {Header, Footer} = Layout;
 
-export const StyledLayout = styled(Layout)`
-  height: 1024px;
-  max-width: 1280px;
-  margin: 0 auto;
+export const StyledLayout = styled(MaxWidthContainer)`
+  min-height: calc(100vh - 75px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 export const StyledHeader = styled(Header)`
@@ -40,18 +42,13 @@ export const MenuItem = styled.div`
   align-items: baseline;
 `;
 
-export const StyledContent = styled(Content)`
-  background-color: yellow;
-  padding: 1%;
-`;
-
 export const IndicatorName = styled.h2`
   color: blue;
   font-familiy: Arial;
   display: flex;
   justify-content: center;
   margin: 1rem;
-  font-size: 2rem; ;
+  font-size: 2rem;
 `;
 
 export const ContainerRow = styled.div`
@@ -61,7 +58,7 @@ export const ContainerRow = styled.div`
 `;
 
 export const ContentLeftContainer = styled.div`
-  width: 66%;
+  width: 66.66%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -70,7 +67,6 @@ export const ContentLeftContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 0 1rem;
 `;
 
 export const StyledIndicatorsDropdown = styled(IndicatorsDropdown)`
@@ -92,10 +88,11 @@ export const StyledSlider = styled(Slider)`
 `;
 
 export const ContentRightContainer = styled.div`
-  width: 33%;
+  width: 33.33%;
   display: flex;
   flex-direction: column;
   display: flex;
+  margin-left: 24px;
 `;
 
 export const StyledFooter = styled(Footer)`

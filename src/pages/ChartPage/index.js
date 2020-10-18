@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
 import queryString from "query-string";
-import { Link } from "react-router-dom";
 import {
-  GlobalOutlined,
   GithubOutlined,
   LinkedinFilled,
   MailOutlined,
@@ -10,11 +8,7 @@ import {
 import "antd/dist/antd.css";
 import {
   StyledLayout,
-  StyledHeader,
-  AppTitle,
-  HeaderMenu,
   MenuItem,
-  StyledContent,
   IndicatorName,
   ContainerRow,
   ContentLeftContainer,
@@ -219,30 +213,7 @@ const ChartPage = (props) => {
       )}
       {chartHasData && (
         <StyledLayout>
-          <StyledHeader>
-            <AppTitle>
-              <Link to="/">
-                <GlobalOutlined /> World Charts
-              </Link>
-            </AppTitle>
-            <HeaderMenu>
-              <MenuItem>
-                <a
-                  target="_blank"
-                  href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
-                >
-                  <LinkedinFilled />
-                  LinkedIn
-                </a>
-              </MenuItem>
-              <MenuItem>
-                <a target="_blank" href="https://github.com/jorsema2">
-                  <GithubOutlined /> GitHub
-                </a>
-              </MenuItem>
-            </HeaderMenu>
-          </StyledHeader>
-          <StyledContent>
+          <div>
             <div>
               <IndicatorName>{chartState.indicatorName}</IndicatorName>
             </div>
@@ -296,7 +267,7 @@ const ChartPage = (props) => {
                 setSelected={setSelected}
               />
             </div>
-          </StyledContent>
+          </div>
           <StyledFooter>
             <div>
               <h3>Welcome to World Charts</h3>

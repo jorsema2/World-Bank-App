@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useCallback } from "react";
 import Select from "react-select";
 import { SmartContext } from "../../App";
 import getData from "../../utils/getData";
@@ -6,12 +6,7 @@ import getData from "../../utils/getData";
 const IndicatorsDropdown = (props) => {
   const { appState, appDispatch } = useContext(SmartContext);
 
-  useEffect(() => {
-    appDispatch({ type: "startIndicatorsFetch" });
-    fetchMoreIndicators();
-  }, []);
-
-  function fetchMoreIndicators() {
+  const fetchMoreIndicators = useCallback(() => {
     setTimeout(async () => {
       const data = await getData(
         `http://api.worldbank.org/v2/indicator?format=json&page=+${appState.page}`
@@ -29,7 +24,13 @@ const IndicatorsDropdown = (props) => {
 
       appDispatch({ type: "finishIndicatorsFetch", payload: newIndicators });
     }, 1500);
-  }
+  }, [appDispatch, appState.page])
+  useEffect(() => {
+    appDispatch({ type: "startIndicatorsFetch" });
+    fetchMoreIndicators();
+  }, [appDispatch, fetchMoreIndicators]);
+
+ 
 
   function handleScroll() {
     appDispatch({ type: "startIndicatorsFetch" });
@@ -46,7 +47,7 @@ const IndicatorsDropdown = (props) => {
     );
   };
 
-  return <Select options={appState.indicators} onChange={changeIndicator} onMenuScrollToBottom={handleScroll} />;
+  return <Select {...props} options={appState.indicators} onChange={changeIndicator} onMenuScrollToBottom={handleScroll} />;
 };
 
 export default IndicatorsDropdown;
