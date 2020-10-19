@@ -3,6 +3,7 @@ export const appInitialState = {
   indicators: [],
   isFetching: false,
   page: 1,
+  isLight: true,
 };
 
 export function appReducer(appState, action) {
@@ -33,6 +34,12 @@ export function appReducer(appState, action) {
         isFetching: false,
         page: appState.page + 1,
       };
+    }
+    case "toggleTheme": {
+      return {
+        ...appState,
+        isLight: !appState.isLight,
+      }
     }
     default:
       return appState;

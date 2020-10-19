@@ -1,14 +1,8 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
 import queryString from "query-string";
-import {
-  GithubOutlined,
-  LinkedinFilled,
-  MailOutlined,
-} from "@ant-design/icons";
 import "antd/dist/antd.css";
 import {
   StyledLayout,
-  MenuItem,
   IndicatorName,
   ContainerRow,
   ContentLeftContainer,
@@ -18,8 +12,6 @@ import {
   SliderContainer,
   StyledSlider,
   ContentRightContainer,
-  StyledFooter,
-  FooterMenu,
 } from "./style";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
@@ -36,7 +28,7 @@ import chooseIDs from "../../utils/chooseIDs";
 import storeSelectedCountries from "../../utils/storeSelectedCountries";
 
 const ChartPage = (props) => {
-  const { countries, appState, appDispatch } = useContext(SmartContext);
+  const { countries, appDispatch } = useContext(SmartContext);
   const [chartState, chartDispatch] = useReducer(
     chartReducer,
     chartInitialState
@@ -268,34 +260,6 @@ const ChartPage = (props) => {
               />
             </div>
           </div>
-          <StyledFooter>
-            <div>
-              <h3>Welcome to World Charts</h3>
-              <h4>A React App by Jorge Segura</h4>
-            </div>
-            <FooterMenu>
-              <MenuItem>
-                <a href="mailto: jorsema2@gmail.com">
-                  <MailOutlined />
-                  jorsema2@gmail.com
-                </a>
-              </MenuItem>
-              <MenuItem>
-                <a
-                  target="_blank"
-                  href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
-                >
-                  <LinkedinFilled />
-                  LinkedIn
-                </a>
-              </MenuItem>
-              <MenuItem>
-                <a target="_blank" href="https://github.com/jorsema2">
-                  <GithubOutlined /> GitHub
-                </a>
-              </MenuItem>
-            </FooterMenu>
-          </StyledFooter>
         </StyledLayout>
       )}
     </div>

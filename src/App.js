@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "./themes";
 import { appReducer, appInitialState } from "./reducers/appReducer";
+import Navigation from "./components/Navigation";
 import { Home } from "./pages/Home";
 import ChartPage from "./pages/ChartPage";
 import FourOhFour from "./components/FourOhFour";
 import getCountries from "./utils/getCountries";
-import Navigation from './components/Navigation'
+import Footer from "./components/Footer"
 
 export const SmartContext = React.createContext();
 
@@ -26,7 +28,7 @@ const App = () => {
   return (
     <div>
       <Router>
-        <ThemeProvider theme={{ mainColor: "#FF5A5F" }}>
+        <ThemeProvider theme={appState.isLight ? lightTheme : darkTheme}>
           <SmartContext.Provider
             value={{ countries, setCountries, appState, appDispatch }}
           >
@@ -42,6 +44,7 @@ const App = () => {
                 />
                 <Route path="*" component={FourOhFour} />
               </Switch>
+              <Footer />
             </div>
           </SmartContext.Provider>
         </ThemeProvider>
