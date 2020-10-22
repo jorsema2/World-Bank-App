@@ -2,11 +2,10 @@ import styled from "styled-components";
 import { MaxWidthContainer } from "../UI/ui.styles";
 
 export const Container = styled.div`
-  ${(props) => `
-  background-color:${props.theme.backgroundColor};
-  color: ${props.theme.inputTextColor};
-  border: 1px solid ${props.theme.borderColor};
-  box-shadow: ${props.theme.boxShadow}
+${(props) => `
+background-color:${props.theme.NavMenuBackgroundColor};
+border-top: 1px solid ${props.theme.borderColor};
+box-shadow: ${props.theme.boxShadow};
 `}
 `;
 
@@ -25,10 +24,12 @@ export const FooterMenu = styled.div`
 `;
 
 export const MenuItem = styled.div`
-  color: black;
   font-size: 1.25rem;
   display: flex;
   flex-direction: row;
   align-items: baseline;
   margin-left: 12px;
+  ${(props) => `
+  color: ${props.theme.color};
+  `}
 `;

@@ -1,9 +1,11 @@
-import getData from "./getData";
-
-async function fetchData(countryID, indicator) {
-    const link = `http://api.worldbank.org/v2/country/${countryID}/indicator/${indicator}?format=json`;
-    const fetchedData = await getData(link);
-    return {fetchedData, link};
+async function fetchData(link) {
+  try {
+    const result = await fetch(link);
+    const data = await result.json();
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 export default fetchData;

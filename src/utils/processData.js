@@ -10,29 +10,26 @@ function checkIfHasData(data) {
 }
 
 async function processData(fetchedData, link, newColor) {
-  try {
-    const hasData = checkIfHasData(fetchedData);
-    if (!hasData) return null;
-    // From now on, we only want the second element of the array, which is the one that has values per year:
-    const pagesNumber = fetchedData[0].pages;
-    let data = fetchedData[1];
-    const indicatorName = data[0].indicator.value;
-    const countryName = data[0].country.value;
+  const hasData = checkIfHasData(fetchedData);
+  if (!hasData) return null;
 
-    // Sometimes, there's more than one page of values fot the given country and indicator:
-    if (pagesNumber > 1) {
-      data = await fetchMorePages(data, link, pagesNumber);
-    }
+  const pagesNumber = fetchedData[0].pages;
+  // From now on, we only want the second element of the array, which is the one that has values per year:
+  let data = fetchedData[1];
+  
+  const indicatorName = data[0].indicator.value;
+  const countryName = data[0].country.value;
 
-    const { valuesArray, yearsArray } = processArrays(data);
-
-    // We select only the data that's going to be used in the chart:
-    const countryDataset = dataFiller(countryName, valuesArray, newColor);
-    return { indicatorName, yearsArray, countryDataset };
-  } catch (err) {
-    console.log(err);
-    return {};
+  // Sometimes, there's more than one page of values for the given country and indicator:
+  if (pagesNumber > 1) {
+    data = await fetchMorePages(data, link, pagesNumber);
   }
+
+  const { valuesArray, yearsArray } = processArrays(data);
+
+  // We select only the data that's going to be used in the chart:
+  const countryDataset = dataFiller(countryName, valuesArray, newColor);
+  return { indicatorName, yearsArray, countryDataset };
 }
 
 export default processData;

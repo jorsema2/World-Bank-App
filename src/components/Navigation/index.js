@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import {
+  GlobalOutlined,
   GithubOutlined,
   LinkedinFilled,
 } from "@ant-design/icons";
-import { StyledHeader, HeaderMenu, AppLogo, MenuItem, Container } from "./style.js";
+import { StyledHeader, HeaderMenu, HomeButton, MenuItem, Container } from "./style.js";
 // import { sun, moon } from "../../assets/svg";
 import { SmartContext } from "../../App";
 
@@ -15,7 +16,9 @@ const Navigation = () => {
     <Container>
       <StyledHeader>
         <Link to="/">
-          <AppLogo />
+          <HomeButton>
+            <GlobalOutlined />
+          </HomeButton>
         </Link>
         <HeaderMenu>
           <MenuItem>

@@ -1,14 +1,14 @@
 import React, { useEffect, useContext, useCallback } from "react";
 import Select from "react-select";
 import { SmartContext } from "../../App";
-import getData from "../../utils/getData";
+import fetchData from "../../utils/fetchData";
 
 const IndicatorsDropdown = (props) => {
   const { appState, appDispatch } = useContext(SmartContext);
 
   const fetchMoreIndicators = useCallback(() => {
     setTimeout(async () => {
-      const data = await getData(
+      const data = await fetchData(
         `http://api.worldbank.org/v2/indicator?format=json&page=+${appState.page}`
       );
       // Only the second element of the array has indicators, i.e., what we want:

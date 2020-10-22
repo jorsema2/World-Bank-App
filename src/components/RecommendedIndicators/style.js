@@ -1,11 +1,15 @@
 import styled from "styled-components";
 
 export const List = styled.ul`
-  background-color: white;
-  border: 1px solid black;
   height: 100%;
   list-style-type: none;
+  border-radius: 5px;
+  position: absolute;
   overflow-y: scroll;
+  ${(props) => `
+background-color:${props.theme.NavMenuBackgroundColor};
+border: 1px solid ${props.theme.borderColor};
+`}
 `;
 
 export const ListSection = styled.div`

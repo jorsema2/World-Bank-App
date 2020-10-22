@@ -7,6 +7,7 @@ import {
   ContainerRow,
   ContentLeftContainer,
   ButtonContainer,
+  StyledButton,
   StyledIndicatorsDropdown,
   ChartContainer,
   SliderContainer,
@@ -35,6 +36,7 @@ const ChartPage = (props) => {
   );
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [isServerDown, setIsServerDown] = useState(false);
 
   const search = queryString.parse(props.location.search);
 
@@ -56,15 +58,17 @@ const ChartPage = (props) => {
   useEffect(() => {
     try {
       async function addData() {
-        const { fetchedData, link } = await fetchData(
-          props.match.params.country,
-          props.match.params.indicatorId
-        );
+        const link = `http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`;
+        const fetchedData = await fetchData(link);
+
+        fetchedData ? setIsServerDown(false) : setIsServerDown(true);
+
         const isCountry = checkIfIsCountry(fetchedData);
         const wasIndicatorDeleted = checkIfIndicatorWasDeleted(fetchedData);
 
         const firstColor = "rgba(128, 0, 128, 0.8)";
         const firstDataset = await processData(fetchedData, link, firstColor);
+
         if (firstDataset === null || !isCountry || wasIndicatorDeleted) {
           chartDispatch({ type: "invalidateRequest" });
           return;
@@ -131,11 +135,9 @@ const ChartPage = (props) => {
     async function getSelectedCountriesDatasets() {
       const newDatasets = await Promise.all(
         selected.map(async function (el) {
+          const link = `http://api.worldbank.org/v2/country/${el.id}/indicator/${props.match.params.indicatorId}?format=json`;
           const chosenColor = chooseColor(el, selected);
-          const { fetchedData, link } = await fetchData(
-            el.id,
-            props.match.params.indicatorId
-          );
+          const fetchedData = await fetchData(link);
           const isCountry = checkIfIsCountry(fetchedData);
           if (!isCountry) {
             const newDataset = dataFiller(
@@ -195,70 +197,82 @@ const ChartPage = (props) => {
     datasets: chartState.datasets,
   };
 
+  console.log(isServerDown);
+
   const chartHasData =
     chartState.datasets.length > 0 && chartState.years.length > 0;
 
   return (
     <div>
-      {!chartState.isRequestValid && !chartHasData && (
+      {isServerDown && (
+        <div>
+          <p>
+            Unfortunately, the third party's server which API we use seems to be
+            down.
+          </p>
+          <br></br>
+          <p>
+            We apologize and we recommend you to visit us in another moment.
+          </p>
+        </div>
+      )}
+      {!chartState.isRequestValid && !chartHasData && !isServerDown && (
         <NoDataMessage setSelected={setSelected} />
       )}
-      {chartHasData && (
+      {chartHasData && !isServerDown && (
         <StyledLayout>
           <div>
-            <div>
-              <IndicatorName>{chartState.indicatorName}</IndicatorName>
-            </div>
-            <ContainerRow>
-              <ContentLeftContainer>
-                <ButtonContainer>
-                  <StyledIndicatorsDropdown
-                    history={props.history}
-                    search={search}
-                    currentCountry={props.match.params.country}
-                  />
-                  <div>
-                    <button onClick={() => changeChart()}>
-                      Change chart type
-                    </button>
-                  </div>
-                </ButtonContainer>
-                <ChartContainer>
-                  {!chartState.isRequestValid && (
-                    <NoDataMessage setSelected={setSelected} />
-                  )}
-                  {chartState.isRequestValid && (
-                    <Chart chartData={chartData} isLine={chartState.isLine} />
-                  )}
-                </ChartContainer>
-                <SliderContainer>
-                  <p>1960</p>
-                  <StyledSlider
-                    range
-                    defaultValue={[1990, 2015]}
-                    min={1960}
-                    max={2019}
-                  />
-                  <p>2019</p>
-                </SliderContainer>
-              </ContentLeftContainer>
-              <ContentRightContainer>
-                <h3>Recommended indicators</h3>
-                <RecommendedIndicators
+            <IndicatorName>{chartState.indicatorName}</IndicatorName>
+          </div>
+          <ContainerRow>
+            <ContentLeftContainer>
+              <ButtonContainer>
+                <StyledIndicatorsDropdown
                   history={props.history}
                   search={search}
                   currentCountry={props.match.params.country}
                 />
-              </ContentRightContainer>
-            </ContainerRow>
-            <div>
-              <p>Add another country to the chart</p>
-              <MultiSelectSort
-                options={options}
-                selected={selected}
-                setSelected={setSelected}
+                <div>
+                  <StyledButton onClick={() => changeChart()}>
+                    Change chart type
+                  </StyledButton>
+                </div>
+              </ButtonContainer>
+              <ChartContainer>
+                {!chartState.isRequestValid && (
+                  <NoDataMessage setSelected={setSelected} />
+                )}
+                {chartState.isRequestValid && (
+                  <Chart chartData={chartData} isLine={chartState.isLine} />
+                )}
+              </ChartContainer>
+              <SliderContainer>
+                <p>1960</p>
+                <StyledSlider
+                  range
+                  defaultValue={[1990, 2015]}
+                  min={1960}
+                  max={2019}
+                />
+                <p>2019</p>
+              </SliderContainer>
+            </ContentLeftContainer>
+            <ContentRightContainer>
+              <h3>Recommended indicators</h3>
+              <RecommendedIndicators
+                history={props.history}
+                search={search}
+                currentCountry={props.match.params.country}
               />
-            </div>
+            </ContentRightContainer>
+          </ContainerRow>
+          <div>
+            <p>Add another country to the chart</p>
+            <MultiSelectSort
+              options={options}
+              selected={selected}
+              setSelected={setSelected}
+            />
           </div>
         </StyledLayout>
       )}
