@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 export const List = styled.ul`
   height: 100%;
+  max-height: 300px;
   list-style-type: none;
   border-radius: 5px;
-  position: absolute;
   overflow-y: scroll;
   ${(props) => `
 background-color:${props.theme.NavMenuBackgroundColor};

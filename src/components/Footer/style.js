@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { MaxWidthContainer } from "../UI/ui.styles";
 
 export const Container = styled.div`
+height: 10vh;
 ${(props) => `
 background-color:${props.theme.NavMenuBackgroundColor};
 border-top: 1px solid ${props.theme.borderColor};

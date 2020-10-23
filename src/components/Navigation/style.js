@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { MaxWidthContainer } from "../UI/ui.styles";
+import EarthIcon from "../../assets/svg/earth.js";
+import SunIcon from "../../assets/svg/sun.js";
+import MoonIcon from "../../assets/svg/moon.js";
 
 export const Container = styled.div`
+  height: 8vh;
   position: relative;
   ${(props) => `
   background-color:${props.theme.NavMenuBackgroundColor};
@@ -19,20 +23,29 @@ export const StyledHeader = styled(MaxWidthContainer)`
 `}
 `;
 
-export const HomeButton = styled.span`
-  font-size: 2rem;
-  color: #345995;
-  ${(props) => `
-background-color:${props.theme.NavMenuBackgroundColor};
-color: ${props.theme.color};
-`}
-`;
-
 export const HeaderMenu = styled.div`
   width: 33%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+`;
+
+export const Earth = styled(EarthIcon)`
+  g {
+    fill: #345995;
+  }
+`
+
+export const Sun = styled(SunIcon)`
+  g {
+    fill: #111;
+  }
+`;
+
+export const Moon = styled(MoonIcon)`
+  g {
+    fill: white;
+  }
 `;
 
 export const MenuItem = styled.div`

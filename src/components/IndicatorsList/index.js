@@ -1,19 +1,8 @@
 import React, { useEffect, useContext, useCallback } from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { SmartContext } from "../../App";
+import { Container, StyledButton } from "./style";
 import fetchData from "../../utils/fetchData";
-
-const StyledLi = styled.li`
-  background-color: lightgrey;
-  border-radius: 1px solid grey;
-  font-family: Arial;
-  font-size: 1.5rem;
-  display: flex;
-  justify-content: center;
-  list-style-type: none;
-  margin-bottom: 2rem;
-`;
 
 const IndicatorsList = (props) => {
   const { appState, appDispatch } = useContext(SmartContext);
@@ -69,23 +58,21 @@ const IndicatorsList = (props) => {
   }
 
   return (
-    <>
-      <ul className="list-group mb-2 cool-list">
+    <Container>
         {appState.indicators.map((indicator) => (
-          <StyledLi key={Math.random() + "-" + Math.random()}>
+          <StyledButton key={Math.random() + "-" + Math.random()}>
             <Link
               to={`/indicator/${appState.firstCountry.id}/${indicator.id}/${otherCountries}`}
             >
               {indicator.name}
             </Link>
-          </StyledLi>
+          </StyledButton>
         ))}
-      </ul>
       {appState.isFetching && "Loading more indicators..."}
       {appState.indicators.length === 0 &&
         !appState.isFetching &&
         "Loading indicators..."}
-    </>
+    </Container>
   );
 };
 

@@ -41,30 +41,26 @@ const App = () => {
   }, []);
 
   return (
-    <div>
-      <Router>
-        <ThemeProvider theme={appState.isLight ? lightTheme : darkTheme}>
-          <SmartContext.Provider
-            value={{ countries, setCountries, appState, appDispatch }}
-          >
-            <div>
-              <Navigation />
-              <Switch>
-                <Route exact path="/">
-                  <Home />
-                </Route>
-                <Route
-                  path="/indicator/:country/:indicatorId"
-                  component={ChartPage}
-                />
-                <Route path="*" component={FourOhFour} />
-              </Switch>
-              <Footer />
-            </div>
-          </SmartContext.Provider>
-        </ThemeProvider>
-      </Router>
-    </div>
+    <Router>
+      <ThemeProvider theme={appState.isLight ? lightTheme : darkTheme}>
+        <SmartContext.Provider
+          value={{ countries, setCountries, appState, appDispatch }}
+        >
+          <Navigation />
+          <Switch className={"intruder"}>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route
+              path="/indicator/:country/:indicatorId"
+              component={ChartPage}
+            />
+            <Route path="*" component={FourOhFour} />
+          </Switch>
+          <Footer />
+        </SmartContext.Provider>
+      </ThemeProvider>
+    </Router>
   );
 };
 

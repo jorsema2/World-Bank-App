@@ -1,24 +1,25 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { GithubOutlined, LinkedinFilled } from "@ant-design/icons";
 import {
-  GlobalOutlined,
-  GithubOutlined,
-  LinkedinFilled,
-} from "@ant-design/icons";
-import { StyledHeader, HeaderMenu, HomeButton, MenuItem, Container } from "./style.js";
-// import { sun, moon } from "../../assets/svg";
+  StyledHeader,
+  HeaderMenu,
+  Earth,
+  Sun,
+  Moon,
+  MenuItem,
+  Container,
+} from "./style.js";
 import { SmartContext } from "../../App";
 
 const Navigation = () => {
-  const { appDispatch } = useContext(SmartContext);
+  const { appState, appDispatch } = useContext(SmartContext);
 
   return (
     <Container>
       <StyledHeader>
         <Link to="/">
-          <HomeButton>
-            <GlobalOutlined />
-          </HomeButton>
+          <Earth />
         </Link>
         <HeaderMenu>
           <MenuItem>
@@ -35,10 +36,9 @@ const Navigation = () => {
               <GithubOutlined /> GitHub
             </a>
           </MenuItem>
-          <MenuItem>
-            <button onClick={() => appDispatch({ type: "toggleTheme" })}>
-              Toggle
-            </button>
+          <MenuItem onClick={() => appDispatch({ type: "toggleTheme" })}>
+            {appState.isLight && <Sun />}
+            {!appState.isLight && <Moon />}
           </MenuItem>
         </HeaderMenu>
       </StyledHeader>

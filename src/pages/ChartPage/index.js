@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useReducer } from "react";
 import queryString from "query-string";
 import "antd/dist/antd.css";
 import {
+  MainContent,
   StyledLayout,
   IndicatorName,
   ContainerRow,
@@ -66,7 +67,7 @@ const ChartPage = (props) => {
         const isCountry = checkIfIsCountry(fetchedData);
         const wasIndicatorDeleted = checkIfIndicatorWasDeleted(fetchedData);
 
-        const firstColor = "rgba(128, 0, 128, 0.8)";
+        const firstColor = "rgba(52, 89, 149, 0.8)";
         const firstDataset = await processData(fetchedData, link, firstColor);
 
         if (firstDataset === null || !isCountry || wasIndicatorDeleted) {
@@ -197,13 +198,11 @@ const ChartPage = (props) => {
     datasets: chartState.datasets,
   };
 
-  console.log(isServerDown);
-
   const chartHasData =
     chartState.datasets.length > 0 && chartState.years.length > 0;
 
   return (
-    <div>
+    <MainContent>
       {isServerDown && (
         <div>
           <p>
@@ -276,7 +275,7 @@ const ChartPage = (props) => {
           </div>
         </StyledLayout>
       )}
-    </div>
+    </MainContent>
   );
 };
 

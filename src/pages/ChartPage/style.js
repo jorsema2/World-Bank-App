@@ -3,8 +3,12 @@ import { Button, Slider } from "antd";
 import IndicatorsDropdown from "../../components/IndicatorsDropdown";
 import { MaxWidthContainer } from "../../components/UI/ui.styles";
 
+export const MainContent = styled.div`
+  height: 82vh;
+`;
+
 export const StyledLayout = styled(MaxWidthContainer)`
-  min-height: calc(100vh - 75px);
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -26,7 +30,7 @@ export const IndicatorName = styled.h2`
 `;
 
 export const ContainerRow = styled.div`
-  height: 80%;
+  height: 85%;
   display: flex;
   flex-direction: row;
 `;
@@ -72,15 +76,13 @@ export const SliderContainer = styled.div`
 
 export const StyledSlider = styled(Slider)`
   width: 80%;
-  ${(props) => `
-  color: ${props.theme.color};
-  `}
+  color: 345995;
 `;
 
 export const ContentRightContainer = styled.div`
+  height: auto;
   width: 33.33%;
   display: flex;
   flex-direction: column;
-  display: flex;
   margin-left: 24px;
 `;

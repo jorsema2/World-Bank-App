@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Select from "react-select";
 import IndicatorsList from "../../components/IndicatorsList";
 import {SmartContext} from "../../App";
+import { MainContent } from "./style";
 
 export const Home = () => {
   const {countries, appState, appDispatch} = useContext(SmartContext);
@@ -9,17 +10,17 @@ export const Home = () => {
   function handleChange(e) {
     const selectedCountry = countries.find((obj) => obj.value === e.value);
     appDispatch({type: 'selectedCountry', payload: selectedCountry});
-    appDispatch({type: 'resetIndicators', payload: selectedCountry});
+    appDispatch({type: 'resetIndicators'});
   }
 
   return (
-    <div>
+    <MainContent>
       <Select
         value={appState.firstCountry}
         options={countries}
         onChange={handleChange}
       />
       {appState.firstCountry && <IndicatorsList />}
-    </div>
+    </MainContent>
   );
 };
