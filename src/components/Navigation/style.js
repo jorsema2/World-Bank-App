@@ -11,12 +11,7 @@ export const Container = styled.div`
   left: 0;
   position: fixed;
   ${(props) => `
-<<<<<<< HEAD
-  background-color: ${props.theme.main};
-  border-bottom: 1px solid ${props.theme.border};
-=======
   background-color:${props.theme.main};
->>>>>>> 39ca3e2cbb3e1e0aa4fa53b17e3f271e13fadbea
   box-shadow: ${props.theme.boxShadow};
   z-index: 9999;
 `}
