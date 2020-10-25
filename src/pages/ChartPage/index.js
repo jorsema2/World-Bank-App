@@ -227,13 +227,21 @@ const ChartPage = (props) => {
             <IndicatorName>{chartState.indicatorName}</IndicatorName>
           </div>
           <ContainerRow>
-            <ContentLeftContainer>
+          <ContentLeftContainer>
               <ButtonContainer>
+                <div style={{display: 'flex'}} >
                 <StyledIndicatorsDropdown
                   history={props.history}
                   search={search}
                   currentCountry={props.match.params.country}
                 />
+                <MultiSelectSort
+              options={options}
+              selected={selected}
+              setSelected={setSelected}
+            />
+                </div>
+              
                 <div>
                   <StyledButton onClick={() => changeChart()}>
                     Change chart type
@@ -269,13 +277,13 @@ const ChartPage = (props) => {
               />
             </ContentRightContainer>
           </ContainerRow>
-          <MultiSelectContainer>
+          {/* <MultiSelectContainer>
             <MultiSelectSort
               options={options}
               selected={selected}
               setSelected={setSelected}
             />
-          </MultiSelectContainer>
+          </MultiSelectContainer> */}
         </StyledLayout>
       )}
     </MainContent>

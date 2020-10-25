@@ -18,7 +18,7 @@ const RecommendedIndicators = (props) => {
     <List>
       {groupedIndicators.map((group) => (
         <div key={group.label}>
-          <li>{group.label}</li>
+          <li style={{fontWeight: 'bold', marginBottom: 8, marginTop: 8, color: '#333'}} >{group.label}</li>
           <ListSection>
             {group.options.map((item) => (
               <ListItem key={item.id} value={item} onClick={() => changeIndicator(item)}>

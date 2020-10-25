@@ -5,19 +5,27 @@ import SunIcon from "../../assets/svg/sun.js";
 import MoonIcon from "../../assets/svg/moon.js";
 
 export const Container = styled.div`
-  height: 8vh;
-  position: relative;
+  height: 80px;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  position: fixed;
   ${(props) => `
   background-color:${props.theme.main};
-  border-bottom: 1px solid ${props.theme.border};
   box-shadow: ${props.theme.boxShadow};
+  z-index: 9999;
 `}
 `;
 
 export const StyledHeader = styled(MaxWidthContainer)`
-  display: flex;
-  flex-direction: row;
+height: 100%;  
+display: flex;
   justify-content: space-between;
+  align-items: center;
+  a {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 export const HeaderMenu = styled.div`
