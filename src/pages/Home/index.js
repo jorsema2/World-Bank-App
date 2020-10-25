@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
 import Select from "react-select";
 import IndicatorsList from "../../components/IndicatorsList";
-import {SmartContext} from "../../App";
+import { SmartContext } from "../../App";
 import { MainContent } from "./style";
 
 export const Home = () => {
-  const {countries, appState, appDispatch} = useContext(SmartContext);
+  const { countries, appState, appDispatch } = useContext(SmartContext);
 
   function handleChange(e) {
     const selectedCountry = countries.find((obj) => obj.value === e.value);
-    appDispatch({type: 'selectedCountry', payload: selectedCountry});
-    appDispatch({type: 'resetIndicators'});
+    appDispatch({ type: "selectedCountry", payload: selectedCountry });
+    appDispatch({ type: "resetIndicators" });
   }
 
   return (

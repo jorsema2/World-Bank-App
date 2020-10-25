@@ -8,7 +8,7 @@ export const Container = styled.div`
   height: 8vh;
   position: relative;
   ${(props) => `
-  background-color:${props.theme.main};
+  background-color: ${props.theme.main};
   border-bottom: 1px solid ${props.theme.border};
   box-shadow: ${props.theme.boxShadow};
 `}
