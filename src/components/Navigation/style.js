@@ -8,8 +8,8 @@ export const Container = styled.div`
   height: 8vh;
   position: relative;
   ${(props) => `
-  background-color:${props.theme.NavMenuBackgroundColor};
-  border-bottom: 1px solid ${props.theme.borderColor};
+  background-color:${props.theme.main};
+  border-bottom: 1px solid ${props.theme.border};
   box-shadow: ${props.theme.boxShadow};
 `}
 `;
@@ -18,9 +18,6 @@ export const StyledHeader = styled(MaxWidthContainer)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  ${(props) => `
-  color: ${props.theme.color};
-`}
 `;
 
 export const HeaderMenu = styled.div`
@@ -34,17 +31,26 @@ export const Earth = styled(EarthIcon)`
   g {
     fill: #345995;
   }
-`
+  g:hover {
+    fill: #40a9ff;
+  }
+`;
 
 export const Sun = styled(SunIcon)`
   g {
-    fill: #111;
+    fill: #333;
+  }
+  g:hover {
+    fill: #40a9ff;
   }
 `;
 
 export const Moon = styled(MoonIcon)`
   g {
-    fill: white;
+    fill: #333;
+  }
+  g:hover {
+    fill: #40a9ff;
   }
 `;
 
@@ -54,7 +60,11 @@ export const MenuItem = styled.div`
   flex-direction: row;
   align-items: baseline;
   margin-left: 12px;
+  cursor: pointer;
+`;
+
+export const ExternalLink = styled.a`
   ${(props) => `
-  color: ${props.theme.color};
-  `}
+color: ${props.theme.secondary};
+`}
 `;

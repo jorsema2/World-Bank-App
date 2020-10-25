@@ -47,7 +47,7 @@ const IndicatorsDropdown = (props) => {
     );
   };
 
-  return <Select {...props} options={appState.indicators} onChange={changeIndicator} onMenuScrollToBottom={handleScroll} />;
+  return <Select {...props} placeholder={"Change indicator..."} options={appState.indicators} onChange={changeIndicator} onMenuScrollToBottom={handleScroll} />;
 };
 
 export default IndicatorsDropdown;

@@ -13,8 +13,10 @@ export const StyledLayout = styled(MaxWidthContainer)`
   flex-direction: column;
   justify-content: space-between;
   ${(props) => `
-  background-color:${props.theme.MainBodyBackgroundColor};
-  `}
+  background-color:${props.theme.main};
+  box-shadow: ${props.theme.boxShadow};
+  color: ${props.theme.color};
+`}
 `;
 
 export const IndicatorName = styled.h2`
@@ -25,8 +27,8 @@ export const IndicatorName = styled.h2`
   margin: 1rem;
   font-size: 2rem;
   ${(props) => `
-  color: ${props.theme.color};
-  `}
+  color: ${props.theme.secondary};
+`}
 `;
 
 export const ContainerRow = styled.div`
@@ -49,19 +51,14 @@ export const ButtonContainer = styled.div`
 
 export const StyledButton = styled(Button)`
   ${(props) => `
-background-color:${props.theme.MainBodyBackgroundColor};
-color: ${props.theme.color};
-borderColor: ${props.theme.borderColor}
+background-color:${props.theme.secondBackground};
+color: ${props.theme.secondary};
+borderColor: ${props.theme.border}
 `}
 `;
 
 export const StyledIndicatorsDropdown = styled(IndicatorsDropdown)`
   width: 50%;
-  ${(props) => `
-  background-color:${props.theme.MainBodyBackgroundColor};
-  color: ${props.theme.color};
-  borderColor: ${props.theme.borderColor}
-  `}
 `;
 
 export const ChartContainer = styled.div`
@@ -74,9 +71,14 @@ export const SliderContainer = styled.div`
   align-items: baseline;
 `;
 
+export const DefaultYear = styled.h3`
+  ${(props) => `
+color: ${props.theme.secondary};
+`}
+`;
+
 export const StyledSlider = styled(Slider)`
   width: 80%;
-  color: 345995;
 `;
 
 export const ContentRightContainer = styled.div`
@@ -86,3 +88,14 @@ export const ContentRightContainer = styled.div`
   flex-direction: column;
   margin-left: 24px;
 `;
+
+export const SectionHeader = styled.h3`
+  ${(props) => `
+color: ${props.theme.secondary};
+`}
+`;
+
+export const MultiSelectContainer = styled.div`
+  padding: 8px;
+`;
+

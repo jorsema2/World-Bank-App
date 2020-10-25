@@ -8,6 +8,7 @@ import {
   Sun,
   Moon,
   MenuItem,
+  ExternalLink,
   Container,
 } from "./style.js";
 import { SmartContext } from "../../App";
@@ -23,18 +24,18 @@ const Navigation = () => {
         </Link>
         <HeaderMenu>
           <MenuItem>
-            <a
+            <ExternalLink
               target="_blank"
               href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
             >
               <LinkedinFilled />
               LinkedIn
-            </a>
+            </ExternalLink>
           </MenuItem>
           <MenuItem>
-            <a target="_blank" href="https://github.com/jorsema2">
+            <ExternalLink target="_blank" href="https://github.com/jorsema2">
               <GithubOutlined /> GitHub
-            </a>
+            </ExternalLink>
           </MenuItem>
           <MenuItem onClick={() => appDispatch({ type: "toggleTheme" })}>
             {appState.isLight && <Sun />}

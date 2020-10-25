@@ -1,15 +1,15 @@
 export const darkTheme = {
-  NavMenuBackgroundColor: "#000000",
-  MainBodyBackgroundColor: "#05090F",
-  color: "#F0F4F9",
-  borderColor: "#000022",
-  boxShadow: "0px 10px 10px #05090F",
+  main: "#111",
+  secondary: "white",
+  secondBackground: "#222",
+  border: "#333",  
+  boxShadow: "none",  
 };
 
 export const lightTheme = {
-  NavMenuBackgroundColor: "#B4C6E4",
-  MainBodyBackgroundColor: "#F0F4F9",
-  color: "#FFFFFF",
-  borderColor: "#345995",
-  boxShadow: "0px 10px 10px #D2DDEF",
+  main: "white",
+  secondary: "#111",
+  secondBackground: "white",
+  border: "#111",  
+  boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.2)",  
 };

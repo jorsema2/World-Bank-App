@@ -49,6 +49,7 @@ export default function MultiSelectSort(props) {
       // small fix for https://github.com/clauderic/react-sortable-hoc/pull/352:
       getHelperDimensions={({ node }) => node.getBoundingClientRect()}
       // react-select props:
+      placeholder={"Add another country to chart..."}
       isMulti
       options={props.options}
       value={props.selected}

@@ -2,11 +2,10 @@ import styled from "styled-components";
 import { MaxWidthContainer } from "../UI/ui.styles";
 
 export const Container = styled.div`
-height: 10vh;
-${(props) => `
-background-color:${props.theme.NavMenuBackgroundColor};
-border-top: 1px solid ${props.theme.borderColor};
-box-shadow: ${props.theme.boxShadow};
+  height: 10vh;
+  ${(props) => `
+background-color: ${props.theme.main};
+border-top: 1px solid ${props.theme.border};
 `}
 `;
 
@@ -14,6 +13,15 @@ export const StyledFooter = styled(MaxWidthContainer)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  ${(props) => `
+  color: ${props.theme.secondary};
+`}
+`;
+
+export const FooterParagraph = styled.p`
+  ${(props) => `
+color: ${props.theme.secondary};
+`}
 `;
 
 export const FooterMenu = styled.div`
@@ -30,7 +38,10 @@ export const MenuItem = styled.div`
   flex-direction: row;
   align-items: baseline;
   margin-left: 12px;
+`;
+
+export const ExternalLink = styled.a`
   ${(props) => `
-  color: ${props.theme.color};
-  `}
+color: ${props.theme.secondary};
+`}
 `;

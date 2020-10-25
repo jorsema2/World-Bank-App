@@ -4,35 +4,35 @@ import {
   GithubOutlined,
   LinkedinFilled,
 } from "@ant-design/icons";
-import {Container, StyledFooter, FooterMenu, MenuItem} from "./style"
+import {Container, StyledFooter, FooterParagraph, FooterMenu, MenuItem, ExternalLink} from "./style"
 
 const Footer = (props) => (
   <Container>
     <StyledFooter>
       <div>
-        <h3>Welcome to World Charts</h3>
-        <h4>A React App by Jorge Segura</h4>
+        <FooterParagraph>Welcome to World Charts</FooterParagraph>
+        <FooterParagraph>A React App by Jorge Segura</FooterParagraph>
       </div>
       <FooterMenu>
         <MenuItem>
-          <a href="mailto: jorsema2@gmail.com">
+          <ExternalLink href="mailto: jorsema2@gmail.com">
             <MailOutlined />
             jorsema2@gmail.com
-          </a>
+          </ExternalLink>
         </MenuItem>
         <MenuItem>
-          <a
+          <ExternalLink
             target="_blank"
             href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
           >
             <LinkedinFilled />
             LinkedIn
-          </a>
+          </ExternalLink>
         </MenuItem>
         <MenuItem>
-          <a target="_blank" href="https://github.com/jorsema2">
+          <ExternalLink target="_blank" href="https://github.com/jorsema2">
             <GithubOutlined /> GitHub
-          </a>
+          </ExternalLink>
         </MenuItem>
       </FooterMenu>
     </StyledFooter>

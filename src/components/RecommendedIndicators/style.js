@@ -7,8 +7,9 @@ export const List = styled.ul`
   border-radius: 5px;
   overflow-y: scroll;
   ${(props) => `
-background-color:${props.theme.NavMenuBackgroundColor};
-border: 1px solid ${props.theme.borderColor};
+  background-color:${props.theme.secondBackground};
+  border: 1px solid ${props.theme.border};
+  color: ${props.theme.secondary};
 `}
 `;
 
@@ -18,9 +19,8 @@ export const ListSection = styled.div`
   align-items: flex-start;
 `;
 
-export const ListItem = styled.button`
-  background-color: transparent;
-  border: none;
+export const ListItem = styled.li`
   outline: none;
   text-align: start;
+  cursor: pointer;
 `;

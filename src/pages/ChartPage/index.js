@@ -12,8 +12,11 @@ import {
   StyledIndicatorsDropdown,
   ChartContainer,
   SliderContainer,
+  DefaultYear,
   StyledSlider,
   ContentRightContainer,
+  SectionHeader,
+  MultiSelectContainer,
 } from "./style";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
@@ -246,18 +249,19 @@ const ChartPage = (props) => {
                 )}
               </ChartContainer>
               <SliderContainer>
-                <p>1960</p>
+                <DefaultYear>1960</DefaultYear>
                 <StyledSlider
                   range
+                  primaryColor={"#345995"}
                   defaultValue={[1990, 2015]}
                   min={1960}
                   max={2019}
                 />
-                <p>2019</p>
+                <DefaultYear>2019</DefaultYear>
               </SliderContainer>
             </ContentLeftContainer>
             <ContentRightContainer>
-              <h3>Recommended indicators</h3>
+              <SectionHeader>Recommended indicators</SectionHeader>
               <RecommendedIndicators
                 history={props.history}
                 search={search}
@@ -265,14 +269,13 @@ const ChartPage = (props) => {
               />
             </ContentRightContainer>
           </ContainerRow>
-          <div>
-            <p>Add another country to the chart</p>
+          <MultiSelectContainer>
             <MultiSelectSort
               options={options}
               selected={selected}
               setSelected={setSelected}
             />
-          </div>
+          </MultiSelectContainer>
         </StyledLayout>
       )}
     </MainContent>
