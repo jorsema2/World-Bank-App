@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider,createGlobalStyle } from "styled-components";
 import { darkTheme, lightTheme } from "./themes";
 import { appReducer, appInitialState } from "./reducers/appReducer";
 import Navigation from "./components/Navigation";
@@ -11,6 +11,12 @@ import Footer from "./components/Footer";
 import fetchData from "./utils/fetchData";
 
 export const SmartContext = React.createContext();
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    padding-top: 80px;
+  }
+`
 
 const App = () => {
   const [appState, appDispatch] = useReducer(appReducer, appInitialState);
@@ -43,6 +49,7 @@ const App = () => {
   return (
     <Router>
       <ThemeProvider theme={appState.isLight ? lightTheme : darkTheme}>
+        <GlobalStyle />
         <SmartContext.Provider
           value={{ countries, setCountries, appState, appDispatch }}
         >

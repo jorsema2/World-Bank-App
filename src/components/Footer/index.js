@@ -9,9 +9,9 @@ import {Container, StyledFooter, FooterParagraph, FooterMenu, MenuItem, External
 const Footer = (props) => (
   <Container>
     <StyledFooter>
-      <div>
+      <div style={{display: 'flex', flexDirection: 'column', padding: '16px 0'}} >
         <FooterParagraph>Welcome to World Charts</FooterParagraph>
-        <FooterParagraph>A React App by Jorge Segura</FooterParagraph>
+        <FooterParagraph style={{fontWeight: 'bold'}} >A React App by Jorge Segura</FooterParagraph>
       </div>
       <FooterMenu>
         <MenuItem>

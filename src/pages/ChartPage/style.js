@@ -4,19 +4,16 @@ import IndicatorsDropdown from "../../components/IndicatorsDropdown";
 import { MaxWidthContainer } from "../../components/UI/ui.styles";
 
 export const MainContent = styled.div`
-  height: 82vh;
+  min-height: calc(100vh - 80px - 112px);
+  background-color:${props => props.theme.main};
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 `;
 
 export const StyledLayout = styled(MaxWidthContainer)`
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  ${(props) => `
-  background-color:${props.theme.main};
-  box-shadow: ${props.theme.boxShadow};
-  color: ${props.theme.color};
-`}
+  flex: 1;
+  color: ${ props => props.theme.color};
 `;
 
 export const IndicatorName = styled.h2`
@@ -51,14 +48,20 @@ export const ButtonContainer = styled.div`
 
 export const StyledButton = styled(Button)`
   ${(props) => `
-background-color:${props.theme.secondBackground};
-color: ${props.theme.secondary};
-borderColor: ${props.theme.border}
+background-color:#345995;
+color: ${props.theme.main};
+border-color: #345995;
+
+  height: 38px !important;
+  border-radius: 4px;
 `}
+
+
 `;
 
 export const StyledIndicatorsDropdown = styled(IndicatorsDropdown)`
-  width: 50%;
+  width: 350px;
+  margin-right: 16px;
 `;
 
 export const ChartContainer = styled.div`
@@ -69,6 +72,8 @@ export const SliderContainer = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: baseline;
+  margin-top: 24px;
+  padding-top: 32px;
 `;
 
 export const DefaultYear = styled.h3`
@@ -93,6 +98,8 @@ export const SectionHeader = styled.h3`
   ${(props) => `
 color: ${props.theme.secondary};
 `}
+  font-size: 24px;
+  font-weight: bold;
 `;
 
 export const MultiSelectContainer = styled.div`

@@ -2,10 +2,11 @@ import styled from "styled-components";
 import { MaxWidthContainer } from "../UI/ui.styles";
 
 export const Container = styled.div`
-  height: 10vh;
+height: 112px;
   ${(props) => `
-background-color: ${props.theme.main};
-border-top: 1px solid ${props.theme.border};
+background-color: #FAFAFA;
+padding-top: 16px;
+padding-bottom: 16px;
 `}
 `;
 
@@ -15,13 +16,16 @@ export const StyledFooter = styled(MaxWidthContainer)`
   justify-content: space-between;
   ${(props) => `
   color: ${props.theme.secondary};
+  border-top: 3px solid #345995;
 `}
+height: 100%;
 `;
 
 export const FooterParagraph = styled.p`
   ${(props) => `
 color: ${props.theme.secondary};
 `}
+margin: 0;
 `;
 
 export const FooterMenu = styled.div`
