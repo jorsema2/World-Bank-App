@@ -2,30 +2,38 @@ import styled from "styled-components";
 import { MaxWidthContainer } from "../UI/ui.styles";
 
 export const Container = styled.div`
-height: 112px;
+  height: 112px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   ${(props) => `
-background-color: #FAFAFA;
-padding-top: 16px;
-padding-bottom: 16px;
+background-color: ${props.theme.main};
+color: ${props.theme.secondary};
 `}
 `;
 
 export const StyledFooter = styled(MaxWidthContainer)`
+  height: 100%;
+  border-top: 3px solid #345995;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   ${(props) => `
   color: ${props.theme.secondary};
-  border-top: 3px solid #345995;
 `}
-height: 100%;
+`;
+
+export const ParagraphContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
 `;
 
 export const FooterParagraph = styled.p`
+  fontweight: bold;
+  margin: 0;
   ${(props) => `
 color: ${props.theme.secondary};
 `}
-margin: 0;
 `;
 
 export const FooterMenu = styled.div`

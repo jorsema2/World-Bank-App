@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { useBottomScrollListener } from "react-bottom-scroll-listener";
 import { SmartContext } from "../../App";
 import { Container, StyledButton } from "./style";
 import fetchData from "../../utils/fetchData";
@@ -7,30 +8,18 @@ import fetchData from "../../utils/fetchData";
 const IndicatorsList = (props) => {
   const { appState, appDispatch } = useContext(SmartContext);
 
-  const handleScroll = useCallback(() => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop !==
-      document.documentElement.offsetHeight
-    )
-      appDispatch({ type: "startIndicatorsFetch" });
+  useEffect(() => {
+    fetchMoreIndicators();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const scrollRef = useBottomScrollListener(handleScroll);
+
+  function handleScroll() {
+    appDispatch({ type: "startIndicatorsFetch" });
+    fetchMoreIndicators();
     return;
-  }, [appDispatch]);
-
-  useEffect(() => {
-    fetchMoreIndicators();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appState.firstCountry]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
-
-  useEffect(() => {
-    if (!appState.isFetching) return;
-    fetchMoreIndicators();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appState.isFetching]);
+  }
 
   const hasSearch = props.search && props.search.compareTo;
 
@@ -58,16 +47,16 @@ const IndicatorsList = (props) => {
   }
 
   return (
-    <Container>
-        {appState.indicators.map((indicator) => (
-          <StyledButton key={Math.random() + "-" + Math.random()}>
-            <Link
-              to={`/indicator/${appState.firstCountry.id}/${indicator.id}/${otherCountries}`}
-            >
-              {indicator.name}
-            </Link>
-          </StyledButton>
-        ))}
+    <Container ref={scrollRef}>
+      {appState.indicators.map((indicator) => (
+        <StyledButton key={Math.random() + "-" + Math.random()}>
+          <Link
+            to={`/indicator/${appState.firstCountry.id}/${indicator.id}/${otherCountries}`}
+          >
+            {indicator.name}
+          </Link>
+        </StyledButton>
+      ))}
       {appState.isFetching && "Loading more indicators..."}
       {appState.indicators.length === 0 &&
         !appState.isFetching &&

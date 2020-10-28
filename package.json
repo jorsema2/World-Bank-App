@@ -11,6 +11,7 @@
     "chart.js": "^2.9.3",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
+    "react-bottom-scroll-listener": "^4.1.1",
     "react-chartjs-2": "^2.10.0",
     "react-dom": "^16.13.1",
     "react-infinite-scroll-hook": "^3.0.0",

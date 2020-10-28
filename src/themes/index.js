@@ -8,8 +8,8 @@ export const darkTheme = {
 
 export const lightTheme = {
   main: "#FAFAFA",
-  secondary: "#111",
+  secondary: "#333",
   secondBackground: "white",
-  border: "#111",  
+  border: "#111",
   boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.2)",  
 };

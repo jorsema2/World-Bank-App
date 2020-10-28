@@ -5,7 +5,7 @@ import { MaxWidthContainer } from "../../components/UI/ui.styles";
 
 export const MainContent = styled.div`
   min-height: calc(100vh - 80px - 112px);
-  background-color:${props => props.theme.main};
+  background-color: ${(props) => props.theme.main};
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -13,7 +13,7 @@ export const MainContent = styled.div`
 
 export const StyledLayout = styled(MaxWidthContainer)`
   flex: 1;
-  color: ${ props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 
 export const IndicatorName = styled.h2`
@@ -41,22 +41,23 @@ export const ContentLeftContainer = styled.div`
   justify-content: space-around;
 `;
 
-export const ButtonContainer = styled.div`
+export const ButtonsContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
+export const SelectorsContainer = styled.div`
+  display: flex;
+`;
+
 export const StyledButton = styled(Button)`
+  height: 38px;
+  border-radius: 4px;
   ${(props) => `
 background-color:#345995;
 color: ${props.theme.main};
 border-color: #345995;
-
-  height: 38px !important;
-  border-radius: 4px;
 `}
-
-
 `;
 
 export const StyledIndicatorsDropdown = styled(IndicatorsDropdown)`
@@ -95,14 +96,9 @@ export const ContentRightContainer = styled.div`
 `;
 
 export const SectionHeader = styled.h3`
+  font-size: 24px;
+  font-weight: bold;
   ${(props) => `
 color: ${props.theme.secondary};
 `}
-  font-size: 24px;
-  font-weight: bold;
 `;
-
-export const MultiSelectContainer = styled.div`
-  padding: 8px;
-`;
-

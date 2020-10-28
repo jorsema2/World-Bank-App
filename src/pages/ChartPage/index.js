@@ -7,16 +7,16 @@ import {
   IndicatorName,
   ContainerRow,
   ContentLeftContainer,
-  ButtonContainer,
-  StyledButton,
+  ButtonsContainer,
+  SelectorsContainer,
   StyledIndicatorsDropdown,
+  StyledButton,
   ChartContainer,
   SliderContainer,
   DefaultYear,
   StyledSlider,
   ContentRightContainer,
   SectionHeader,
-  MultiSelectContainer,
 } from "./style";
 import NoDataMessage from "../../components/NoDataMessage";
 import Chart from "../../components/Chart";
@@ -43,6 +43,10 @@ const ChartPage = (props) => {
   const [isServerDown, setIsServerDown] = useState(false);
 
   const search = queryString.parse(props.location.search);
+
+  useEffect(() => {
+    appDispatch({ type: "resetIndicators"})
+  }, [])
 
   useEffect(() => {
     if (search.compareTo && options[0] !== undefined) {
@@ -227,27 +231,27 @@ const ChartPage = (props) => {
             <IndicatorName>{chartState.indicatorName}</IndicatorName>
           </div>
           <ContainerRow>
-          <ContentLeftContainer>
-              <ButtonContainer>
-                <div style={{display: 'flex'}} >
-                <StyledIndicatorsDropdown
-                  history={props.history}
-                  search={search}
-                  currentCountry={props.match.params.country}
-                />
-                <MultiSelectSort
-              options={options}
-              selected={selected}
-              setSelected={setSelected}
-            />
-                </div>
-              
+            <ContentLeftContainer>
+              <ButtonsContainer>
+                <SelectorsContainer>
+                  <StyledIndicatorsDropdown
+                    history={props.history}
+                    search={search}
+                    currentCountry={props.match.params.country}
+                  />
+                  <MultiSelectSort
+                    options={options}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SelectorsContainer>
+
                 <div>
                   <StyledButton onClick={() => changeChart()}>
                     Change chart type
                   </StyledButton>
                 </div>
-              </ButtonContainer>
+              </ButtonsContainer>
               <ChartContainer>
                 {!chartState.isRequestValid && (
                   <NoDataMessage setSelected={setSelected} />
@@ -277,13 +281,6 @@ const ChartPage = (props) => {
               />
             </ContentRightContainer>
           </ContainerRow>
-          {/* <MultiSelectContainer>
-            <MultiSelectSort
-              options={options}
-              selected={selected}
-              setSelected={setSelected}
-            />
-          </MultiSelectContainer> */}
         </StyledLayout>
       )}
     </MainContent>

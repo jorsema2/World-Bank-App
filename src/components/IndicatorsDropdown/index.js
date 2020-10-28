@@ -6,6 +6,11 @@ import fetchData from "../../utils/fetchData";
 const IndicatorsDropdown = (props) => {
   const { appState, appDispatch } = useContext(SmartContext);
 
+  useEffect(() => {
+    fetchMoreIndicators();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const fetchMoreIndicators = useCallback(() => {
     setTimeout(async () => {
       const data = await fetchData(
@@ -23,14 +28,8 @@ const IndicatorsDropdown = (props) => {
       });
 
       appDispatch({ type: "finishIndicatorsFetch", payload: newIndicators });
-    }, 1500);
-  }, [appDispatch, appState.page])
-  useEffect(() => {
-    appDispatch({ type: "startIndicatorsFetch" });
-    fetchMoreIndicators();
-  }, [appDispatch, fetchMoreIndicators]);
-
- 
+    }, 1000);
+  }, [appDispatch, appState.page]);
 
   function handleScroll() {
     appDispatch({ type: "startIndicatorsFetch" });
@@ -40,14 +39,24 @@ const IndicatorsDropdown = (props) => {
   const changeIndicator = (newIndicator) => {
     const hasSearch = props.search && props.search.compareTo;
 
-    const otherCountries = hasSearch ? `?compareTo=${props.search.compareTo}` : "";
+    const otherCountries = hasSearch
+      ? `?compareTo=${props.search.compareTo}`
+      : "";
 
     props.history.push(
       `/indicator/${props.currentCountry}/${newIndicator.id}/${otherCountries}`
     );
   };
 
-  return <Select {...props} placeholder={"Change indicator..."} options={appState.indicators} onChange={changeIndicator} onMenuScrollToBottom={handleScroll} />;
+  return (
+    <Select
+      {...props}
+      placeholder={"Change indicator..."}
+      options={appState.indicators}
+      onChange={changeIndicator}
+      onMenuScrollToBottom={handleScroll}
+    />
+  );
 };
 
 export default IndicatorsDropdown;
