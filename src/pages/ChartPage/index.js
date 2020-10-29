@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
+import cloneDeep from "lodash/cloneDeep";
 import queryString from "query-string";
 import "antd/dist/antd.css";
 import {
@@ -40,13 +41,14 @@ const ChartPage = (props) => {
   );
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [chosenYearsData, setChosenYearsData] = useState({});
   const [isServerDown, setIsServerDown] = useState(false);
 
   const search = queryString.parse(props.location.search);
 
   useEffect(() => {
-    appDispatch({ type: "resetIndicators"})
-  }, [])
+    appDispatch({ type: "resetIndicators" });
+  }, []);
 
   useEffect(() => {
     if (search.compareTo && options[0] !== undefined) {
@@ -200,10 +202,29 @@ const ChartPage = (props) => {
     chartDispatch({ type: "changeChartType" });
   }
 
+  function changeRange(range) {
+    const minYear = String(range[0]);
+    const maxYear = String(range[1]);
+
+    const minIndex = chartState.years.indexOf(minYear);
+    const maxIndex = chartState.years.indexOf(maxYear) + 1;
+
+    let newChartData = cloneDeep(chartData);
+
+    chartState.datasets.forEach(function (country, index) {
+      const newData = country.data.slice(minIndex, maxIndex);
+      newChartData.datasets[index].data = newData;
+    });
+
+    newChartData.labels = chartState.years.slice(minIndex, maxIndex);
+
+    setChosenYearsData(newChartData);
+  }
+
   const chartData = {
     labels: chartState.years,
     datasets: chartState.datasets,
-  };
+  }
 
   const chartHasData =
     chartState.datasets.length > 0 && chartState.years.length > 0;
@@ -263,9 +284,10 @@ const ChartPage = (props) => {
               <SliderContainer>
                 <DefaultYear>1960</DefaultYear>
                 <StyledSlider
+                  onAfterChange={changeRange}
                   range
                   primaryColor={"#345995"}
-                  defaultValue={[1990, 2015]}
+                  defaultValue={[2010, 2019]}
                   min={1960}
                   max={2019}
                 />
