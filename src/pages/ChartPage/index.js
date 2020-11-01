@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
-import cloneDeep from "lodash/cloneDeep";
 import queryString from "query-string";
+import cloneDeep from "lodash/cloneDeep";
 import "antd/dist/antd.css";
 import {
   MainContent,
@@ -41,7 +41,6 @@ const ChartPage = (props) => {
   );
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState([]);
-  const [chosenYearsData, setChosenYearsData] = useState({});
   const [isServerDown, setIsServerDown] = useState(false);
 
   const search = queryString.parse(props.location.search);
@@ -96,6 +95,7 @@ const ChartPage = (props) => {
         }
       }
       addData();
+
     } catch (err) {
       chartDispatch({ type: "finishLoading" });
     }
@@ -168,7 +168,7 @@ const ChartPage = (props) => {
       chartDispatch({
         type: "FETCH_DATA_SUCCESS",
         payload: {
-          datasets: [chartState.datasets[0], ...filteredDatasets], // why are you spreading an object into an array???
+          datasets: [chartState.datasets[0], ...filteredDatasets],
         },
       });
     }
@@ -202,6 +202,11 @@ const ChartPage = (props) => {
     chartDispatch({ type: "changeChartType" });
   }
 
+  let chartData = {
+    labels: chartState.years,
+    datasets: chartState.datasets,
+  };
+
   function changeRange(range) {
     const minYear = String(range[0]);
     const maxYear = String(range[1]);
@@ -218,12 +223,9 @@ const ChartPage = (props) => {
 
     newChartData.labels = chartState.years.slice(minIndex, maxIndex);
 
-    setChosenYearsData(newChartData);
-  }
+    chartData = newChartData;
 
-  const chartData = {
-    labels: chartState.years,
-    datasets: chartState.datasets,
+    console.log(chartData)
   }
 
   const chartHasData =
@@ -278,7 +280,10 @@ const ChartPage = (props) => {
                   <NoDataMessage setSelected={setSelected} />
                 )}
                 {chartState.isRequestValid && (
-                  <Chart chartData={chartData} isLine={chartState.isLine} />
+                  <Chart
+                    chartData={chartData}
+                    isLine={chartState.isLine}
+                  />
                 )}
               </ChartContainer>
               <SliderContainer>

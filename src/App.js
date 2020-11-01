@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
+import RecursiveTTF from "./assets/typography/Recursive.ttf"
 import { darkTheme, lightTheme } from "./themes";
 import { appReducer, appInitialState } from "./reducers/appReducer";
 import Navigation from "./components/Navigation";
@@ -13,7 +14,12 @@ import fetchData from "./utils/fetchData";
 export const SmartContext = React.createContext();
 
 const GlobalStyle = createGlobalStyle`
+@font-face {
+  font-family: 'Recursive';
+  src: url(${RecursiveTTF}) format('truetype');
+}
   body {
+    font-family: "Recursive";
     padding-top: 80px;
   }
 `;

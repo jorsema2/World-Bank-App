@@ -18,8 +18,8 @@ export const Container = styled.div`
 `;
 
 export const StyledHeader = styled(MaxWidthContainer)`
-height: 100%;  
-display: flex;
+  height: 100%;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   a {
@@ -54,8 +54,10 @@ export const Sun = styled(SunIcon)`
 `;
 
 export const Moon = styled(MoonIcon)`
+  width: 40px;
+  transform: translate(0px, 4px);
   g {
-    fill: #333;
+    fill: white;
   }
   g:hover {
     fill: #40a9ff;
