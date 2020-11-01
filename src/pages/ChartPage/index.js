@@ -42,12 +42,14 @@ const ChartPage = (props) => {
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState([]);
   const [isServerDown, setIsServerDown] = useState(false);
+  const [startRange, setStartRange] = useState(2010)
+  const [endRange, setEndRange] = useState(2019)
 
   const search = queryString.parse(props.location.search);
 
   useEffect(() => {
     appDispatch({ type: "resetIndicators" });
-  }, []);
+  }, [appDispatch]);
 
   useEffect(() => {
     if (search.compareTo && options[0] !== undefined) {
@@ -82,12 +84,11 @@ const ChartPage = (props) => {
           chartDispatch({ type: "invalidateRequest" });
           return;
         } else {
-          const { indicatorName, yearsArray, countryDataset } = firstDataset;
+          const { indicatorName, countryDataset } = firstDataset;
           chartDispatch({
             type: "FETCH_DATA_SUCCESS",
             payload: {
               datasets: [countryDataset],
-              years: yearsArray,
               indicatorName,
             },
           });
@@ -202,34 +203,21 @@ const ChartPage = (props) => {
     chartDispatch({ type: "changeChartType" });
   }
 
-  let chartData = {
-    labels: chartState.years,
-    datasets: chartState.datasets,
-  };
+  let chartData = { datasets: chartState.datasets }
 
   function changeRange(range) {
-    const minYear = String(range[0]);
-    const maxYear = String(range[1]);
+    const minYear = Number(range[0]);
+    const maxYear = Number(range[1]);
 
-    const minIndex = chartState.years.indexOf(minYear);
-    const maxIndex = chartState.years.indexOf(maxYear) + 1;
-
-    let newChartData = cloneDeep(chartData);
-
-    chartState.datasets.forEach(function (country, index) {
-      const newData = country.data.slice(minIndex, maxIndex);
-      newChartData.datasets[index].data = newData;
-    });
-
-    newChartData.labels = chartState.years.slice(minIndex, maxIndex);
-
-    chartData = newChartData;
-
-    console.log(chartData)
+    if(minYear !== startRange){
+      setStartRange(minYear)
+    }
+    if(maxYear !== endRange){
+      setEndRange(maxYear)
+    }   
   }
 
-  const chartHasData =
-    chartState.datasets.length > 0 && chartState.years.length > 0;
+  const chartHasData = chartState.datasets.length > 0
 
   return (
     <MainContent>
@@ -282,6 +270,8 @@ const ChartPage = (props) => {
                 {chartState.isRequestValid && (
                   <Chart
                     chartData={chartData}
+                    startRange={startRange}
+                    endRange={endRange}
                     isLine={chartState.isLine}
                   />
                 )}
@@ -292,7 +282,7 @@ const ChartPage = (props) => {
                   onAfterChange={changeRange}
                   range
                   primaryColor={"#345995"}
-                  defaultValue={[2010, 2019]}
+                  defaultValue={[startRange, endRange]}
                   min={1960}
                   max={2019}
                 />

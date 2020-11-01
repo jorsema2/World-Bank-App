@@ -25,11 +25,11 @@ async function processData(fetchedData, link, newColor) {
     data = await fetchMorePages(data, link, pagesNumber);
   }
 
-  const { valuesArray, yearsArray } = processArrays(data);
+  const chartdata = processArrays(data);
 
   // We select only the data that's going to be used in the chart:
-  const countryDataset = dataFiller(countryName, valuesArray, newColor);
-  return { indicatorName, yearsArray, countryDataset };
+  const countryDataset = dataFiller(countryName, chartdata, newColor);
+  return { indicatorName, countryDataset };
 }
 
 export default processData;
