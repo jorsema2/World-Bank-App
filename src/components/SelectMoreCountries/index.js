@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-
 import Select, { components } from "react-select";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
+import { Container } from "./style"
 
 function arrayMove(array, from, to) {
   array = array.slice();
@@ -40,7 +40,7 @@ export default function MultiSelectSort(props) {
   }, [props.selected])
 
   return (
-    <div>
+    <Container>
       {!areDisabled && <SortableSelect
       // react-sortable-hoc props:
       axis="xy"
@@ -77,6 +77,6 @@ export default function MultiSelectSort(props) {
       closeMenuOnSelect={false}
       isOptionDisabled={option => option === option}
     />}
-    </div>
+    </Container>
   );
 }

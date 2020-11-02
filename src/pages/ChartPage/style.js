@@ -48,6 +48,8 @@ export const ButtonsContainer = styled.div`
 
 export const SelectorsContainer = styled.div`
   display: flex;
+  min-width: 66%;
+  margin-right: 16px;
 `;
 
 export const StyledButton = styled(Button)`

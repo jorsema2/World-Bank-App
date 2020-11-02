@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useReducer } from "react";
 import queryString from "query-string";
-import cloneDeep from "lodash/cloneDeep";
 import "antd/dist/antd.css";
 import {
   MainContent,
@@ -42,8 +41,8 @@ const ChartPage = (props) => {
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState([]);
   const [isServerDown, setIsServerDown] = useState(false);
-  const [startRange, setStartRange] = useState(2010)
-  const [endRange, setEndRange] = useState(2019)
+  const [startRange, setStartRange] = useState(2010);
+  const [endRange, setEndRange] = useState(2019);
 
   const search = queryString.parse(props.location.search);
 
@@ -67,24 +66,28 @@ const ChartPage = (props) => {
   }, []);
 
   useEffect(() => {
-    try {
-      async function addData() {
-        const link = `http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`;
-        const fetchedData = await fetchData(link);
+    async function addData() {
+      const link = `http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`;
+      const fetchedData = await fetchData(link);
 
-        fetchedData ? setIsServerDown(false) : setIsServerDown(true);
+      fetchedData ? setIsServerDown(false) : setIsServerDown(true);
 
-        const isCountry = checkIfIsCountry(fetchedData);
-        const wasIndicatorDeleted = checkIfIndicatorWasDeleted(fetchedData);
+      const isCountry = checkIfIsCountry(fetchedData);
+      const wasIndicatorDeleted = checkIfIndicatorWasDeleted(fetchedData);
 
-        const firstColor = "rgba(52, 89, 149, 0.8)";
-        const firstDataset = await processData(fetchedData, link, firstColor);
+      const firstColor = "rgba(52, 89, 149, 0.8)";
+      const currentCountryDataset = await processData(
+        fetchedData,
+        link,
+        firstColor
+      );
 
-        if (firstDataset === null || !isCountry || wasIndicatorDeleted) {
-          chartDispatch({ type: "invalidateRequest" });
-          return;
-        } else {
-          const { indicatorName, countryDataset } = firstDataset;
+      if (currentCountryDataset === null || !isCountry || wasIndicatorDeleted) {
+        chartDispatch({ type: "invalidateRequest" });
+        return;
+      } else {
+        const { indicatorName, countryDataset } = currentCountryDataset;
+        if (selected.length < 1) {
           chartDispatch({
             type: "FETCH_DATA_SUCCESS",
             payload: {
@@ -93,15 +96,19 @@ const ChartPage = (props) => {
             },
           });
           chartDispatch({ type: "validateRequest" });
+        } else {
+          getAdditionalCountriesDatasets(countryDataset, indicatorName);
         }
       }
-      addData();
-
-    } catch (err) {
-      chartDispatch({ type: "finishLoading" });
     }
+    addData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.match.params.country, props.match.params.indicatorId]);
+  }, [
+    props.match.params.country,
+    props.match.params.indicatorId,
+    selected.length,
+  ]);
 
   useEffect(() => {
     const currentCountry = countries.find(
@@ -141,49 +148,46 @@ const ChartPage = (props) => {
   }, [selected]);
 
   useEffect(() => {
-    // We don't want this effect to be used unless we already know the years:
-    if (!chartState.years.length) return;
-    async function getSelectedCountriesDatasets() {
-      const newDatasets = await Promise.all(
-        selected.map(async function (el) {
-          const link = `http://api.worldbank.org/v2/country/${el.id}/indicator/${props.match.params.indicatorId}?format=json`;
-          const chosenColor = chooseColor(el, selected);
-          const fetchedData = await fetchData(link);
-          const isCountry = checkIfIsCountry(fetchedData);
-          if (!isCountry) {
-            const newDataset = dataFiller(
-              el.value + " (No Data)",
-              [],
-              chosenColor
-            );
-            return newDataset;
-          }
-          const newDataset = await processData(fetchedData, link, chosenColor);
-
-          if (!newDataset) return null;
-          return newDataset.countryDataset;
-        })
-      );
-      const filteredDatasets = newDatasets.filter((data) => data !== null);
-
-      chartDispatch({
-        type: "FETCH_DATA_SUCCESS",
-        payload: {
-          datasets: [chartState.datasets[0], ...filteredDatasets],
-        },
-      });
-    }
-    getSelectedCountriesDatasets();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected.length, chartState.years, props.match.params.indicatorId]);
-
-  useEffect(() => {
     if (!chartState.chartData && !chartState.isLoading) {
       props.history.push("/not-found");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartState.chartData, chartState.isLoading]);
+
+  async function getAdditionalCountriesDatasets(
+    currentCountryDataset,
+    indicatorName
+  ) {
+    const newDatasets = await Promise.all(
+      selected.map(async function (el) {
+        const link = `http://api.worldbank.org/v2/country/${el.id}/indicator/${props.match.params.indicatorId}?format=json`;
+        const chosenColor = chooseColor(el, selected);
+        const fetchedData = await fetchData(link);
+        const isCountry = checkIfIsCountry(fetchedData);
+        if (!isCountry) {
+          const newDataset = dataFiller(
+            el.value + " (No Data)",
+            [],
+            chosenColor
+          );
+          return newDataset;
+        }
+        const newDataset = await processData(fetchedData, link, chosenColor);
+
+        if (!newDataset) return null;
+        return newDataset.countryDataset;
+      })
+    );
+    const filteredDatasets = newDatasets.filter((data) => data !== null);
+
+    chartDispatch({
+      type: "FETCH_DATA_SUCCESS",
+      payload: {
+        datasets: [currentCountryDataset, ...filteredDatasets],
+        indicatorName,
+      },
+    });
+  }
 
   function checkIfIsCountry(data) {
     if (data.length > 1) {
@@ -203,21 +207,20 @@ const ChartPage = (props) => {
     chartDispatch({ type: "changeChartType" });
   }
 
-  let chartData = { datasets: chartState.datasets }
-
   function changeRange(range) {
-    const minYear = Number(range[0]);
-    const maxYear = Number(range[1]);
+    const [minYear, maxYear] = range;
 
-    if(minYear !== startRange){
-      setStartRange(minYear)
+    if (minYear !== startRange) {
+      setStartRange(minYear);
     }
-    if(maxYear !== endRange){
-      setEndRange(maxYear)
-    }   
+    if (maxYear !== endRange) {
+      setEndRange(maxYear);
+    }
   }
 
-  const chartHasData = chartState.datasets.length > 0
+  const chartData = { datasets: chartState.datasets };
+
+  const chartHasData = chartState.datasets.length > 0;
 
   return (
     <MainContent>
