@@ -67,7 +67,7 @@ const ChartPage = (props) => {
 
   useEffect(() => {
     async function addData() {
-      const link = `http://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`;
+      const link = `https://api.worldbank.org/v2/country/${props.match.params.country}/indicator/${props.match.params.indicatorId}?format=json`;
       const fetchedData = await fetchData(link);
 
       fetchedData ? setIsServerDown(false) : setIsServerDown(true);
@@ -160,7 +160,7 @@ const ChartPage = (props) => {
   ) {
     const newDatasets = await Promise.all(
       selected.map(async function (el) {
-        const link = `http://api.worldbank.org/v2/country/${el.id}/indicator/${props.match.params.indicatorId}?format=json`;
+        const link = `https://api.worldbank.org/v2/country/${el.id}/indicator/${props.match.params.indicatorId}?format=json`;
         const chosenColor = chooseColor(el, selected);
         const fetchedData = await fetchData(link);
         const isCountry = checkIfIsCountry(fetchedData);
