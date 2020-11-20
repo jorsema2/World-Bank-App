@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
-import RecursiveTTF from "./assets/typography/Recursive.ttf"
+import RecursiveTTF from "./assets/typography/Recursive.ttf";
 import { darkTheme, lightTheme } from "./themes";
 import { appReducer, appInitialState } from "./reducers/appReducer";
 import Navigation from "./components/Navigation";
 import { Home } from "./pages/Home";
+import AboutMe from "./pages/AboutMe"
 import ChartPage from "./pages/ChartPage";
 import FourOhFour from "./components/FourOhFour";
 import Footer from "./components/Footer";
@@ -60,10 +61,9 @@ const App = () => {
           value={{ countries, setCountries, appState, appDispatch }}
         >
           <Navigation />
-          <Switch className={"intruder"}>
-            <Route exact path="/">
-              <Home />
-            </Route>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/about-me" component={AboutMe} />
             <Route
               path="/indicator/:country/:indicatorId"
               component={ChartPage}
