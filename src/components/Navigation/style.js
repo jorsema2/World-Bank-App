@@ -73,6 +73,16 @@ export const MenuItem = styled.div`
   cursor: pointer;
 `;
 
+export const AboutMeButton = styled.p`
+  transform: translate(0px, 10px);
+  :hover {
+    color: #40a9ff;
+  }
+  ${(props) => `
+  color: ${props.theme.secondary};
+  `}
+`;
+
 export const ExternalLink = styled.a`
   ${(props) => `
 color: ${props.theme.secondary};

@@ -8,6 +8,7 @@ import {
   Sun,
   Moon,
   MenuItem,
+  AboutMeButton,
   ExternalLink,
   Container,
 } from "./style.js";
@@ -23,6 +24,11 @@ const Navigation = () => {
           <Earth />
         </Link>
         <HeaderMenu>
+          <MenuItem>
+            <Link to="/about-me">
+              <AboutMeButton>About me</AboutMeButton>
+            </Link>
+          </MenuItem>
           <MenuItem>
             <ExternalLink
               target="_blank"
