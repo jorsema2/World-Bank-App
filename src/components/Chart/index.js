@@ -36,6 +36,7 @@ const Chart = (props) => {
       )}
       {props.chartData && !props.isLine && (
         <StyledBar
+       
           data={{ datasets: parsedData, labels }}
           options={{ maintainAspectRatio: false }}
         />

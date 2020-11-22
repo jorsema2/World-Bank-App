@@ -28,6 +28,7 @@ const IndicatorsList = (props) => {
     : "";
 
   function fetchMoreIndicators() {
+    console.log('here')
     setTimeout(async () => {
       const data = await fetchData(
         `https://api.worldbank.org/v2/indicator?format=json&page=+${appState.page}`
