@@ -1,8 +1,8 @@
-import React, { useEffect, useContext, useCallback } from "react";
+import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useBottomScrollListener } from "react-bottom-scroll-listener";
 import { SmartContext } from "../../App";
-import { Container, StyledButton } from "./style";
+import { Container, StyledButton, LoadingMessage } from "./style";
 import fetchData from "../../utils/fetchData";
 
 const IndicatorsList = (props) => {
@@ -46,6 +46,8 @@ const IndicatorsList = (props) => {
     }, 1500);
   }
 
+  console.log("again");
+
   return (
     <Container ref={scrollRef}>
       {appState.indicators.map((indicator) => (
@@ -57,10 +59,12 @@ const IndicatorsList = (props) => {
           </Link>
         </StyledButton>
       ))}
-      {appState.isFetching && "Loading more indicators..."}
-      {appState.indicators.length === 0 &&
-        !appState.isFetching &&
-        "Loading indicators..."}
+      {appState.isFetching && (
+        <LoadingMessage>Loading more indicators...</LoadingMessage>
+      )}
+      {appState.indicators.length === 0 && !appState.isFetching && (
+        <LoadingMessage>Loading indicators...</LoadingMessage>
+      )}
     </Container>
   );
 };

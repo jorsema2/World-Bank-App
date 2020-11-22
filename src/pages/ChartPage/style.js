@@ -12,8 +12,9 @@ export const MainContent = styled.div`
 `;
 
 export const StyledLayout = styled(MaxWidthContainer)`
+  display: flex;
+  flex-direction: column;
   flex: 1;
-  color: ${(props) => props.theme.color};
 `;
 
 export const IndicatorName = styled.h2`

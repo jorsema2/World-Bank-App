@@ -241,9 +241,7 @@ const ChartPage = (props) => {
       )}
       {chartHasData && !isServerDown && (
         <StyledLayout>
-          <div>
-            <IndicatorName>{chartState.indicatorName}</IndicatorName>
-          </div>
+          <IndicatorName>{chartState.indicatorName}</IndicatorName>
           <ContainerRow>
             <ContentLeftContainer>
               <ButtonsContainer>

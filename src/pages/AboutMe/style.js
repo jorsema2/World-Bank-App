@@ -86,7 +86,5 @@ export const RightSectionList = styled.ul`
 `;
 
 export const ExternalLink = styled.a`
-  ${(props) => `
-color: ${props.theme.secondary};
-`}
+  color: ${(props) => props.theme.secondary};
 `;
