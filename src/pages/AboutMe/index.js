@@ -61,10 +61,10 @@ const AboutMe = () => {
                   <p>
                     Live demo:{" "}
                     <a
-                      href="https://interactive-country-charts.herokuapp.com/"
+                      href="https://world-charts.herokuapp.com/"
                       target="_blank"
                     >
-                      https://interactive-country-charts.herokuapp.com/
+                      https://world-charts.herokuapp.com/
                     </a>
                   </p>
                   <p>
@@ -273,10 +273,10 @@ const AboutMe = () => {
                   <p>
                     Live demo:{" "}
                     <a
-                      href="https://interactive-country-charts.herokuapp.com/"
+                      href="https://world-charts.herokuapp.com/"
                       target="_blank"
                     >
-                      https://interactive-country-charts.herokuapp.com/
+                      https://world-charts.herokuapp.com/
                     </a>
                   </p>
                   <p>
