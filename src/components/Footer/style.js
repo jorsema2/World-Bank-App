@@ -42,6 +42,10 @@ export const FooterMenu = styled.div`
   align-self: flex-end;
   justify-content: space-between;
   width: 50%;
+
+  @media (max-width: 425px) {
+    flex-direction: column;
+  }
 `;
 
 export const MenuItem = styled.div`
@@ -53,6 +57,9 @@ export const MenuItem = styled.div`
 `;
 
 export const ExternalLink = styled.a`
+  @media (max-width: 425px) {
+    font-size: 0.8rem;
+  }
   ${(props) => `
 color: ${props.theme.secondary};
 `}

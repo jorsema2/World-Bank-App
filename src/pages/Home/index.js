@@ -4,10 +4,9 @@ import { SmartContext } from "../../App";
 import img0 from "./../../assets/backgroundImages/backgroundImage0.jpg";
 import img1 from "./../../assets/backgroundImages/backgroundImage1.jpg";
 import img2 from "./../../assets/backgroundImages/backgroundImage2.jpg";
-import img3 from "./../../assets/backgroundImages/backgroundImage3.jpg";
 import { Container, StyledSelect, MainContent } from "./style";
 
-const images = [img0, img1, img2, img3]
+const images = [img0, img1, img2]
 
 
 
@@ -18,7 +17,7 @@ export const Home = () => {
 
 
   useEffect(() => {
-    const index = Math.floor(Math.random() * 4);
+    const index = Math.floor(Math.random() * 3);
     setBackgroundImage(images[index]);
   }, []);
 
@@ -30,7 +29,6 @@ export const Home = () => {
 
   return (
     <MainContent backgroundImage={backgroundImage}>
-      <div style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)'}} />
       <Container>
         <StyledSelect
           value={appState.firstCountry}

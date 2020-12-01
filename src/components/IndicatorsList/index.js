@@ -28,7 +28,7 @@ const IndicatorsList = (props) => {
     : "";
 
   function fetchMoreIndicators() {
-    console.log('here')
+    console.log("here");
     setTimeout(async () => {
       const data = await fetchData(
         `https://api.worldbank.org/v2/indicator?format=json&page=+${appState.page}`
@@ -47,24 +47,26 @@ const IndicatorsList = (props) => {
     }, 1500);
   }
 
-  console.log("again");
-
   return (
     <Container ref={scrollRef}>
       {appState.indicators.map((indicator) => (
-        <StyledButton key={Math.random() + "-" + Math.random()}>
-          <Link
-            to={`/indicator/${appState.firstCountry.id}/${indicator.id}/${otherCountries}`}
-          >
+        <Link
+          to={`/indicator/${appState.firstCountry.id}/${indicator.id}/${otherCountries}`}
+        >
+          <StyledButton key={Math.random() + "-" + Math.random()}>
             {indicator.name}
-          </Link>
-        </StyledButton>
+          </StyledButton>
+        </Link>
       ))}
       {appState.isFetching && (
-        <LoadingMessage>Loading more indicators...</LoadingMessage>
+        <LoadingMessage>
+          <p>Loading more indicators...</p>
+        </LoadingMessage>
       )}
       {appState.indicators.length === 0 && !appState.isFetching && (
-        <LoadingMessage>Loading indicators...</LoadingMessage>
+        <LoadingMessage>
+          <p>Loading indicators...</p>
+        </LoadingMessage>
       )}
     </Container>
   );
