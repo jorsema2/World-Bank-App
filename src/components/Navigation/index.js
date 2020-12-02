@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { GithubOutlined, LinkedinFilled } from "@ant-design/icons";
+import { IconDescription } from "../UI/ui.styles";
 import {
+  Container,
   StyledHeader,
   HeaderMenu,
   Earth,
@@ -10,7 +12,6 @@ import {
   MenuItem,
   AboutMeButton,
   ExternalLink,
-  Container,
 } from "./style.js";
 import { SmartContext } from "../../App";
 
@@ -35,12 +36,13 @@ const Navigation = () => {
               href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
             >
               <LinkedinFilled />
-              LinkedIn
+              <IconDescription>LinkedIn</IconDescription>
             </ExternalLink>
           </MenuItem>
           <MenuItem>
             <ExternalLink target="_blank" href="https://github.com/jorsema2">
-              <GithubOutlined /> GitHub
+              <GithubOutlined />
+              <IconDescription>GitHub</IconDescription>
             </ExternalLink>
           </MenuItem>
           <MenuItem onClick={() => appDispatch({ type: "toggleTheme" })}>

@@ -4,6 +4,7 @@ import {
   GithubOutlined,
   LinkedinFilled,
 } from "@ant-design/icons";
+import { IconDescription } from "../UI/ui.styles";
 import {
   Container,
   StyledFooter,
@@ -25,7 +26,7 @@ const Footer = () => (
         <MenuItem>
           <ExternalLink href="mailto: jorsema2@gmail.com">
             <MailOutlined />
-            jorsema2@gmail.com
+            <IconDescription>jorsema2@gmail.com</IconDescription>
           </ExternalLink>
         </MenuItem>
         <MenuItem>
@@ -34,12 +35,13 @@ const Footer = () => (
             href="https://www.linkedin.com/in/jorge-segura-mart%C3%ADnez-6b53851b3/"
           >
             <LinkedinFilled />
-            LinkedIn
+            <IconDescription>LinkedIn</IconDescription>
           </ExternalLink>
         </MenuItem>
         <MenuItem>
           <ExternalLink target="_blank" href="https://github.com/jorsema2">
-            <GithubOutlined /> GitHub
+            <IconDescription>GitHub</IconDescription>
+            <GithubOutlined />
           </ExternalLink>
         </MenuItem>
       </FooterMenu>

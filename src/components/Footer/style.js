@@ -25,7 +25,7 @@ export const StyledFooter = styled(MaxWidthContainer)`
 export const ParagraphContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 16px 0;
+  justify-content: flex-end;
 `;
 
 export const FooterParagraph = styled.p`
@@ -44,7 +44,7 @@ export const FooterMenu = styled.div`
   width: 50%;
 
   @media (max-width: 425px) {
-    flex-direction: column;
+    width: 33.3333%;
   }
 `;
 
@@ -57,9 +57,6 @@ export const MenuItem = styled.div`
 `;
 
 export const ExternalLink = styled.a`
-  @media (max-width: 425px) {
-    font-size: 0.8rem;
-  }
   ${(props) => `
 color: ${props.theme.secondary};
 `}
