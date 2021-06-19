@@ -15,11 +15,12 @@ export const StyledLayout = styled(MaxWidthContainer)`
   display: flex;
   flex-direction: column;
   flex: 1;
+  justify-content: center;
 `;
 
 export const IndicatorName = styled.h2`
   color: blue;
-  font-familiy: Arial;
+  font-family: Arial;
   display: flex;
   justify-content: center;
   margin: 1rem;
@@ -33,6 +34,9 @@ export const ContainerRow = styled.div`
   height: 85%;
   display: flex;
   flex-direction: row;
+  @media (max-width: 1080px) {
+    flex-direction: column;
+  }
 `;
 
 export const ContentLeftContainer = styled.div`
@@ -40,6 +44,9 @@ export const ContentLeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  @media (max-width: 1080px) {
+    width: 100%;
+  }
 `;
 
 export const ButtonsContainer = styled.div`
@@ -94,6 +101,11 @@ export const ContentRightContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 24px;
+  @media (max-width: 1080px) {
+    margin: 0;
+    margin-top: 1rem;
+    width: 100%;
+  }
 `;
 
 export const SectionHeader = styled.h3`

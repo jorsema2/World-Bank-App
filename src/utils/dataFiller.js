@@ -6,7 +6,7 @@ function dataFiller(label, data = [], color) {
     backgroundColor: color,
     borderColor: color,
     borderWidth: 5,
-    pointRadius: 4,
+    pointRadius: 1,
     pointHoverRadius: 8,
   };
   return datasets;

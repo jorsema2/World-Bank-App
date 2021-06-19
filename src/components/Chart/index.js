@@ -32,13 +32,14 @@ const Chart = (props) => {
         <StyledLine
           data={{ datasets: parsedData, labels }}
           options={{ maintainAspectRatio: false }}
+          responsive="true"
         />
       )}
       {props.chartData && !props.isLine && (
         <StyledBar
-       
           data={{ datasets: parsedData, labels }}
           options={{ maintainAspectRatio: false }}
+          responsive="true"
         />
       )}
     </Container>
