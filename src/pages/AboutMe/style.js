@@ -8,6 +8,13 @@ export const MainContent = styled(MaxWidthContainer)`
   display: flex;
   align-items: flex-start;
   flex-direction: row;
+  p,
+  li,
+  h1,
+  h2,
+  h5 {
+    color: ${(props) => props.theme.secondary};
+  }
 `;
 
 export const ContentLeftContainer = styled.div`
@@ -32,11 +39,9 @@ export const StyledButton = styled(Button)`
   border-radius: 4px;
   height: 38px;
   min-width: 128px;
-  ${(props) => `
-background-color: #345995;
-color: ${props.theme.main};
-border-color: #345995;
-`}
+  background-color: #345995;
+  color: white;
+  border-color: #345995;
 `;
 
 export const ContentRightContainer = styled.div`
@@ -67,6 +72,7 @@ export const SectionFragmentTitle = styled.div`
   font-size: 1rem;
   font-weight: 600;
   padding-bottom: 8px;
+  color: ${(props) => props.theme.secondary};
 `;
 
 export const ContactInfoSection = styled.div`

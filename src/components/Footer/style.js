@@ -29,7 +29,7 @@ export const ParagraphContainer = styled.div`
 `;
 
 export const FooterParagraph = styled.p`
-  fontweight: bold;
+  font-weight: bold;
   margin: 0;
   ${(props) => `
 color: ${props.theme.secondary};
@@ -52,8 +52,11 @@ export const MenuItem = styled.div`
   font-size: 1.25rem;
   display: flex;
   flex-direction: row;
-  align-items: baseline;
+  align-items: center;
   margin-left: 12px;
+  span {
+    margin-right: 4px;
+  }
 `;
 
 export const ExternalLink = styled.a`

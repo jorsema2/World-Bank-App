@@ -7,7 +7,7 @@ export const MaxWidthContainer = styled.div`
 `;
 
 
-export const IconDescription = styled.p`
+export const IconDescription = styled.div`
   @media (max-width: 425px) {
     display: none;
   } ;

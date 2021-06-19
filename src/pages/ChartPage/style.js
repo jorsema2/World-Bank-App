@@ -56,11 +56,9 @@ export const SelectorsContainer = styled.div`
 export const StyledButton = styled(Button)`
   border-radius: 4px;
   height: 38px;
-  ${(props) => `
-background-color: #345995;
-color: ${props.theme.main};
-border-color: #345995;
-`}
+  background-color: #345995;
+  color: white;
+  border-color: #345995;
 `;
 
 export const StyledIndicatorsDropdown = styled(IndicatorsDropdown)`

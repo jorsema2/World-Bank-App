@@ -45,10 +45,10 @@ const Navigation = () => {
               <IconDescription>GitHub</IconDescription>
             </ExternalLink>
           </MenuItem>
-          <MenuItem onClick={() => appDispatch({ type: "toggleTheme" })}>
+          <div onClick={() => appDispatch({ type: "toggleTheme" })}>
             {appState.isLight && <Sun />}
             {!appState.isLight && <Moon />}
-          </MenuItem>
+          </div>
         </HeaderMenu>
       </StyledHeader>
     </Container>

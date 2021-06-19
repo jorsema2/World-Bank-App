@@ -54,6 +54,7 @@ const AboutMe = () => {
                     <a
                       href="https://github.com/jorsema2/World-Bank-App"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       https://github.com/jorsema2/World-Bank-App
                     </a>
@@ -63,6 +64,7 @@ const AboutMe = () => {
                     <a
                       href="https://world-charts.herokuapp.com/"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       https://world-charts.herokuapp.com/
                     </a>
@@ -127,6 +129,7 @@ const AboutMe = () => {
                   <a
                     href="https://www.linkedin.com/in/cristian-florea-396046123/"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     https://www.linkedin.com/in/cristian-florea-396046123/
                   </a>
@@ -147,6 +150,7 @@ const AboutMe = () => {
                   <a
                     href="https://www.codecademy.com/profiles/Jorge-Segura"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     https://www.codecademy.com/profiles/Jorge-Segura
                   </a>
@@ -188,7 +192,11 @@ const AboutMe = () => {
                 <li>
                   GitHub:
                   <br></br>
-                  <a href="https://github.com/jorsema2" target="_blank">
+                  <a
+                    href="https://github.com/jorsema2"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     https://github.com/jorsema2
                   </a>
                 </li>
@@ -200,6 +208,7 @@ const AboutMe = () => {
             jorge-segura-mart%C3%ADn
             ez-6b53851b3/"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     https://www.linkedin.com/in/ jorge-segura-mart%C3%ADn
                     ez-6b53851b3/
@@ -266,6 +275,7 @@ const AboutMe = () => {
                     <a
                       href="https://github.com/jorsema2/World-Bank-App"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       https://github.com/jorsema2/World-Bank-App
                     </a>
@@ -275,6 +285,7 @@ const AboutMe = () => {
                     <a
                       href="https://world-charts.herokuapp.com/"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       https://world-charts.herokuapp.com/
                     </a>
@@ -347,6 +358,7 @@ const AboutMe = () => {
                   <a
                     href="https://www.linkedin.com/in/cristian-florea-396046123/"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     https://www.linkedin.com/in/cristian-florea-396046123/
                   </a>
@@ -367,6 +379,7 @@ const AboutMe = () => {
                   <a
                     href="https://www.codecademy.com/profiles/Jorge-Segura"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     https://www.codecademy.com/profiles/Jorge-Segura
                   </a>
@@ -410,7 +423,11 @@ const AboutMe = () => {
                 <li>
                   GitHub:
                   <br></br>
-                  <a href="https://github.com/jorsema2" target="_blank">
+                  <a
+                    href="https://github.com/jorsema2"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     https://github.com/jorsema2
                   </a>
                 </li>
@@ -422,6 +439,7 @@ const AboutMe = () => {
             jorge-segura-mart%C3%ADn
             ez-6b53851b3/"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     https://www.linkedin.com/in/ jorge-segura-mart%C3%ADn
                     ez-6b53851b3/

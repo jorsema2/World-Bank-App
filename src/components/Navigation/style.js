@@ -66,15 +66,17 @@ export const Moon = styled(MoonIcon)`
 
 export const MenuItem = styled.div`
   font-size: 1.25rem;
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  margin-left: 12px;
   cursor: pointer;
+  span {
+    margin-right: 4px;
+  }
+  margin-right: 8px;
+  @media (max-width: 1080px) {
+    font-size: 0.7rem;
+  }
 `;
 
-export const AboutMeButton = styled.p`
-  transform: translate(0px, 10px);
+export const AboutMeButton = styled.div`
   :hover {
     color: #40a9ff;
   }
