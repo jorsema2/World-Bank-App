@@ -6,7 +6,7 @@ import { darkTheme, lightTheme } from "./themes";
 import { appReducer, appInitialState } from "./reducers/appReducer";
 import Navigation from "./components/Navigation";
 import { Home } from "./pages/Home";
-import AboutMe from "./pages/AboutMe"
+import AboutMe from "./pages/AboutMe";
 import ChartPage from "./pages/ChartPage";
 import FourOhFour from "./components/FourOhFour";
 import Footer from "./components/Footer";
@@ -19,6 +19,12 @@ const GlobalStyle = createGlobalStyle`
   font-family: 'Recursive';
   src: url(${RecursiveTTF}) format('truetype');
 }
+  html {
+    font-size: 16px;
+    @media (max-width: 620px) {
+      font-size: 12px;
+    }
+  }
   body {
     font-family: "Recursive";
     padding-top: 80px;

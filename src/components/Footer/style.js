@@ -41,11 +41,6 @@ export const FooterMenu = styled.div`
   align-items: baseline;
   align-self: flex-end;
   justify-content: space-between;
-  width: 50%;
-
-  @media (max-width: 425px) {
-    width: 33.3333%;
-  }
 `;
 
 export const MenuItem = styled.div`

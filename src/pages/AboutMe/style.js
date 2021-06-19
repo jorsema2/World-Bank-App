@@ -15,6 +15,9 @@ export const MainContent = styled(MaxWidthContainer)`
   h5 {
     color: ${(props) => props.theme.secondary};
   }
+  @media (max-width: 1080px) {
+    flex-direction: column;
+  }
 `;
 
 export const ContentLeftContainer = styled.div`
@@ -22,6 +25,9 @@ export const ContentLeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  @media (max-width: 1080px) {
+    width: 100%;
+  }
 `;
 
 export const Header = styled.div`
@@ -42,6 +48,7 @@ export const StyledButton = styled(Button)`
   background-color: #345995;
   color: white;
   border-color: #345995;
+
 `;
 
 export const ContentRightContainer = styled.div`
@@ -49,6 +56,9 @@ export const ContentRightContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  @media (max-width: 1080px) {
+    width: 100%;
+  }
 `;
 
 export const LeftContainerSection = styled.div`
@@ -89,8 +99,15 @@ export const RightSectionList = styled.ul`
   margin: 0;
   padding: 0;
   line-height: 2rem;
+  @media (max-width: 1080px) {
+    display: flex;
+    flex-wrap: wrap;
+    li {
+      margin-right: 1rem;
+    }
+  }
 `;
 
 export const ExternalLink = styled.a`
-  color: ${(props) => props.theme.secondary};
+  color: #1890ff;
 `;

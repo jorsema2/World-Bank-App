@@ -186,23 +186,21 @@ const AboutMe = () => {
             <RightContainerSection>
               <TopicSectionTitle>CONTACT</TopicSectionTitle>
               <RightSectionList>
-                <ExternalLink href="mailto: jorsema2@gmail.com">
-                  jorsema2@gmail.com
-                </ExternalLink>
                 <li>
-                  GitHub:
-                  <br></br>
+                  <ExternalLink href="mailto: jorsema2@gmail.com">
+                    jorsema2@gmail.com
+                  </ExternalLink>
+                </li>
+                <li>
                   <a
                     href="https://github.com/jorsema2"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    https://github.com/jorsema2
+                    GitHub
                   </a>
                 </li>
                 <li>
-                  LinkedIn:
-                  <br></br>
                   <a
                     href="https://www.linkedin.com/in/
             jorge-segura-mart%C3%ADn
@@ -210,8 +208,7 @@ const AboutMe = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    https://www.linkedin.com/in/ jorge-segura-mart%C3%ADn
-                    ez-6b53851b3/
+                    LinkedIn
                   </a>
                 </li>
               </RightSectionList>
